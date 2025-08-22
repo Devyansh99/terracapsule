@@ -254,113 +254,418 @@ export default function Home() {
 
   // Main Site
   return (
-    <AnimatePresence>
-      <motion.main
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white"
-      >
-        {/* Navigation */}
-        <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md border-b border-gray-800">
-          <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-cyan-500 to-teal-600 rounded-full"></div>
-              <span className="text-xl font-bold">TerraCapsule</span>
+    <div className="main-site">
+      {/* Navigation Header */}
+      <nav className="site-nav">
+        <div className="nav-container">
+          <div className="nav-logo">
+            <div className="logo-icon">
+              <TerraCapsuleLogo />
             </div>
-            <div className="hidden md:flex space-x-6 text-sm">
-              <a href="#explore" className="hover:text-cyan-400 transition-colors">Explore</a>
-              <a href="#destinations" className="hover:text-cyan-400 transition-colors">Destinations</a>
-              <a href="#events" className="hover:text-cyan-400 transition-colors">Events</a>
-              <a href="#planner" className="hover:text-cyan-400 transition-colors">Trip Planner</a>
+            <span className="logo-text">TERRACAPSULE</span>
+          </div>
+          
+          <div className="nav-menu">
+            <a href="#destinations" className="nav-link">Destinations</a>
+            <a href="#experiences" className="nav-link">Experiences</a>
+            <a href="#events" className="nav-link">Events</a>
+            <a href="#about" className="nav-link">About</a>
+          </div>
+          
+          <div className="nav-actions">
+            <div className="social-links">
+              <a href="#" className="social-link" aria-label="Instagram">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              <a href="#" className="social-link" aria-label="Facebook">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </a>
+              <a href="#" className="social-link" aria-label="Twitter">
+                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                </svg>
+              </a>
             </div>
+            <button className="nav-button secondary">Sign In</button>
+            <button className="nav-button primary">Get Started</button>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        {/* Hero Section with Globe */}
-        <section className="flex items-center justify-center min-h-screen px-6 pt-20">
-          <div className="text-center max-w-6xl">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 1.2 }}
-              className="w-96 h-96 mx-auto mb-12"
+      {/* Hero Section with Globe - 3D Parallax */}
+      <section className="hero-section-3d">
+        <div className="hero-container">
+          <div className="hero-content-3d">
+            <motion.div 
+              className="hero-text"
+              initial={{ opacity: 0, x: -100, z: -50 }}
+              animate={{ opacity: 1, x: 0, z: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              style={{ 
+                transform: "perspective(1000px) rotateY(5deg) rotateX(2deg)",
+                transformStyle: "preserve-3d" 
+              }}
             >
-              <Globe3D onLocationClick={handleLocationClick} />
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-400 via-teal-500 to-blue-600 bg-clip-text text-transparent"
-            >
-              Discover Tomorrow's Adventures
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.6 }}
-              className="text-xl text-gray-300 mb-12 leading-relaxed"
-            >
-              Explore upcoming events, festivals, and experiences around the world. 
-              <br />Plan your next adventure with AI-powered recommendations.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.9 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-teal-600 rounded-full text-white font-semibold hover:shadow-xl hover:shadow-cyan-500/25 transition-all duration-300">
-                Start Exploring
-              </button>
-              <button className="px-8 py-4 border border-gray-600 rounded-full text-gray-300 hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300">
-                View Demo
-              </button>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 px-6">
-          <div className="container mx-auto max-w-6xl">
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: "🗺️",
-                  title: "Interactive Globe",
-                  description: "Explore destinations in 3D with real-time data and upcoming events"
-                },
-                {
-                  icon: "🎉", 
-                  title: "Live Events",
-                  description: "Discover festivals, concerts, and experiences happening around the world"
-                },
-                {
-                  icon: "🤖",
-                  title: "AI Trip Planner",
-                  description: "Get personalized itineraries and recommendations powered by AI"
-                }
-              ].map((feature, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.2 }}
-                  className="text-center p-8 bg-gray-800/30 backdrop-blur-sm rounded-2xl border border-gray-700/50 hover:border-cyan-500/50 transition-colors duration-300"
+              <motion.h1 
+                className="main-hero-title-3d"
+                initial={{ opacity: 0, y: 50, rotateX: -20 }}
+                animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                transition={{ duration: 1.5, delay: 0.3 }}
+              >
+                <motion.span
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.5 }}
                 >
-                  <div className="text-4xl mb-4">{feature.icon}</div>
-                  <h3 className="text-xl font-semibold mb-3 text-cyan-400">{feature.title}</h3>
-                  <p className="text-gray-400">{feature.description}</p>
+                  Explore the World in
+                </motion.span>
+                <motion.span 
+                  className="title-accent"
+                  initial={{ opacity: 0, scale: 0.8, rotateZ: -10 }}
+                  animate={{ opacity: 1, scale: 1, rotateZ: 0 }}
+                  transition={{ duration: 1, delay: 0.8 }}
+                > 3D</motion.span>
+              </motion.h1>
+              
+              <motion.p 
+                className="main-hero-subtitle"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 1 }}
+              >
+                Discover extraordinary destinations, upcoming events, and hidden gems 
+                through our immersive interactive globe experience.
+              </motion.p>
+              
+              <motion.div 
+                className="hero-stats"
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 1.3 }}
+              >
+                {[
+                  { number: "500+", label: "Destinations" },
+                  { number: "1000+", label: "Events" },
+                  { number: "50+", label: "Countries" }
+                ].map((stat, index) => (
+                  <motion.div 
+                    key={stat.label}
+                    className="stat-item"
+                    initial={{ opacity: 0, scale: 0.5, rotateY: -45 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    transition={{ duration: 0.8, delay: 1.5 + index * 0.2 }}
+                    whileHover={{ 
+                      scale: 1.1, 
+                      rotateY: 10,
+                      transition: { duration: 0.3 }
+                    }}
+                  >
+                    <span className="stat-number">{stat.number}</span>
+                    <span className="stat-label">{stat.label}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </motion.div>
+            
+            <motion.div 
+              className="globe-container-3d"
+              initial={{ opacity: 0, scale: 0.5, rotateY: 45, z: -100 }}
+              animate={{ opacity: 1, scale: 1, rotateY: 0, z: 0 }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+              style={{ 
+                transform: "perspective(1000px) rotateY(-5deg) rotateX(-2deg)",
+                transformStyle: "preserve-3d" 
+              }}
+            >
+              <Globe3D />
+              <motion.div 
+                className="globe-controls"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 2 }}
+              >
+                {[
+                  { icon: "🌍", text: "Earth View", active: true },
+                  { icon: "📍", text: "Events", active: false },
+                  { icon: "✈️", text: "Flights", active: false }
+                ].map((control, index) => (
+                  <motion.button 
+                    key={control.text}
+                    className={`control-btn ${control.active ? 'active' : ''}`}
+                    initial={{ opacity: 0, x: -20, rotateZ: -10 }}
+                    animate={{ opacity: 1, x: 0, rotateZ: 0 }}
+                    transition={{ duration: 0.6, delay: 2.2 + index * 0.1 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateZ: 2,
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {control.icon} {control.text}
+                  </motion.button>
+                ))}
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+        
+        {/* Floating 3D Elements */}
+        <div className="floating-elements-3d">
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="floating-element"
+              initial={{ 
+                opacity: 0, 
+                scale: 0,
+                rotateX: Math.random() * 360,
+                rotateY: Math.random() * 360,
+                z: -200
+              }}
+              animate={{ 
+                opacity: 0.6, 
+                scale: 1,
+                rotateX: 360,
+                rotateY: 360,
+                z: 0
+              }}
+              transition={{ 
+                duration: 3 + Math.random() * 2,
+                delay: 2.5 + i * 0.3,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                position: 'absolute',
+                left: `${10 + Math.random() * 80}%`,
+                top: `${10 + Math.random() * 80}%`,
+                width: '20px',
+                height: '20px',
+                background: `linear-gradient(45deg, #00d4ff, #03dac6)`,
+                borderRadius: Math.random() > 0.5 ? '50%' : '4px',
+                transformStyle: 'preserve-3d'
+              }}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Destinations with Scroll Animation */}
+      <motion.section 
+        className="destinations-section"
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="section-container">
+          <motion.div 
+            className="section-header"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="section-title">Featured Destinations</h2>
+            <p className="section-subtitle">Handpicked locations for your next adventure</p>
+          </motion.div>
+          
+          <div className="destinations-grid">
+            {[
+              { name: "Tokyo, Japan", image: "🏙️", events: 42, type: "Urban" },
+              { name: "Santorini, Greece", image: "🏛️", events: 18, type: "Island" },
+              { name: "Machu Picchu, Peru", image: "🏔️", events: 12, type: "Historical" },
+              { name: "Dubai, UAE", image: "🏗️", events: 35, type: "Modern" },
+              { name: "Bali, Indonesia", image: "🌴", events: 28, type: "Tropical" },
+              { name: "Iceland", image: "🌋", events: 15, type: "Nature" }
+            ].map((destination, index) => (
+              <motion.div 
+                key={index} 
+                className="destination-card"
+                initial={{ opacity: 0, y: 50, rotateY: -20 }}
+                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: 0.3 + index * 0.1,
+                  ease: "easeOut"
+                }}
+                whileHover={{ 
+                  scale: 1.05, 
+                  rotateY: 5,
+                  rotateX: 5,
+                  transition: { duration: 0.3 }
+                }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <div className="destination-image">
+                  <span className="destination-emoji">{destination.image}</span>
+                  <motion.div 
+                    className="destination-overlay"
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <motion.button 
+                      className="explore-btn"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Explore
+                    </motion.button>
+                  </motion.div>
+                </div>
+                <div className="destination-info">
+                  <h3 className="destination-name">{destination.name}</h3>
+                  <div className="destination-meta">
+                    <span className="destination-type">{destination.type}</span>
+                    <span className="destination-events">{destination.events} events</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Upcoming Events with Scroll Animation */}
+      <motion.section 
+        className="events-section"
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="section-container">
+          <motion.div 
+            className="section-header"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="section-title">Upcoming Events</h2>
+            <p className="section-subtitle">Don't miss these amazing experiences</p>
+          </motion.div>
+          
+          <div className="events-timeline">
+            {[
+              { date: "Mar 15", title: "Cherry Blossom Festival", location: "Tokyo, Japan", attendees: "2.5K" },
+              { date: "Apr 2", title: "Music & Arts Festival", location: "Coachella, USA", attendees: "125K" },
+              { date: "May 18", title: "Northern Lights Tour", location: "Reykjavik, Iceland", attendees: "450" },
+              { date: "Jun 10", title: "Summer Solstice", location: "Stonehenge, UK", attendees: "15K" }
+            ].map((event, index) => (
+              <motion.div 
+                key={index} 
+                className="event-card"
+                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100, rotateY: index % 2 === 0 ? -15 : 15 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: 0.8, 
+                  delay: 0.2 + index * 0.15,
+                  ease: "easeOut"
+                }}
+                whileHover={{ 
+                  scale: 1.02, 
+                  x: 10,
+                  transition: { duration: 0.3 }
+                }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <motion.div 
+                  className="event-date"
+                  initial={{ scale: 0.8, rotateZ: -10 }}
+                  whileInView={{ scale: 1, rotateZ: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                >
+                  <span className="event-month">{event.date.split(' ')[0]}</span>
+                  <span className="event-day">{event.date.split(' ')[1]}</span>
                 </motion.div>
-              ))}
+                <div className="event-details">
+                  <motion.h3 
+                    className="event-title"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                  >
+                    {event.title}
+                  </motion.h3>
+                  <motion.p 
+                    className="event-location"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                  >
+                    📍 {event.location}
+                  </motion.p>
+                  <motion.p 
+                    className="event-attendees"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                  >
+                    👥 {event.attendees} attending
+                  </motion.p>
+                </div>
+                <motion.button 
+                  className="event-action"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Join Event
+                </motion.button>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Footer */}
+      <footer className="site-footer">
+        <div className="footer-container">
+          <div className="footer-content">
+            <div className="footer-brand">
+              <div className="footer-logo">
+                <TerraCapsuleLogo />
+              </div>
+              <h3>TERRACAPSULE</h3>
+              <p>Your gateway to extraordinary destinations</p>
+            </div>
+            <div className="footer-links">
+              <div className="link-group">
+                <h4>Explore</h4>
+                <a href="#">Destinations</a>
+                <a href="#">Events</a>
+                <a href="#">Experiences</a>
+              </div>
+              <div className="link-group">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Contact</a>
+                <a href="#">Careers</a>
+              </div>
+              <div className="link-group">
+                <h4>Support</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+              </div>
             </div>
           </div>
-        </section>
-      </motion.main>
-    </AnimatePresence>
+          <div className="footer-bottom">
+            <p>&copy; 2025 TerraCapsule. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
