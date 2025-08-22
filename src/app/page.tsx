@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Globe3D from "../components/Globe3D";
+import GoogleEarthGlobe from "../components/GoogleEarthGlobe";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -14,13 +14,13 @@ export default function Home() {
       setProgress((old) => {
         if (old >= 100) {
           clearInterval(interval);
-          setTimeout(() => setShowEnterButton(true), 800);
+          setTimeout(() => setShowEnterButton(true), 500);
           return 100;
         }
-        return old + 1.5;
+        return old + 1;
       });
-    }, 60);
-
+    }, 50); // Faster progress to match bar animation
+    
     return () => clearInterval(interval);
   }, []);
 
@@ -296,56 +296,100 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* Hero Section with Globe - 3D Parallax */}
-      <section className="hero-section-3d">
+      {/* Hero Section with Google Earth Globe */}
+      <section className="hero-section-main">
         <div className="hero-container">
-          <div className="hero-content-3d">
+          {/* Main Globe Section - First thing users see */}
+          <div className="globe-hero-section">
             <motion.div 
-              className="hero-text"
-              initial={{ opacity: 0, x: -100, z: -50 }}
-              animate={{ opacity: 1, x: 0, z: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-              style={{ 
-                transform: "perspective(1000px) rotateY(5deg) rotateX(2deg)",
-                transformStyle: "preserve-3d" 
-              }}
+              className="globe-main-container"
+              initial={{ opacity: 0, scale: 0.5, y: 50 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+            >
+              <GoogleEarthGlobe />
+              
+              <motion.div 
+                className="globe-welcome-text"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 2 }}
+              >
+                <h1 className="globe-title">Welcome to TerraCapsule</h1>
+                <p className="globe-subtitle">Your interactive journey begins here</p>
+                <motion.div 
+                  className="scroll-indicator"
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <span>Scroll to explore</span>
+                  <div className="scroll-arrow">↓</div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Explore in 3D Section - Appears on scroll */}
+      <motion.section 
+        className="explore-3d-section"
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-200px" }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+      >
+        <div className="section-container">
+          <div className="explore-content-3d">
+            <motion.div 
+              className="explore-text-content"
+              initial={{ opacity: 0, x: -100, rotateY: -20 }}
+              whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, delay: 0.3 }}
+              style={{ transformStyle: "preserve-3d" }}
             >
               <motion.h1 
-                className="main-hero-title-3d"
+                className="explore-main-title"
                 initial={{ opacity: 0, y: 50, rotateX: -20 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ duration: 1.5, delay: 0.3 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, delay: 0.5 }}
               >
                 <motion.span
                   initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
                 >
                   Explore the World in
                 </motion.span>
                 <motion.span 
-                  className="title-accent"
+                  className="title-accent-3d"
                   initial={{ opacity: 0, scale: 0.8, rotateZ: -10 }}
-                  animate={{ opacity: 1, scale: 1, rotateZ: 0 }}
-                  transition={{ duration: 1, delay: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1, rotateZ: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 1 }}
                 > 3D</motion.span>
               </motion.h1>
               
               <motion.p 
-                className="main-hero-subtitle"
+                className="explore-subtitle"
                 initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 1.2 }}
               >
                 Discover extraordinary destinations, upcoming events, and hidden gems 
-                through our immersive interactive globe experience.
+                through our immersive interactive experience.
               </motion.p>
               
               <motion.div 
-                className="hero-stats"
+                className="hero-stats-3d"
                 initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1.3 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 1.5 }}
               >
                 {[
                   { number: "500+", label: "Destinations" },
@@ -354,39 +398,29 @@ export default function Home() {
                 ].map((stat, index) => (
                   <motion.div 
                     key={stat.label}
-                    className="stat-item"
+                    className="stat-item-3d"
                     initial={{ opacity: 0, scale: 0.5, rotateY: -45 }}
-                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-                    transition={{ duration: 0.8, delay: 1.5 + index * 0.2 }}
+                    whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 1.7 + index * 0.2 }}
                     whileHover={{ 
                       scale: 1.1, 
                       rotateY: 10,
                       transition: { duration: 0.3 }
                     }}
                   >
-                    <span className="stat-number">{stat.number}</span>
-                    <span className="stat-label">{stat.label}</span>
+                    <span className="stat-number-3d">{stat.number}</span>
+                    <span className="stat-label-3d">{stat.label}</span>
                   </motion.div>
                 ))}
               </motion.div>
-            </motion.div>
-            
-            <motion.div 
-              className="globe-container-3d"
-              initial={{ opacity: 0, scale: 0.5, rotateY: 45, z: -100 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0, z: 0 }}
-              transition={{ duration: 1.5, delay: 0.5 }}
-              style={{ 
-                transform: "perspective(1000px) rotateY(-5deg) rotateX(-2deg)",
-                transformStyle: "preserve-3d" 
-              }}
-            >
-              <Globe3D />
+
               <motion.div 
-                className="globe-controls"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 2 }}
+                className="explore-actions"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 2.2 }}
               >
                 {[
                   { icon: "🌍", text: "Earth View", active: true },
@@ -395,10 +429,11 @@ export default function Home() {
                 ].map((control, index) => (
                   <motion.button 
                     key={control.text}
-                    className={`control-btn ${control.active ? 'active' : ''}`}
+                    className={`action-btn-3d ${control.active ? 'active' : ''}`}
                     initial={{ opacity: 0, x: -20, rotateZ: -10 }}
-                    animate={{ opacity: 1, x: 0, rotateZ: 0 }}
-                    transition={{ duration: 0.6, delay: 2.2 + index * 0.1 }}
+                    whileInView={{ opacity: 1, x: 0, rotateZ: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 2.4 + index * 0.1 }}
                     whileHover={{ 
                       scale: 1.05, 
                       rotateZ: 2,
@@ -411,15 +446,101 @@ export default function Home() {
                 ))}
               </motion.div>
             </motion.div>
+            
+            <motion.div 
+              className="explore-visual-container"
+              initial={{ opacity: 0, scale: 0.5, rotateY: 45, z: -100 }}
+              whileInView={{ opacity: 1, scale: 1, rotateY: 0, z: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.5, delay: 0.8 }}
+              style={{ 
+                transform: "perspective(1000px) rotateY(-5deg) rotateX(-2deg)",
+                transformStyle: "preserve-3d" 
+              }}
+            >
+              <div className="explore-feature-grid">
+                <motion.div 
+                  className="feature-card-3d"
+                  initial={{ opacity: 0, rotateX: -90 }}
+                  whileInView={{ opacity: 1, rotateX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 1.5 }}
+                  whileHover={{ 
+                    rotateX: 5, 
+                    rotateY: 5, 
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <div className="feature-icon">�️</div>
+                  <h3>Interactive Maps</h3>
+                  <p>Explore detailed 3D maps of destinations</p>
+                </motion.div>
+
+                <motion.div 
+                  className="feature-card-3d"
+                  initial={{ opacity: 0, rotateX: -90 }}
+                  whileInView={{ opacity: 1, rotateX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 1.7 }}
+                  whileHover={{ 
+                    rotateX: 5, 
+                    rotateY: 5, 
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <div className="feature-icon">📅</div>
+                  <h3>Live Events</h3>
+                  <p>Discover events happening around the world</p>
+                </motion.div>
+
+                <motion.div 
+                  className="feature-card-3d"
+                  initial={{ opacity: 0, rotateX: -90 }}
+                  whileInView={{ opacity: 1, rotateX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 1.9 }}
+                  whileHover={{ 
+                    rotateX: 5, 
+                    rotateY: 5, 
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <div className="feature-icon">🎯</div>
+                  <h3>Smart Recommendations</h3>
+                  <p>AI-powered travel suggestions</p>
+                </motion.div>
+
+                <motion.div 
+                  className="feature-card-3d"
+                  initial={{ opacity: 0, rotateX: -90 }}
+                  whileInView={{ opacity: 1, rotateX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 2.1 }}
+                  whileHover={{ 
+                    rotateX: 5, 
+                    rotateY: 5, 
+                    scale: 1.02,
+                    transition: { duration: 0.3 }
+                  }}
+                >
+                  <div className="feature-icon">📱</div>
+                  <h3>Mobile Ready</h3>
+                  <p>Access from anywhere, anytime</p>
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </div>
         
         {/* Floating 3D Elements */}
-        <div className="floating-elements-3d">
-          {[...Array(6)].map((_, i) => (
+        <div className="floating-elements-explore">
+          {[...Array(8)].map((_, i) => (
             <motion.div
               key={i}
-              className="floating-element"
+              className="floating-element-explore"
               initial={{ 
                 opacity: 0, 
                 scale: 0,
@@ -427,13 +548,14 @@ export default function Home() {
                 rotateY: Math.random() * 360,
                 z: -200
               }}
-              animate={{ 
+              whileInView={{ 
                 opacity: 0.6, 
                 scale: 1,
                 rotateX: 360,
                 rotateY: 360,
                 z: 0
               }}
+              viewport={{ once: true }}
               transition={{ 
                 duration: 3 + Math.random() * 2,
                 delay: 2.5 + i * 0.3,
@@ -453,7 +575,7 @@ export default function Home() {
             />
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Featured Destinations with Scroll Animation */}
       <motion.section 
