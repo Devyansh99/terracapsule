@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import CesiumGlobe from '../components/SimpleGlobe';
+import CesiumGlobe from '../components/CesiumGlobe';
 import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo';
 
 export default function Home() {
@@ -9,6 +9,53 @@ export default function Home() {
   const [progress, setProgress] = useState(0);
   const [showEnterButton, setShowEnterButton] = useState(false);
   const [enterSite, setEnterSite] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure client-side rendering to prevent hydration issues
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Predefined particle data to avoid hydration issues
+  const particleData = [
+    { left: 20, delay: 2, duration: 18 },
+    { left: 45, delay: 7, duration: 22 },
+    { left: 75, delay: 1, duration: 16 },
+    { left: 15, delay: 9, duration: 20 },
+    { left: 85, delay: 4, duration: 24 },
+    { left: 35, delay: 11, duration: 17 },
+    { left: 65, delay: 6, duration: 19 },
+    { left: 90, delay: 3, duration: 21 },
+    { left: 25, delay: 12, duration: 15 },
+    { left: 55, delay: 8, duration: 23 },
+    { left: 10, delay: 14, duration: 18 },
+    { left: 80, delay: 5, duration: 20 },
+    { left: 40, delay: 10, duration: 16 },
+    { left: 70, delay: 2, duration: 22 },
+    { left: 95, delay: 7, duration: 19 },
+    { left: 5, delay: 13, duration: 17 },
+    { left: 50, delay: 1, duration: 25 },
+    { left: 30, delay: 9, duration: 18 },
+    { left: 60, delay: 4, duration: 21 },
+    { left: 88, delay: 11, duration: 16 },
+    { left: 12, delay: 6, duration: 24 },
+    { left: 77, delay: 3, duration: 20 },
+    { left: 42, delay: 8, duration: 15 },
+    { left: 67, delay: 12, duration: 23 },
+    { left: 22, delay: 5, duration: 19 }
+  ];
+
+  // Predefined 3D element data
+  const floating3DElements = [
+    { left: 25, top: 30, rotateX: 45, rotateY: 90, duration: 4, isCircle: true },
+    { left: 70, top: 20, rotateX: 180, rotateY: 270, duration: 5, isCircle: false },
+    { left: 15, top: 60, rotateX: 90, rotateY: 180, duration: 3.5, isCircle: true },
+    { left: 85, top: 40, rotateX: 270, rotateY: 45, duration: 4.5, isCircle: false },
+    { left: 40, top: 70, rotateX: 135, rotateY: 315, duration: 3.8, isCircle: true },
+    { left: 60, top: 15, rotateX: 225, rotateY: 135, duration: 4.2, isCircle: false },
+    { left: 80, top: 80, rotateX: 315, rotateY: 225, duration: 3.2, isCircle: true },
+    { left: 20, top: 50, rotateX: 60, rotateY: 120, duration: 4.8, isCircle: false }
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -136,19 +183,21 @@ export default function Home() {
     return (
       <main className="loading-container flex items-center justify-center min-h-screen text-white flex-col relative">
         {/* Animated background particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          {[...Array(25)].map((_, i) => (
-            <div
-              key={i}
-              className="floating-particle"
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 15}s`,
-                animationDuration: `${15 + Math.random() * 10}s`
-              }}
-            />
-          ))}
-        </div>
+        {isClient && (
+          <div className="absolute inset-0 pointer-events-none">
+            {particleData.map((particle, i) => (
+              <div
+                key={i}
+                className="floating-particle"
+                style={{
+                  left: `${particle.left}%`,
+                  animationDelay: `${particle.delay}s`,
+                  animationDuration: `${particle.duration}s`
+                }}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="z-10 flex flex-col items-center">
           <TerraCapsuleLogo />
@@ -261,7 +310,7 @@ export default function Home() {
         <div className="nav-container">
           <div className="nav-logo">
             <div className="logo-icon">
-              <SimpleAnimatedLogo size="large" />
+              <SimpleAnimatedLogo />
             </div>
           </div>
           
@@ -309,27 +358,83 @@ export default function Home() {
             >
               <CesiumGlobe className="w-full h-full" />
               
+              {/* Simple, non-blocking instruction overlay */}
               <motion.div 
-                className="globe-welcome-text"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 2 }}
+                className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm text-white px-3 py-2 rounded-lg text-sm border border-white/20 pointer-events-none"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 1, delay: 3 }}
               >
-                <h1 className="globe-title">Welcome to TerraCapsule</h1>
-                <p className="globe-subtitle">Your interactive journey begins here</p>
+                <p>🌍 Interactive Earth • Click countries • Drag to rotate</p>
+              </motion.div>
+              
+              {/* Scroll indicator moved to bottom right */}
+              <motion.div 
+                className="absolute bottom-4 right-4 text-white/70 text-sm pointer-events-none"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 4 }}
+              >
                 <motion.div 
-                  className="scroll-indicator"
-                  animate={{ y: [0, 10, 0] }}
+                  className="flex items-center space-x-2"
+                  animate={{ y: [0, -5, 0] }}
                   transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <span>Scroll to explore</span>
-                  <div className="scroll-arrow">↓</div>
+                  <span>Scroll to explore more</span>
+                  <div className="text-lg">↓</div>
                 </motion.div>
               </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
+
+      {/* Welcome Section - First scrollable section */}
+      <motion.section 
+        className="welcome-section py-20 bg-gradient-to-b from-slate-900/50 to-slate-800/50"
+        initial={{ opacity: 0, y: 100 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
+        <div className="section-container text-center">
+          <motion.h1 
+            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            Welcome to TerraCapsule
+          </motion.h1>
+          
+          <motion.p 
+            className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.4 }}
+          >
+            Explore our interactive 3D Earth and discover extraordinary destinations around the globe. 
+            Your ultimate travel experience starts here.
+          </motion.p>
+          
+          <motion.div 
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.6 }}
+          >
+            <button className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105">
+              Start Exploring
+            </button>
+            <button className="px-8 py-4 border border-gray-600 text-gray-300 rounded-lg font-semibold hover:border-gray-500 hover:text-white transition-all duration-300">
+              Learn More
+            </button>
+          </motion.div>
+        </div>
+      </motion.section>
 
       {/* Explore in 3D Section - Appears on scroll */}
       <motion.section 
@@ -536,45 +641,47 @@ export default function Home() {
         </div>
         
         {/* Floating 3D Elements */}
-        <div className="floating-elements-explore">
-          {[...Array(8)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="floating-element-explore"
-              initial={{ 
-                opacity: 0, 
-                scale: 0,
-                rotateX: Math.random() * 360,
-                rotateY: Math.random() * 360,
-                z: -200
-              }}
-              whileInView={{ 
-                opacity: 0.6, 
-                scale: 1,
-                rotateX: 360,
-                rotateY: 360,
-                z: 0
-              }}
-              viewport={{ once: true }}
-              transition={{ 
-                duration: 3 + Math.random() * 2,
-                delay: 2.5 + i * 0.3,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-              style={{
-                position: 'absolute',
-                left: `${10 + Math.random() * 80}%`,
-                top: `${10 + Math.random() * 80}%`,
-                width: '20px',
-                height: '20px',
-                background: `linear-gradient(45deg, #00d4ff, #03dac6)`,
-                borderRadius: Math.random() > 0.5 ? '50%' : '4px',
-                transformStyle: 'preserve-3d'
-              }}
-            />
-          ))}
-        </div>
+        {isClient && (
+          <div className="floating-elements-explore">
+            {floating3DElements.map((element, i) => (
+              <motion.div
+                key={i}
+                className="floating-element-explore"
+                initial={{ 
+                  opacity: 0, 
+                  scale: 0,
+                  rotateX: element.rotateX,
+                  rotateY: element.rotateY,
+                  z: -200
+                }}
+                whileInView={{ 
+                  opacity: 0.6, 
+                  scale: 1,
+                  rotateX: 360,
+                  rotateY: 360,
+                  z: 0
+                }}
+                viewport={{ once: true }}
+                transition={{ 
+                  duration: element.duration,
+                  delay: 2.5 + i * 0.3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{
+                  position: 'absolute',
+                  left: `${element.left}%`,
+                  top: `${element.top}%`,
+                  width: '20px',
+                  height: '20px',
+                  background: `linear-gradient(45deg, #00d4ff, #03dac6)`,
+                  borderRadius: element.isCircle ? '50%' : '4px',
+                  transformStyle: 'preserve-3d'
+                }}
+              />
+            ))}
+          </div>
+        )}
       </motion.section>
 
       {/* Featured Destinations with Scroll Animation */}
