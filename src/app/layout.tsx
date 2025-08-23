@@ -4,6 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "TerraCapsule",
   description: "Interactive 3D Travel Experience",
+  icons: {
+    icon: '/terracapsule.ico',
+  },
 };
 
 export default function RootLayout({

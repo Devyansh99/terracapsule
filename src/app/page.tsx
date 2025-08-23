@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import GoogleEarthGlobe from "../components/GoogleEarthGlobe";
+import CesiumGlobe from '../components/SimpleGlobe';
+import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -260,9 +261,8 @@ export default function Home() {
         <div className="nav-container">
           <div className="nav-logo">
             <div className="logo-icon">
-              <TerraCapsuleLogo />
+              <SimpleAnimatedLogo size="large" />
             </div>
-            <span className="logo-text">TERRACAPSULE</span>
           </div>
           
           <div className="nav-menu">
@@ -307,7 +307,7 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1.5, delay: 0.5 }}
             >
-              <GoogleEarthGlobe />
+              <CesiumGlobe className="w-full h-full" />
               
               <motion.div 
                 className="globe-welcome-text"
