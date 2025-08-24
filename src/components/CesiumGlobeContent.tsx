@@ -73,7 +73,8 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
         viewer.scene.globe.dynamicAtmosphereLighting = false; // Disable for performance
         viewer.scene.globe.showGroundAtmosphere = true;
         viewer.scene.skyBox.show = false; // Remove stars for cleaner look
-        viewer.scene.backgroundColor = Cesium.Color.BLACK;
+        viewer.scene.backgroundColor = Cesium.Color.TRANSPARENT;
+        viewer.scene.canvas.style.background = 'transparent';
         
         // Performance optimizations
         viewer.scene.fog.enabled = false;
@@ -305,10 +306,13 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
       <div
         ref={cesiumContainer}
         className="w-full h-full"
-        style={{ minHeight: '400px' }}
+        style={{ 
+          minHeight: '400px',
+          pointerEvents: isLoaded ? 'auto' : 'none'
+        }}
       />
       {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 rounded-lg">
+        <div className="absolute inset-0 flex items-center justify-center bg-transparent pointer-events-none">
           <div className="flex flex-col items-center space-y-4 text-white">
             <div className="relative">
               <div className="w-20 h-20 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>

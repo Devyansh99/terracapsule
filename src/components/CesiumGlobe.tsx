@@ -12,9 +12,9 @@ interface CesiumGlobeProps {
 const CesiumGlobeContent = dynamic(() => import('./CesiumGlobeContent'), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-gray-900 rounded-lg">
+    <div className="w-full h-full flex items-center justify-center bg-transparent">
       <div className="flex flex-col items-center space-y-3">
-        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-400"></div>
         <div className="text-white text-sm font-medium">Loading 3D Earth...</div>
       </div>
     </div>
@@ -24,12 +24,12 @@ const CesiumGlobeContent = dynamic(() => import('./CesiumGlobeContent'), {
 export default function CesiumGlobe({ className = '', onCountryHover }: CesiumGlobeProps) {
   return (
     <div 
-      className={`relative overflow-hidden rounded-lg ${className}`} 
+      className={`relative overflow-hidden ${className}`} 
       style={{ 
         minHeight: '500px', 
-        height: '70vh',
+        height: '100vh',
         width: '100%',
-        background: '#1a1a2e' 
+        background: 'transparent'
       }}
     >
       <CesiumGlobeContent onCountryHover={onCountryHover} />

@@ -15,10 +15,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <head />
-      <body className="bg-black text-white font-sans antialiased">
-        {children}
+      <body className="bg-black text-white font-sans antialiased overflow-x-hidden min-h-screen">
+        <div className="relative min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   );

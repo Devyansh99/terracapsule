@@ -16,60 +16,42 @@ export default function Home() {
     setIsClient(true);
   }, []);
 
-  // Predefined particle data to avoid hydration issues
-  const particleData = [
-    { left: 20, delay: 2, duration: 18 },
-    { left: 45, delay: 7, duration: 22 },
-    { left: 75, delay: 1, duration: 16 },
-    { left: 15, delay: 9, duration: 20 },
-    { left: 85, delay: 4, duration: 24 },
-    { left: 35, delay: 11, duration: 17 },
-    { left: 65, delay: 6, duration: 19 },
-    { left: 90, delay: 3, duration: 21 },
-    { left: 25, delay: 12, duration: 15 },
-    { left: 55, delay: 8, duration: 23 },
-    { left: 10, delay: 14, duration: 18 },
-    { left: 80, delay: 5, duration: 20 },
-    { left: 40, delay: 10, duration: 16 },
-    { left: 70, delay: 2, duration: 22 },
-    { left: 95, delay: 7, duration: 19 },
-    { left: 5, delay: 13, duration: 17 },
-    { left: 50, delay: 1, duration: 25 },
-    { left: 30, delay: 9, duration: 18 },
-    { left: 60, delay: 4, duration: 21 },
-    { left: 88, delay: 11, duration: 16 },
-    { left: 12, delay: 6, duration: 24 },
-    { left: 77, delay: 3, duration: 20 },
-    { left: 42, delay: 8, duration: 15 },
-    { left: 67, delay: 12, duration: 23 },
-    { left: 22, delay: 5, duration: 19 }
+  // Predefined 3D floating elements data (reduced for performance)
+  const floating3DElements = [
+    { left: 10, top: 20, rotateX: 45, rotateY: 90, isCircle: true, duration: 8 },
+    { left: 80, top: 15, rotateX: 90, rotateY: 180, isCircle: false, duration: 12 },
+    { left: 25, top: 60, rotateX: 180, rotateY: 270, isCircle: true, duration: 10 },
+    { left: 70, top: 75, rotateX: 270, rotateY: 360, isCircle: false, duration: 14 }
   ];
 
-  // Predefined 3D element data
-  const floating3DElements = [
-    { left: 25, top: 30, rotateX: 45, rotateY: 90, duration: 4, isCircle: true },
-    { left: 70, top: 20, rotateX: 180, rotateY: 270, duration: 5, isCircle: false },
-    { left: 15, top: 60, rotateX: 90, rotateY: 180, duration: 3.5, isCircle: true },
-    { left: 85, top: 40, rotateX: 270, rotateY: 45, duration: 4.5, isCircle: false },
-    { left: 40, top: 70, rotateX: 135, rotateY: 315, duration: 3.8, isCircle: true },
-    { left: 60, top: 15, rotateX: 225, rotateY: 135, duration: 4.2, isCircle: false },
-    { left: 80, top: 80, rotateX: 315, rotateY: 225, duration: 3.2, isCircle: true },
-    { left: 20, top: 50, rotateX: 60, rotateY: 120, duration: 4.8, isCircle: false }
+  // Predefined particle data (reduced for performance)
+  const particleData = [
+    { left: 20, delay: 2, duration: 18, top: 10, opacity: 0.3 },
+    { left: 45, delay: 7, duration: 22, top: 30, opacity: 0.2 },
+    { left: 75, delay: 1, duration: 16, top: 60, opacity: 0.4 },
+    { left: 15, delay: 9, duration: 20, top: 80, opacity: 0.3 },
+    { left: 85, delay: 4, duration: 24, top: 40, opacity: 0.2 },
+    { left: 35, delay: 11, duration: 17, top: 70, opacity: 0.3 }
   ];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress((old) => {
-        if (old >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setShowEnterButton(true), 500);
-          return 100;
-        }
-        return old + 1;
-      });
-    }, 50); // Faster progress to match bar animation
+    let startTime = Date.now();
+    const duration = 4000; // 4 seconds total loading time
     
-    return () => clearInterval(interval);
+    const updateProgress = () => {
+      const elapsed = Date.now() - startTime;
+      const newProgress = Math.min((elapsed / duration) * 100, 100);
+      
+      setProgress(newProgress);
+      
+      if (newProgress >= 100) {
+        setTimeout(() => setShowEnterButton(true), 500);
+      } else {
+        requestAnimationFrame(updateProgress);
+      }
+    };
+    
+    requestAnimationFrame(updateProgress);
   }, []);
 
   // Keyboard support for Enter key
@@ -84,11 +66,6 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [showEnterButton, enterSite]);
 
-  const handleLocationClick = (location: string) => {
-    console.log(`Exploring ${location}...`);
-    // Future: Navigate to location details page
-  };
-
   // TerraCapsule Logo Component
   const TerraCapsuleLogo = () => (
     <div className="terra-logo">
@@ -99,49 +76,42 @@ export default function Home() {
         {/* Enhanced Globe Design with geometric patterns */}
         <div className="absolute inset-2 rounded-full overflow-hidden">
           {/* Central Core */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-full shadow-lg shadow-emerald-400/50"></div>
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-4 rounded-full bg-gradient-to-br from-cyan-500/30 to-teal-500/30 backdrop-blur-sm border border-cyan-400/50"
+          />
           
-          {/* Geometric Land Masses */}
-          <div className="absolute top-2 left-3 w-5 h-4 bg-gradient-to-br from-emerald-400 to-green-500 rounded-md opacity-90 transform rotate-12 shadow-sm"></div>
-          <div className="absolute top-5 right-2 w-4 h-5 bg-gradient-to-br from-green-400 to-emerald-600 rounded-lg opacity-85 transform -rotate-6 shadow-sm"></div>
-          <div className="absolute bottom-3 left-4 w-6 h-3 bg-gradient-to-r from-green-500 to-teal-500 rounded-full opacity-90 shadow-sm"></div>
-          <div className="absolute bottom-4 right-4 w-3 h-4 bg-gradient-to-br from-emerald-500 to-green-600 rounded-md opacity-80 transform rotate-45 shadow-sm"></div>
-          
-          {/* Additional smaller landmasses */}
-          <div className="absolute top-7 left-6 w-2 h-2 bg-emerald-400 rounded-full opacity-70"></div>
-          <div className="absolute bottom-6 left-2 w-2 h-3 bg-green-500 rounded-sm opacity-75"></div>
-          <div className="absolute top-6 right-6 w-1 h-2 bg-teal-400 rounded-full opacity-80"></div>
-          
-          {/* Orbital Grid Pattern */}
-          <div className="absolute inset-0 rounded-full border border-cyan-300/20"></div>
-          <div className="absolute inset-2 rounded-full border border-cyan-400/15"></div>
-          <div className="absolute inset-4 rounded-full border border-teal-300/20"></div>
-          
-          {/* Latitude lines */}
-          <div className="absolute top-1/4 left-1 right-1 h-px bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent"></div>
-          <div className="absolute top-1/2 left-0 right-0 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent"></div>
-          <div className="absolute top-3/4 left-1 right-1 h-px bg-gradient-to-r from-transparent via-cyan-300/30 to-transparent"></div>
-          
-          {/* Longitude curves */}
-          <div className="absolute top-1 bottom-1 left-1/3 w-px bg-gradient-to-b from-transparent via-cyan-300/25 to-transparent"></div>
-          <div className="absolute top-1 bottom-1 left-2/3 w-px bg-gradient-to-b from-transparent via-cyan-300/25 to-transparent"></div>
-          
-          {/* Energy pulses */}
+          {/* Floating continents */}
           <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
+            animate={{ 
+              scale: [1, 1.05, 1],
+              opacity: [0.6, 0.9, 0.6]
+            }}
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              delay: 2,
+              ease: "easeInOut"
+            }}
+            className="absolute top-3 left-4 w-2 h-1 bg-emerald-400 rounded-full"
+          />
+          <motion.div
+            animate={{ 
+              scale: [1, 1.1, 1],
               opacity: [0.4, 0.8, 0.4]
             }}
             transition={{
-              duration: 3,
+              duration: 5,
               repeat: Infinity,
+              delay: 1.5,
               ease: "easeInOut"
             }}
-            className="absolute top-3 right-3 w-2 h-2 bg-cyan-400 rounded-full"
+            className="absolute bottom-2 right-2 w-1 h-2 bg-cyan-400 rounded-full"
           />
           <motion.div
-            animate={{
-              scale: [1, 1.3, 1],
+            animate={{ 
+              scale: [1, 1.15, 1],
               opacity: [0.3, 0.7, 0.3]
             }}
             transition={{
@@ -178,10 +148,10 @@ export default function Home() {
     </div>
   );
 
-  // Loading Screen with Enter Button after 100%
+  // Loading Screen - Single Page, No Scrolling
   if (!enterSite) {
     return (
-      <main className="loading-container flex items-center justify-center min-h-screen text-white flex-col relative">
+      <main className="loading-container flex items-center justify-center min-h-screen text-white relative overflow-hidden">
         {/* Animated background particles */}
         {isClient && (
           <div className="absolute inset-0 pointer-events-none">
@@ -191,18 +161,22 @@ export default function Home() {
                 className="floating-particle"
                 style={{
                   left: `${particle.left}%`,
+                  top: `${particle.top}%`,
                   animationDelay: `${particle.delay}s`,
-                  animationDuration: `${particle.duration}s`
+                  animationDuration: `${particle.duration}s`,
+                  opacity: particle.opacity,
+                  willChange: 'transform'
                 }}
               />
             ))}
           </div>
         )}
 
-        <div className="z-10 flex flex-col items-center">
+        {/* Centered Content - Single Page Layout */}
+        <div className="z-10 flex flex-col items-center max-w-6xl px-8">
           <TerraCapsuleLogo />
 
-          <div className="text-center space-y-8 max-w-6xl px-8">
+          <div className="text-center space-y-8 mb-12">
             <h1 className="hero-title">
               TERRA
               <span className="title-highlight">CAPSULE</span>
@@ -227,31 +201,31 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Progress Section - Hide when complete */}
+          {/* Progress Section - Centered Below Title */}
           {!showEnterButton && (
             <div className="progress-section">
               <div className="progress-header">
                 <span className="progress-label">JOURNEY INITIALIZATION</span>
-                <span className="progress-percentage">{Math.floor(progress)}<span className="percentage-symbol">%</span></span>
+                <span className="progress-percentage">{Math.round(progress)}<span className="percentage-symbol">%</span></span>
               </div>
               
               <div className="progress-bar-container">
                 <div 
                   className="progress-bar-fill"
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${Math.round(progress)}%` }}
                 />
               </div>
 
               <p className="progress-status">
-                {progress < 25 && "ESTABLISHING GLOBAL CONNECTIONS"}
-                {progress >= 25 && progress < 50 && "LOADING IMMERSIVE EXPERIENCES"}
-                {progress >= 50 && progress < 75 && "PREPARING INTERACTIVE INTERFACE"}
-                {progress >= 75 && "FINALIZING YOUR ADVENTURE"}
+                {Math.round(progress) < 25 && "ESTABLISHING GLOBAL CONNECTIONS"}
+                {Math.round(progress) >= 25 && Math.round(progress) < 50 && "LOADING IMMERSIVE EXPERIENCES"}
+                {Math.round(progress) >= 50 && Math.round(progress) < 75 && "PREPARING INTERACTIVE INTERFACE"}
+                {Math.round(progress) >= 75 && "FINALIZING YOUR ADVENTURE"}
               </p>
             </div>
           )}
 
-          {/* Enter Section - Show after loading complete */}
+          {/* Enter Section - Replace Progress Section When Complete */}
           {showEnterButton && (
             <div className="enter-section">
               <div className="enter-description">
@@ -279,7 +253,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* Floating Elements */}
+        {/* Floating Elements - Only Show When Enter Button Appears */}
         {showEnterButton && (
           <>
             <div className="absolute top-20 left-20 opacity-30">
@@ -302,599 +276,670 @@ export default function Home() {
     );
   }
 
-  // Main Site
+  // Main Site After Loading
   return (
     <div className="main-site">
-      {/* Navigation Header */}
-      <nav className="site-nav">
-        <div className="nav-container">
-          <div className="nav-logo">
-            <div className="logo-icon">
-              <SimpleAnimatedLogo />
-            </div>
-          </div>
-          
-          <div className="nav-menu">
-            <a href="#destinations" className="nav-link">Destinations</a>
-            <a href="#experiences" className="nav-link">Experiences</a>
-            <a href="#events" className="nav-link">Events</a>
-            <a href="#about" className="nav-link">About</a>
-          </div>
-          
-          <div className="nav-actions">
-            <div className="social-links">
-              <a href="#" className="social-link" aria-label="Instagram">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </a>
-              <a href="#" className="social-link" aria-label="Facebook">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
-              <a href="#" className="social-link" aria-label="Twitter">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                </svg>
-              </a>
-            </div>
-            <button className="nav-button secondary">Sign In</button>
-            <button className="nav-button primary">Get Started</button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section with Google Earth Globe */}
-      <section className="hero-section-main">
-        <div className="hero-container">
-          {/* Main Globe Section - First thing users see */}
-          <div className="globe-hero-section">
-            <motion.div 
-              className="globe-main-container"
-              initial={{ opacity: 0, scale: 0.5, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 1.5, delay: 0.5 }}
-            >
-              <CesiumGlobe className="w-full h-full" />
-              
-              {/* Simple, non-blocking instruction overlay */}
-              <motion.div 
-                className="absolute top-4 left-4 bg-black/40 backdrop-blur-sm text-white px-3 py-2 rounded-lg text-sm border border-white/20 pointer-events-none"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 1, delay: 3 }}
-              >
-                <p>🌍 Interactive Earth • Click countries • Drag to rotate</p>
-              </motion.div>
-              
-              {/* Scroll indicator moved to bottom right */}
-              <motion.div 
-                className="absolute bottom-4 right-4 text-white/70 text-sm pointer-events-none"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 4 }}
-              >
-                <motion.div 
-                  className="flex items-center space-x-2"
-                  animate={{ y: [0, -5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <span>Scroll to explore more</span>
-                  <div className="text-lg">↓</div>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Welcome Section - First scrollable section */}
-      <motion.section 
-        className="welcome-section py-20 bg-gradient-to-b from-slate-900/50 to-slate-800/50"
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 1, ease: "easeOut" }}
+      {/* Full-Screen Immersive Globe Hero Section */}
+      <section 
+        style={{ 
+          position: 'relative', 
+          width: '100%', 
+          height: '100vh', 
+          overflow: 'hidden'
+        }}
       >
-        <div className="section-container text-center">
-          <motion.h1 
-            className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-teal-400 bg-clip-text text-transparent"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
-          >
-            Welcome to TerraCapsule
-          </motion.h1>
-          
-          <motion.p 
-            className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.4 }}
-          >
-            Explore our interactive 3D Earth and discover extraordinary destinations around the globe. 
-            Your ultimate travel experience starts here.
-          </motion.p>
-          
+        {/* Floating Navigation - overlays on top with scroll adaptation */}
+        <motion.nav 
+          className="site-nav"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            pointerEvents: 'none'
+          }}
+        >
+          <div className="nav-container" style={{ pointerEvents: 'auto' }}>
+            <div className="nav-logo">
+              <div className="logo-icon">
+                <SimpleAnimatedLogo />
+              </div>
+            </div>
+            
+            <div className="nav-menu">
+              <a href="#welcome" className="nav-link">Welcome</a>
+              <a href="#destinations" className="nav-link">Destinations</a>
+              <a href="#events" className="nav-link">Events</a>
+              <a href="#about" className="nav-link">About</a>
+            </div>
+            
+            <div className="nav-actions">
+              <div className="social-links">
+                <a href="#" className="social-link" aria-label="Instagram">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                  </svg>
+                </a>
+                <a href="#" className="social-link" aria-label="Twitter">
+                  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                  </svg>
+                </a>
+              </div>
+              <button className="nav-button secondary">Sign In</button>
+              <button className="nav-button primary">Get Started</button>
+            </div>
+          </div>
+        </motion.nav>
+
+        {/* Full-Screen Globe Container */}
+        <div 
+          style={{ 
+            position: 'absolute',
+            inset: 0,
+            zIndex: 1
+          }}
+        >
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.6 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 3, delay: 0.5, ease: "easeOut" }}
+            style={{ 
+              width: '100%',
+              height: '100%'
+            }}
           >
-            <button className="px-8 py-4 bg-gradient-to-r from-cyan-600 to-teal-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/25 transition-all duration-300 hover:scale-105">
-              Start Exploring
-            </button>
-            <button className="px-8 py-4 border border-gray-600 text-gray-300 rounded-lg font-semibold hover:border-gray-500 hover:text-white transition-all duration-300">
-              Learn More
-            </button>
+            <CesiumGlobe className="w-full h-full" />
           </motion.div>
         </div>
-      </motion.section>
 
-      {/* Explore in 3D Section - Appears on scroll */}
-      <motion.section 
-        className="explore-3d-section"
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-200px" }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-      >
-        <div className="section-container">
-          <div className="explore-content-3d">
-            <motion.div 
-              className="explore-text-content"
-              initial={{ opacity: 0, x: -100, rotateY: -20 }}
-              whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+        {/* Subtle animated particles for depth - behind globe */}
+        <div 
+          className="absolute inset-0 overflow-hidden"
+          style={{ 
+            pointerEvents: 'none',
+            zIndex: 0
+          }}
+        >
+          {[...Array(8)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-white rounded-full"
+              style={{
+                left: `${(i * 12) + 10}%`,
+                top: `${(i * 8) + 15}%`,
+                opacity: 0.2 + (i % 3) * 0.1,
+                pointerEvents: 'none'
+              }}
+              animate={{
+                y: [-10, -40],
+                opacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{
+                duration: 8 + (i * 2),
+                repeat: Infinity,
+                delay: i * 1.5,
+                ease: "linear"
+              }}
+            />
+          ))}
+        </div>
+      </section>
+      
+      {/* Content Sections Below Globe */}
+      <div style={{ position: 'relative', zIndex: 10 }}>
+        {/* Welcome Section - Appears with scroll in 3D */}
+        <motion.section 
+          id="welcome"
+          className="explore-3d-section"
+          style={{ 
+            background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)',
+            minHeight: '80vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '4rem 0'
+          }}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="section-container text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 1, delay: 0.3 }}
-              style={{ transformStyle: "preserve-3d" }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
               <motion.h1 
-                className="explore-main-title"
-                initial={{ opacity: 0, y: 50, rotateX: -20 }}
-                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, delay: 0.5 }}
-              >
-                <motion.span
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.7 }}
-                >
-                  Explore the World in
-                </motion.span>
-                <motion.span 
-                  className="title-accent-3d"
-                  initial={{ opacity: 0, scale: 0.8, rotateZ: -10 }}
-                  whileInView={{ opacity: 1, scale: 1, rotateZ: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1, delay: 1 }}
-                > 3D</motion.span>
-              </motion.h1>
-              
-              <motion.p 
-                className="explore-subtitle"
+                className="globe-title"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, delay: 1.2 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                style={{ 
+                  fontSize: 'clamp(2.5rem, 5vw, 4rem)',
+                  marginBottom: '2rem'
+                }}
               >
-                Discover extraordinary destinations, upcoming events, and hidden gems 
-                through our immersive interactive experience.
-              </motion.p>
+                Welcome to TerraCapsule
+              </motion.h1>
               
-              <motion.div 
-                className="hero-stats-3d"
-                initial={{ opacity: 0, y: 40 }}
+              <motion.p 
+                className="globe-subtitle"
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 1, delay: 1.5 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                style={{ 
+                  fontSize: '1.25rem',
+                  maxWidth: '700px',
+                  margin: '0 auto 3rem',
+                  lineHeight: '1.6'
+                }}
               >
-                {[
-                  { number: "500+", label: "Destinations" },
-                  { number: "1000+", label: "Events" },
-                  { number: "50+", label: "Countries" }
-                ].map((stat, index) => (
-                  <motion.div 
-                    key={stat.label}
-                    className="stat-item-3d"
-                    initial={{ opacity: 0, scale: 0.5, rotateY: -45 }}
-                    whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                Explore our interactive 3D Earth and discover extraordinary destinations around the globe. 
+                Your ultimate travel experience starts here.
+              </motion.p>
+
+              <motion.div 
+                className="scroll-indicator"
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.8 }}
+                style={{ 
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '1rem'
+                }}
+              >
+                <span style={{ 
+                  fontSize: '0.9rem', 
+                  color: 'rgba(255, 255, 255, 0.7)' 
+                }}>
+                  Continue exploring below
+                </span>
+                <motion.div 
+                  className="scroll-arrow"
+                  animate={{ 
+                    y: [0, 8, 0]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                  }}
+                  style={{ 
+                    fontSize: '1.5rem',
+                    filter: 'drop-shadow(0 4px 8px rgba(0, 212, 255, 0.3))'
+                  }}
+                >
+                  ↓
+                </motion.div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* Explore in 3D Section */}
+        <motion.section 
+          className="explore-3d-section"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-200px" }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        >
+          <div className="section-container">
+            <div className="explore-content-3d">
+              <motion.div 
+                className="explore-text-content"
+                initial={{ opacity: 0, x: -100, rotateY: -20 }}
+                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 0.3 }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <motion.h1 
+                  className="explore-main-title"
+                  initial={{ opacity: 0, y: 50, rotateX: -20 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, delay: 0.5 }}
+                >
+                  <motion.span
+                    initial={{ opacity: 0, x: -30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 1.7 + index * 0.2 }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                  >
+                    Explore the World in
+                  </motion.span>
+                  <motion.span 
+                    className="title-accent-3d"
+                    initial={{ opacity: 0, scale: 0.8, rotateZ: -10 }}
+                    whileInView={{ opacity: 1, scale: 1, rotateZ: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1, delay: 1 }}
+                  > 3D</motion.span>
+                </motion.h1>
+                
+                <motion.p 
+                  className="explore-subtitle"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 1.2 }}
+                >
+                  Discover extraordinary destinations, upcoming events, and hidden gems 
+                  through our immersive interactive experience.
+                </motion.p>
+                
+                <motion.div 
+                  className="hero-stats-3d"
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 1.5 }}
+                >
+                  {[
+                    { number: "500+", label: "Destinations" },
+                    { number: "1000+", label: "Events" },
+                    { number: "50+", label: "Countries" }
+                  ].map((stat, index) => (
+                    <motion.div 
+                      key={stat.label}
+                      className="stat-item-3d"
+                      initial={{ opacity: 0, scale: 0.5, rotateY: -45 }}
+                      whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.8, delay: 1.7 + index * 0.2 }}
+                      whileHover={{ 
+                        scale: 1.1, 
+                        rotateY: 10,
+                        transition: { duration: 0.3 }
+                      }}
+                    >
+                      <span className="stat-number-3d">{stat.number}</span>
+                      <span className="stat-label-3d">{stat.label}</span>
+                    </motion.div>
+                  ))}
+                </motion.div>
+
+                <motion.div 
+                  className="explore-actions"
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 2.2 }}
+                >
+                  {[
+                    { icon: "🌍", text: "Earth View", active: true },
+                    { icon: "📍", text: "Events", active: false },
+                    { icon: "✈️", text: "Flights", active: false }
+                  ].map((control, index) => (
+                    <motion.button 
+                      key={control.text}
+                      className={`action-btn-3d ${control.active ? 'active' : ''}`}
+                      initial={{ opacity: 0, x: -20, rotateZ: -10 }}
+                      whileInView={{ opacity: 1, x: 0, rotateZ: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.6, delay: 2.4 + index * 0.1 }}
+                      whileHover={{ 
+                        scale: 1.05, 
+                        rotateZ: 2,
+                        transition: { duration: 0.2 }
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {control.icon} {control.text}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              </motion.div>
+              
+              <motion.div 
+                className="explore-visual-container"
+                initial={{ opacity: 0, scale: 0.5, rotateY: 45, z: -100 }}
+                whileInView={{ opacity: 1, scale: 1, rotateY: 0, z: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.5, delay: 0.8 }}
+                style={{ 
+                  transform: "perspective(1000px) rotateY(-5deg) rotateX(-2deg)",
+                  transformStyle: "preserve-3d" 
+                }}
+              >
+                <div className="explore-feature-grid">
+                  <motion.div 
+                    className="feature-card-3d"
+                    initial={{ opacity: 0, rotateX: -90 }}
+                    whileInView={{ opacity: 1, rotateX: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 1.5 }}
                     whileHover={{ 
-                      scale: 1.1, 
-                      rotateY: 10,
+                      rotateX: 5, 
+                      rotateY: 5, 
+                      scale: 1.02,
                       transition: { duration: 0.3 }
                     }}
                   >
-                    <span className="stat-number-3d">{stat.number}</span>
-                    <span className="stat-label-3d">{stat.label}</span>
+                    <div className="feature-icon">🗺️</div>
+                    <h3>Interactive Maps</h3>
+                    <p>Explore detailed 3D maps of destinations</p>
                   </motion.div>
-                ))}
-              </motion.div>
 
-              <motion.div 
-                className="explore-actions"
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 2.2 }}
-              >
-                {[
-                  { icon: "🌍", text: "Earth View", active: true },
-                  { icon: "📍", text: "Events", active: false },
-                  { icon: "✈️", text: "Flights", active: false }
-                ].map((control, index) => (
-                  <motion.button 
-                    key={control.text}
-                    className={`action-btn-3d ${control.active ? 'active' : ''}`}
-                    initial={{ opacity: 0, x: -20, rotateZ: -10 }}
-                    whileInView={{ opacity: 1, x: 0, rotateZ: 0 }}
+                  <motion.div 
+                    className="feature-card-3d"
+                    initial={{ opacity: 0, rotateX: -90 }}
+                    whileInView={{ opacity: 1, rotateX: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 2.4 + index * 0.1 }}
+                    transition={{ duration: 0.8, delay: 1.7 }}
                     whileHover={{ 
-                      scale: 1.05, 
-                      rotateZ: 2,
-                      transition: { duration: 0.2 }
+                      rotateX: 5, 
+                      rotateY: 5, 
+                      scale: 1.02,
+                      transition: { duration: 0.3 }
                     }}
-                    whileTap={{ scale: 0.95 }}
                   >
-                    {control.icon} {control.text}
-                  </motion.button>
-                ))}
+                    <div className="feature-icon">📅</div>
+                    <h3>Live Events</h3>
+                    <p>Discover events happening around the world</p>
+                  </motion.div>
+
+                  <motion.div 
+                    className="feature-card-3d"
+                    initial={{ opacity: 0, rotateX: -90 }}
+                    whileInView={{ opacity: 1, rotateX: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 1.9 }}
+                    whileHover={{ 
+                      rotateX: 5, 
+                      rotateY: 5, 
+                      scale: 1.02,
+                      transition: { duration: 0.3 }
+                    }}
+                  >
+                    <div className="feature-icon">🎯</div>
+                    <h3>Smart Recommendations</h3>
+                    <p>AI-powered travel suggestions</p>
+                  </motion.div>
+
+                  <motion.div 
+                    className="feature-card-3d"
+                    initial={{ opacity: 0, rotateX: -90 }}
+                    whileInView={{ opacity: 1, rotateX: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 2.1 }}
+                    whileHover={{ 
+                      rotateX: 5, 
+                      rotateY: 5, 
+                      scale: 1.02,
+                      transition: { duration: 0.3 }
+                    }}
+                  >
+                    <div className="feature-icon">📱</div>
+                    <h3>Mobile Ready</h3>
+                    <p>Access from anywhere, anytime</p>
+                  </motion.div>
+                </div>
               </motion.div>
+            </div>
+          </div>
+          
+          {/* Floating 3D Elements - Optimized */}
+          {isClient && (
+            <div className="floating-elements-explore">
+              {floating3DElements.map((element, i) => (
+                <motion.div
+                  key={i}
+                  className="floating-element-explore"
+                  initial={{ 
+                    opacity: 0, 
+                    scale: 0
+                  }}
+                  whileInView={{ 
+                    opacity: 0.4, 
+                    scale: 1
+                  }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    duration: element.duration,
+                    delay: 1 + i * 0.2,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                  style={{
+                    position: 'absolute',
+                    left: `${element.left}%`,
+                    top: `${element.top}%`,
+                    width: '16px',
+                    height: '16px',
+                    background: `linear-gradient(45deg, #00d4ff, #03dac6)`,
+                    borderRadius: element.isCircle ? '50%' : '4px',
+                    willChange: 'transform'
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </motion.section>
+
+        {/* Featured Destinations Section */}
+        <motion.section 
+          id="destinations"
+          className="destinations-section"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="section-container">
+            <motion.div 
+              className="section-header"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h2 className="section-title">Featured Destinations</h2>
+              <p className="section-subtitle">Handpicked locations for your next adventure</p>
             </motion.div>
             
-            <motion.div 
-              className="explore-visual-container"
-              initial={{ opacity: 0, scale: 0.5, rotateY: 45, z: -100 }}
-              whileInView={{ opacity: 1, scale: 1, rotateY: 0, z: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5, delay: 0.8 }}
-              style={{ 
-                transform: "perspective(1000px) rotateY(-5deg) rotateX(-2deg)",
-                transformStyle: "preserve-3d" 
-              }}
-            >
-              <div className="explore-feature-grid">
+            <div className="destinations-grid">
+              {[
+                { name: "Tokyo, Japan", image: "🏙️", events: 42, type: "Urban" },
+                { name: "Santorini, Greece", image: "🏛️", events: 18, type: "Island" },
+                { name: "Machu Picchu, Peru", image: "🏔️", events: 12, type: "Historical" },
+                { name: "Dubai, UAE", image: "🏗️", events: 35, type: "Modern" },
+                { name: "Bali, Indonesia", image: "🌴", events: 28, type: "Tropical" },
+                { name: "Iceland", image: "🌋", events: 15, type: "Nature" }
+              ].map((destination, index) => (
                 <motion.div 
-                  className="feature-card-3d"
-                  initial={{ opacity: 0, rotateX: -90 }}
-                  whileInView={{ opacity: 1, rotateX: 0 }}
+                  key={index} 
+                  className="destination-card"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 1.5 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.1 + index * 0.1,
+                    ease: "easeOut"
+                  }}
                   whileHover={{ 
-                    rotateX: 5, 
-                    rotateY: 5, 
-                    scale: 1.02,
+                    scale: 1.03,
                     transition: { duration: 0.3 }
                   }}
                 >
-                  <div className="feature-icon">�️</div>
-                  <h3>Interactive Maps</h3>
-                  <p>Explore detailed 3D maps of destinations</p>
-                </motion.div>
-
-                <motion.div 
-                  className="feature-card-3d"
-                  initial={{ opacity: 0, rotateX: -90 }}
-                  whileInView={{ opacity: 1, rotateX: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 1.7 }}
-                  whileHover={{ 
-                    rotateX: 5, 
-                    rotateY: 5, 
-                    scale: 1.02,
-                    transition: { duration: 0.3 }
-                  }}
-                >
-                  <div className="feature-icon">📅</div>
-                  <h3>Live Events</h3>
-                  <p>Discover events happening around the world</p>
-                </motion.div>
-
-                <motion.div 
-                  className="feature-card-3d"
-                  initial={{ opacity: 0, rotateX: -90 }}
-                  whileInView={{ opacity: 1, rotateX: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 1.9 }}
-                  whileHover={{ 
-                    rotateX: 5, 
-                    rotateY: 5, 
-                    scale: 1.02,
-                    transition: { duration: 0.3 }
-                  }}
-                >
-                  <div className="feature-icon">🎯</div>
-                  <h3>Smart Recommendations</h3>
-                  <p>AI-powered travel suggestions</p>
-                </motion.div>
-
-                <motion.div 
-                  className="feature-card-3d"
-                  initial={{ opacity: 0, rotateX: -90 }}
-                  whileInView={{ opacity: 1, rotateX: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 2.1 }}
-                  whileHover={{ 
-                    rotateX: 5, 
-                    rotateY: 5, 
-                    scale: 1.02,
-                    transition: { duration: 0.3 }
-                  }}
-                >
-                  <div className="feature-icon">📱</div>
-                  <h3>Mobile Ready</h3>
-                  <p>Access from anywhere, anytime</p>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-        
-        {/* Floating 3D Elements */}
-        {isClient && (
-          <div className="floating-elements-explore">
-            {floating3DElements.map((element, i) => (
-              <motion.div
-                key={i}
-                className="floating-element-explore"
-                initial={{ 
-                  opacity: 0, 
-                  scale: 0,
-                  rotateX: element.rotateX,
-                  rotateY: element.rotateY,
-                  z: -200
-                }}
-                whileInView={{ 
-                  opacity: 0.6, 
-                  scale: 1,
-                  rotateX: 360,
-                  rotateY: 360,
-                  z: 0
-                }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: element.duration,
-                  delay: 2.5 + i * 0.3,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-                style={{
-                  position: 'absolute',
-                  left: `${element.left}%`,
-                  top: `${element.top}%`,
-                  width: '20px',
-                  height: '20px',
-                  background: `linear-gradient(45deg, #00d4ff, #03dac6)`,
-                  borderRadius: element.isCircle ? '50%' : '4px',
-                  transformStyle: 'preserve-3d'
-                }}
-              />
-            ))}
-          </div>
-        )}
-      </motion.section>
-
-      {/* Featured Destinations with Scroll Animation */}
-      <motion.section 
-        className="destinations-section"
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="section-container">
-          <motion.div 
-            className="section-header"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="section-title">Featured Destinations</h2>
-            <p className="section-subtitle">Handpicked locations for your next adventure</p>
-          </motion.div>
-          
-          <div className="destinations-grid">
-            {[
-              { name: "Tokyo, Japan", image: "🏙️", events: 42, type: "Urban" },
-              { name: "Santorini, Greece", image: "🏛️", events: 18, type: "Island" },
-              { name: "Machu Picchu, Peru", image: "🏔️", events: 12, type: "Historical" },
-              { name: "Dubai, UAE", image: "🏗️", events: 35, type: "Modern" },
-              { name: "Bali, Indonesia", image: "🌴", events: 28, type: "Tropical" },
-              { name: "Iceland", image: "🌋", events: 15, type: "Nature" }
-            ].map((destination, index) => (
-              <motion.div 
-                key={index} 
-                className="destination-card"
-                initial={{ opacity: 0, y: 50, rotateY: -20 }}
-                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: 0.3 + index * 0.1,
-                  ease: "easeOut"
-                }}
-                whileHover={{ 
-                  scale: 1.05, 
-                  rotateY: 5,
-                  rotateX: 5,
-                  transition: { duration: 0.3 }
-                }}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <div className="destination-image">
-                  <span className="destination-emoji">{destination.image}</span>
-                  <motion.div 
-                    className="destination-overlay"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <motion.button 
-                      className="explore-btn"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
+                  <div className="destination-image">
+                    <span className="destination-emoji">{destination.image}</span>
+                    <motion.div 
+                      className="destination-overlay"
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      Explore
-                    </motion.button>
-                  </motion.div>
-                </div>
-                <div className="destination-info">
-                  <h3 className="destination-name">{destination.name}</h3>
-                  <div className="destination-meta">
-                    <span className="destination-type">{destination.type}</span>
-                    <span className="destination-events">{destination.events} events</span>
+                      <motion.button 
+                        className="explore-btn"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Explore
+                      </motion.button>
+                    </motion.div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </motion.section>
-
-      {/* Upcoming Events with Scroll Animation */}
-      <motion.section 
-        className="events-section"
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="section-container">
-          <motion.div 
-            className="section-header"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="section-title">Upcoming Events</h2>
-            <p className="section-subtitle">Don't miss these amazing experiences</p>
-          </motion.div>
-          
-          <div className="events-timeline">
-            {[
-              { date: "Mar 15", title: "Cherry Blossom Festival", location: "Tokyo, Japan", attendees: "2.5K" },
-              { date: "Apr 2", title: "Music & Arts Festival", location: "Coachella, USA", attendees: "125K" },
-              { date: "May 18", title: "Northern Lights Tour", location: "Reykjavik, Iceland", attendees: "450" },
-              { date: "Jun 10", title: "Summer Solstice", location: "Stonehenge, UK", attendees: "15K" }
-            ].map((event, index) => (
-              <motion.div 
-                key={index} 
-                className="event-card"
-                initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100, rotateY: index % 2 === 0 ? -15 : 15 }}
-                whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
-                viewport={{ once: true }}
-                transition={{ 
-                  duration: 0.8, 
-                  delay: 0.2 + index * 0.15,
-                  ease: "easeOut"
-                }}
-                whileHover={{ 
-                  scale: 1.02, 
-                  x: 10,
-                  transition: { duration: 0.3 }
-                }}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <motion.div 
-                  className="event-date"
-                  initial={{ scale: 0.8, rotateZ: -10 }}
-                  whileInView={{ scale: 1, rotateZ: 0 }}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                >
-                  <span className="event-month">{event.date.split(' ')[0]}</span>
-                  <span className="event-day">{event.date.split(' ')[1]}</span>
+                  <div className="destination-info">
+                    <h3 className="destination-name">{destination.name}</h3>
+                    <div className="destination-meta">
+                      <span className="destination-type">{destination.type}</span>
+                      <span className="destination-events">{destination.events} events</span>
+                    </div>
+                  </div>
                 </motion.div>
-                <div className="event-details">
-                  <motion.h3 
-                    className="event-title"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                  >
-                    {event.title}
-                  </motion.h3>
-                  <motion.p 
-                    className="event-location"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                  >
-                    📍 {event.location}
-                  </motion.p>
-                  <motion.p 
-                    className="event-attendees"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                  >
-                    👥 {event.attendees} attending
-                  </motion.p>
-                </div>
-                <motion.button 
-                  className="event-action"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Join Event
-                </motion.button>
-              </motion.div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </motion.section>
+        </motion.section>
 
-      {/* Footer */}
-      <footer className="site-footer">
-        <div className="footer-container">
-          <div className="footer-content">
-            <div className="footer-brand">
-              <div className="footer-logo">
-                <TerraCapsuleLogo />
-              </div>
-              <h3>TERRACAPSULE</h3>
-              <p>Your gateway to extraordinary destinations</p>
-            </div>
-            <div className="footer-links">
-              <div className="link-group">
-                <h4>Explore</h4>
-                <a href="#">Destinations</a>
-                <a href="#">Events</a>
-                <a href="#">Experiences</a>
-              </div>
-              <div className="link-group">
-                <h4>Company</h4>
-                <a href="#">About Us</a>
-                <a href="#">Contact</a>
-                <a href="#">Careers</a>
-              </div>
-              <div className="link-group">
-                <h4>Support</h4>
-                <a href="#">Help Center</a>
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-              </div>
+        {/* Upcoming Events Section */}
+        <motion.section 
+          className="events-section"
+          initial={{ opacity: 0, y: 100 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="section-container">
+            <motion.div 
+              className="section-header"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h2 className="section-title">Upcoming Events</h2>
+              <p className="section-subtitle">Don't miss these amazing experiences</p>
+            </motion.div>
+            
+            <div className="events-timeline">
+              {[
+                { date: "Mar 15", title: "Cherry Blossom Festival", location: "Tokyo, Japan", attendees: "2.5K" },
+                { date: "Apr 2", title: "Music & Arts Festival", location: "Coachella, USA", attendees: "125K" },
+                { date: "May 18", title: "Northern Lights Tour", location: "Reykjavik, Iceland", attendees: "450" },
+                { date: "Jun 10", title: "Summer Solstice", location: "Stonehenge, UK", attendees: "15K" }
+              ].map((event, index) => (
+                <motion.div 
+                  key={index} 
+                  className="event-card"
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100, rotateY: index % 2 === 0 ? -15 : 15 }}
+                  whileInView={{ opacity: 1, x: 0, rotateY: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ 
+                    duration: 0.8, 
+                    delay: 0.2 + index * 0.15,
+                    ease: "easeOut"
+                  }}
+                  whileHover={{ 
+                    scale: 1.02, 
+                    x: 10,
+                    transition: { duration: 0.3 }
+                  }}
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <motion.div 
+                    className="event-date"
+                    initial={{ scale: 0.8, rotateZ: -10 }}
+                    whileInView={{ scale: 1, rotateZ: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                  >
+                    <span className="event-month">{event.date.split(' ')[0]}</span>
+                    <span className="event-day">{event.date.split(' ')[1]}</span>
+                  </motion.div>
+                  <div className="event-details">
+                    <motion.h3 
+                      className="event-title"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
+                    >
+                      {event.title}
+                    </motion.h3>
+                    <motion.p 
+                      className="event-location"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                    >
+                      📍 {event.location}
+                    </motion.p>
+                    <motion.p 
+                      className="event-attendees"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                    >
+                      👥 {event.attendees} attending
+                    </motion.p>
+                  </div>
+                  <motion.button 
+                    className="event-action"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    Join Event
+                  </motion.button>
+                </motion.div>
+              ))}
             </div>
           </div>
-          <div className="footer-bottom">
-            <p>&copy; 2025 TerraCapsule. All rights reserved.</p>
+        </motion.section>
+
+        {/* Footer */}
+        <footer className="site-footer">
+          <div className="footer-container">
+            <div className="footer-content">
+              <div className="footer-brand">
+                <div className="footer-logo">
+                  <TerraCapsuleLogo />
+                </div>
+                <h3>TERRACAPSULE</h3>
+                <p>Your gateway to extraordinary destinations</p>
+              </div>
+              <div className="footer-links">
+                <div className="link-group">
+                  <h4>Explore</h4>
+                  <a href="#">Destinations</a>
+                  <a href="#">Events</a>
+                  <a href="#">Experiences</a>
+                </div>
+                <div className="link-group">
+                  <h4>Company</h4>
+                  <a href="#">About Us</a>
+                  <a href="#">Contact</a>
+                  <a href="#">Careers</a>
+                </div>
+                <div className="link-group">
+                  <h4>Support</h4>
+                  <a href="#">Help Center</a>
+                  <a href="#">Privacy</a>
+                  <a href="#">Terms</a>
+                </div>
+              </div>
+            </div>
+            <div className="footer-bottom">
+              <p>&copy; 2025 TerraCapsule. All rights reserved.</p>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }

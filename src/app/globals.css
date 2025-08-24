@@ -54,7 +54,7 @@
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  background: #0a0a0a;
+  background: #000000;
   color: white;
   overflow-x: hidden;
   line-height: 1.2;
@@ -62,11 +62,25 @@ body {
   /* Performance optimizations */
   will-change: scroll-position;
   transform: translateZ(0);
+  /* Prevent horizontal scrolling */
+  max-width: 100vw;
 }
 
-/* Smooth scroll effect - Performance optimized */
+/* Enhanced smooth scroll effect */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Create depth and layering like tessarakt */
+.main-site {
+  position: relative;
+  min-height: 100vh;
+  background: 
+    radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 0% 50%, rgba(147, 51, 234, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 100% 50%, rgba(6, 182, 212, 0.02) 0%, transparent 50%),
+    #000000;
 }
 
 /* Performance optimizations for all animated elements */
@@ -113,7 +127,130 @@ html {
 }
 
 /* Progress Bar Styles */
-/* 3D Hero Section Styles */
+/* Immersive Globe Section Styles - Tessarakt-inspired */
+.immersive-globe-section {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: 
+    radial-gradient(ellipse at center top, rgba(26, 26, 46, 0.8) 0%, transparent 50%),
+    radial-gradient(ellipse at center bottom, rgba(15, 23, 42, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 30%, #0f172a 70%, #000000 100%);
+  /* Create depth with multiple gradient layers */
+}
+
+.immersive-globe-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.globe-immersive-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  background: transparent;
+}
+
+.globe-full-screen {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.globe-full-screen canvas {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Floating navigation with better backdrop */
+.immersive-globe-section nav {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.3s ease !important;
+}
+
+.immersive-globe-section nav:hover {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Content sections below the globe */
+.content-sections {
+  position: relative;
+  z-index: 10;
+  background: transparent;
+  min-height: 100vh;
+}
+
+.content-section {
+  position: relative;
+  padding: 120px 2rem 80px 2rem;
+  backdrop-filter: blur(10px);
+}
+
+.content-section:first-child {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(10, 10, 10, 0.3) 20%,
+    rgba(26, 26, 46, 0.6) 50%,
+    rgba(22, 33, 62, 0.8) 100%
+  );
+}
+
+.welcome-section {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(10, 10, 10, 0.4) 15%,
+    rgba(26, 26, 46, 0.7) 40%,
+    rgba(22, 33, 62, 0.8) 70%,
+    rgba(15, 23, 42, 0.9) 100%
+  );
+  backdrop-filter: blur(20px);
+}
+
+.features-section {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.8) 0%,
+    rgba(26, 26, 46, 0.6) 50%,
+    rgba(22, 33, 62, 0.8) 100%
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.02); /* Very subtle border for interior sections */
+}
+
+.destinations-section {
+  background: linear-gradient(
+    135deg,
+    rgba(22, 33, 62, 0.8) 0%,
+    rgba(15, 23, 42, 0.6) 50%,
+    rgba(26, 26, 46, 0.8) 100%
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+/* 3D Hero Section Styles (Legacy - keeping for reference) */
 .hero-section-main {
   padding-top: 6rem;
   min-height: 100vh;
@@ -181,14 +318,35 @@ html {
 
 /* Explore in 3D Section Styles */
 .explore-3d-section {
-  padding: 8rem 0;
+  padding: 8rem 2rem;
   min-height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   position: relative;
   perspective: 1000px;
   overflow: hidden;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.explore-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  transform-style: preserve-3d;
+  z-index: 10;
+  position: relative;
+}
+
+.explore-content {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  transform-style: preserve-3d;
+  z-index: 10;
+  position: relative;
 }
 
 .explore-content-3d {
@@ -227,9 +385,13 @@ html {
 }
 
 .hero-stats-3d {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
-  margin-bottom: 3rem;
+  margin: 3rem auto;
+  max-width: 1000px;
+  justify-items: center;
+  align-items: center;
   flex-wrap: wrap;
 }
 
@@ -316,10 +478,12 @@ html {
 
 .explore-feature-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
   width: 100%;
-  max-width: 500px;
+  max-width: 1000px;
+  margin: 0 auto;
+  justify-items: center;
 }
 
 .feature-card-3d {
@@ -1197,6 +1361,45 @@ html {
   max-width: 800px;
   margin: 0 auto;
   padding: 0 2rem;
+}
+
+/* Fixed Progress Section for top positioning */
+.progress-section-fixed {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 3rem;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(25px);
+  border-radius: 24px;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(0, 212, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.progress-section-fixed:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  box-shadow: 
+    0 16px 50px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(0, 212, 255, 0.15);
+}
+
+.progress-section-fixed .progress-header {
+  margin-bottom: 1.5rem;
+}
+
+.progress-section-fixed .progress-bar-container {
+  margin-bottom: 2rem;
+}
+
+.progress-section-fixed .progress-status {
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.05em;
 }
 
 .progress-header {
@@ -2192,4 +2395,379 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to bottom, #0891b2, #047857);
+}
+
+/* Additional 3D Styling Classes */
+.section-title-3d {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #00D4FF, #0EA5E9, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.section-description-3d {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.explore-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  transform-style: preserve-3d;
+}
+
+.destinations-3d .stat-item-3d {
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.destination-card .destination-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.destination-card .destination-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #00D4FF;
+  margin-bottom: 0.5rem;
+}
+
+.destination-card .explore-btn {
+  margin-top: 1rem;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.destination-card:hover .explore-btn {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+/* Experience Section 3D Styles */
+.experience-content-3d {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.experience-text-3d {
+  transform-style: preserve-3d;
+}
+
+.experience-title-3d {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.experience-description-3d {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.experience-features-3d {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.feature-item-3d {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.7);
+  padding-left: 1rem;
+  border-left: 2px solid rgba(0, 212, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.feature-item-3d:hover {
+  border-left-color: rgba(0, 212, 255, 0.6);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.experience-visual-3d {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.experience-demo {
+  width: 100%;
+  max-width: 350px;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.experience-icon {
+  font-size: 4rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.demo-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.demo-description {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 2rem;
+}
+
+.demo-action {
+  margin-top: 1rem;
+}
+
+/* Events Section 3D Styles */
+.events-container-3d {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.event-card {
+  padding: 2.5rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px) rotateX(2deg);
+  box-shadow: 0 25px 50px rgba(0, 212, 255, 0.2);
+}
+
+.event-header-3d {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.event-icon {
+  font-size: 2.5rem !important;
+}
+
+.event-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-type-3d {
+  font-size: 0.875rem;
+  color: #00D4FF;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.event-date-3d {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.event-title-3d {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.event-description-3d {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.event-action {
+  align-self: flex-start;
+}
+
+/* About Section 3D Styles */
+.about-content-3d {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.about-mission-3d {
+  transform-style: preserve-3d;
+}
+
+.mission-title-3d {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.mission-description-3d {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.mission-vision-3d {
+  font-size: 1.125rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+}
+
+.about-stats-3d {
+  transform-style: preserve-3d;
+}
+
+.about-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.metric-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.stat-icon-3d {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.metric-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #00D4FF;
+  margin-bottom: 0.5rem;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Welcome Section 3D Styles */
+.welcome-3d .explore-visual-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-title-3d {
+  font-size: clamp(3rem, 8vw, 6rem) !important;
+  margin-bottom: 2rem !important;
+}
+
+.hero-description-3d {
+  font-size: 1.25rem !important;
+  max-width: 700px !important;
+  margin-bottom: 3rem !important;
+}
+
+.welcome-actions {
+  justify-content: center;
+  gap: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.welcome-actions .stat-item-3d {
+  flex: none;
+  width: auto;
+  min-width: 200px;
+}
+
+.action-primary .action-btn-3d {
+  background: rgba(0, 212, 255, 0.2);
+  border-color: rgba(0, 212, 255, 0.4);
+  color: #00d4ff;
+}
+
+.action-primary .action-btn-3d:hover {
+  background: rgba(0, 212, 255, 0.3);
+  border-color: rgba(0, 212, 255, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .experience-content-3d,
+  .about-content-3d {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .explore-feature-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .hero-stats-3d {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .about-metrics {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .events-container-3d {
+    gap: 1.5rem;
+  }
+  
+  .event-card {
+    padding: 1.5rem;
+  }
+  
+  .section-title-3d {
+    font-size: 2.5rem;
+  }
+  
+  .explore-3d-section {
+    padding: 4rem 1rem;
+  }
+  
+  .experience-title-3d,
+  .mission-title-3d {
+    text-align: center !important;
+  }
 }
