@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import CountryTooltip from './CountryTooltip';
+import { getCountryInfo, CountryInfo } from '../utils/countryAPI';
 
 interface CesiumGlobeContentProps {
   onCountryHover?: (country: string | null) => void;
@@ -11,6 +13,9 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const [countryInfo, setCountryInfo] = useState<CountryInfo | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [tooltipVisible, setTooltipVisible] = useState(false);
   const viewerRef = useRef<any>(null);
 
   useEffect(() => {
@@ -191,10 +196,16 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
         // Enhanced mouse interaction for country hover and clicks (performance optimized)
         hoverThrottle = setTimeout(() => {}, 0); // Initialize
         
-        viewer.cesiumWidget.screenSpaceEventHandler.setInputAction((movement: any) => {
+        viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(async (movement: any) => {
           clearTimeout(hoverThrottle);
-          hoverThrottle = setTimeout(() => {
+          hoverThrottle = setTimeout(async () => {
             const pickedObject = viewer.scene.pick(movement.endPosition);
+            
+            // Update tooltip position
+            setTooltipPosition({
+              x: movement.endPosition.x,
+              y: movement.endPosition.y
+            });
             
             if (Cesium.defined(pickedObject) && (pickedObject.id as any)?.countryInfo) {
               const country = (pickedObject.id as any).countryInfo.name;
@@ -203,6 +214,18 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
               pickedObject.id.label.show = true;
               setHoveredCountry(country);
               onCountryHover?.(country);
+              
+              // Get detailed country information
+              try {
+                const countryData = await getCountryInfo(getCountryCodeFromName(country));
+                if (countryData) {
+                  setCountryInfo(countryData);
+                  setTooltipVisible(true);
+                }
+              } catch (error) {
+                console.warn('Error fetching country data:', error);
+              }
+              
               viewer.scene.requestRender();
             } else {
               // Hide all labels when not hovering
@@ -212,6 +235,8 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
                 }
               });
               setHoveredCountry(null);
+              setCountryInfo(null);
+              setTooltipVisible(false);
               onCountryHover?.(null);
               viewer.scene.requestRender();
             }
@@ -253,6 +278,24 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
         console.error('Failed to initialize Cesium:', err);
         setError(`Failed to load 3D Earth: ${err instanceof Error ? err.message : 'Unknown error'}`);
       }
+    };
+
+    // Helper function to get country code from country name
+    const getCountryCodeFromName = (countryName: string): string => {
+      const countryCodeMap: { [key: string]: string } = {
+        'United States': 'US',
+        'China': 'CN',
+        'Brazil': 'BR',
+        'Russia': 'RU',
+        'India': 'IN',
+        'Australia': 'AU',
+        'Japan': 'JP',
+        'United Kingdom': 'GB',
+        'France': 'FR',
+        'Germany': 'DE'
+      };
+      
+      return countryCodeMap[countryName] || countryName.substring(0, 2).toUpperCase();
     };
 
     initializeCesium();
@@ -330,11 +373,16 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
           </div>
         </div>
       )}
-      {hoveredCountry && (
+      {hoveredCountry && !tooltipVisible && (
         <div className="absolute top-4 left-4 bg-black bg-opacity-75 text-white px-3 py-2 rounded-md text-sm font-medium border border-gray-600">
           📍 {hoveredCountry}
         </div>
       )}
+      <CountryTooltip
+        countryInfo={countryInfo}
+        position={tooltipPosition}
+        visible={tooltipVisible}
+      />
     </>
   );
 }
