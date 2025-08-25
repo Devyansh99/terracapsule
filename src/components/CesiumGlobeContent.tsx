@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import CountryTooltip from './CountryTooltip';
-import { getCountryInfo, CountryInfo } from '../utils/countryAPI';
+import { getCountryInfo, CountryInfo, formatPopulation, formatArea, getPrimaryLanguage, getPrimaryCurrency } from '../utils/countryAPI';
 
 interface CesiumGlobeContentProps {
   onCountryHover?: (country: string | null) => void;
@@ -17,6 +17,17 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const viewerRef = useRef<any>(null);
+  
+  // Side panel states for click-to-pin functionality
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<CountryInfo | null>(null);
+  
+  // Function to close side panel and re-enable hover
+  const closeSidePanel = () => {
+    setIsPanelOpen(false);
+    setSelectedCountry(null);
+    // Hover will be re-enabled automatically since isPanelOpen will be false
+  };
 
   useEffect(() => {
     let viewer: any = null;
@@ -197,6 +208,9 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
         hoverThrottle = setTimeout(() => {}, 0); // Initialize
         
         viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(async (movement: any) => {
+          // Disable hover when side panel is open
+          if (isPanelOpen) return;
+          
           clearTimeout(hoverThrottle);
           hoverThrottle = setTimeout(async () => {
             const pickedObject = viewer.scene.pick(movement.endPosition);
@@ -243,31 +257,46 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
           }, 16); // Throttle to ~60fps
         }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
-        // Click handler for country selection
-        viewer.cesiumWidget.screenSpaceEventHandler.setInputAction((click: any) => {
+        // Click handler for country selection - opens side panel
+        viewer.cesiumWidget.screenSpaceEventHandler.setInputAction(async (click: any) => {
           const pickedObject = viewer.scene.pick(click.position);
           
           if (Cesium.defined(pickedObject) && (pickedObject.id as any)?.countryInfo) {
             const country = (pickedObject.id as any).countryInfo.name;
+            const countryData = (pickedObject.id as any).countryInfo;
             
-            // Fly to country
+            // Fly to country with smooth animation
             viewer.camera.flyTo({
               destination: Cesium.Cartesian3.fromDegrees(
-                (pickedObject.id as any).countryInfo.lng,
-                (pickedObject.id as any).countryInfo.lat,
-                8000000 // Zoom level
+                countryData.lng,
+                countryData.lat,
+                6000000 // Closer zoom for better view
               ),
-              duration: 2.0
+              duration: 1.5
             });
             
-            setHoveredCountry(country);
-            onCountryHover?.(country);
-            
-            // Auto-hide after 5 seconds
-            setTimeout(() => {
-              setHoveredCountry(null);
-              onCountryHover?.(null);
-            }, 5000);
+            // Get detailed country information and open side panel
+            try {
+              const detailedCountryInfo = await getCountryInfo(getCountryCodeFromName(country));
+              if (detailedCountryInfo) {
+                setSelectedCountry(detailedCountryInfo);
+                setIsPanelOpen(true);
+                
+                // Hide hover tooltip and disable hover interactions
+                setTooltipVisible(false);
+                setCountryInfo(null);
+                setHoveredCountry(null);
+                
+                // Hide all labels
+                viewer.entities.values.forEach((entity: any) => {
+                  if (entity.label) {
+                    entity.label.show = false;
+                  }
+                });
+              }
+            } catch (error) {
+              console.warn('Error fetching detailed country data:', error);
+            }
           }
         }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
 
@@ -373,16 +402,206 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
           </div>
         </div>
       )}
-      {hoveredCountry && !tooltipVisible && (
-        <div className="absolute top-4 left-4 bg-black bg-opacity-75 text-white px-3 py-2 rounded-md text-sm font-medium border border-gray-600">
+      {hoveredCountry && !tooltipVisible && !isPanelOpen && (
+        <div className="absolute top-20 left-4 bg-black bg-opacity-75 text-white px-3 py-2 rounded-md text-sm font-medium border border-gray-600">
           📍 {hoveredCountry}
         </div>
       )}
-      <CountryTooltip
-        countryInfo={countryInfo}
-        position={tooltipPosition}
-        visible={tooltipVisible}
-      />
+      {!isPanelOpen && (
+        <CountryTooltip
+          countryInfo={countryInfo}
+          position={tooltipPosition}
+          visible={tooltipVisible}
+        />
+      )}
+      
+      {/* Side Panel - Click-to-pin country information */}
+      {isPanelOpen && selectedCountry && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '0',
+            right: '0',
+            width: '400px',
+            height: '100vh',
+            background: 'rgba(15, 23, 42, 0.96)',
+            backdropFilter: 'blur(25px)',
+            borderLeft: '1px solid rgba(0, 212, 255, 0.2)',
+            zIndex: 100000,
+            overflowY: 'auto',
+            pointerEvents: 'auto',
+            transform: isPanelOpen ? 'translateX(0)' : 'translateX(100%)',
+            transition: 'transform 0.3s ease-in-out',
+            boxShadow: '-10px 0 50px rgba(0, 0, 0, 0.5)'
+          }}
+        >
+          {/* Close button */}
+          <button
+            onClick={closeSidePanel}
+            style={{
+              position: 'absolute',
+              top: '20px',
+              right: '20px',
+              width: '32px',
+              height: '32px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              color: '#fff',
+              fontSize: '18px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 100001,
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+              e.currentTarget.style.transform = 'scale(1.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            ×
+          </button>
+          
+          {/* Country Content - Custom layout for side panel */}
+          <div style={{ padding: '20px', paddingTop: '60px', color: '#fff' }}>
+            {/* Header with Flag and Country Name */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '12px', 
+              marginBottom: '24px',
+              paddingBottom: '16px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <img 
+                src={selectedCountry.flags.svg} 
+                alt={`${selectedCountry.name.common} flag`}
+                style={{ 
+                  width: '48px', 
+                  height: '32px', 
+                  objectFit: 'cover',
+                  borderRadius: '4px',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                }}
+              />
+              <div>
+                <h2 style={{ 
+                  fontSize: '24px', 
+                  fontWeight: 'bold', 
+                  margin: 0,
+                  color: '#00D4FF'
+                }}>
+                  {selectedCountry.name.common}
+                </h2>
+                <p style={{ 
+                  fontSize: '14px', 
+                  color: 'rgba(255, 255, 255, 0.7)', 
+                  margin: 0 
+                }}>
+                  {selectedCountry.name.official}
+                </p>
+              </div>
+            </div>
+
+            {/* Country Details */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Basic Info */}
+              <div style={{ 
+                background: 'rgba(255, 255, 255, 0.05)', 
+                padding: '16px', 
+                borderRadius: '8px',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <h3 style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '600', 
+                  marginBottom: '12px',
+                  color: '#03DAC6'
+                }}>
+                  Basic Information
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Capital:</span>
+                    <span>{selectedCountry.capital?.[0] || 'N/A'}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Population:</span>
+                    <span>{formatPopulation(selectedCountry.population)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Area:</span>
+                    <span>{formatArea(selectedCountry.area)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Region:</span>
+                    <span>{selectedCountry.region}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Languages & Currency */}
+              <div style={{ 
+                background: 'rgba(255, 255, 255, 0.05)', 
+                padding: '16px', 
+                borderRadius: '8px',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <h3 style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '600', 
+                  marginBottom: '12px',
+                  color: '#03DAC6'
+                }}>
+                  Language & Currency
+                </h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Language:</span>
+                    <span>{getPrimaryLanguage(selectedCountry.languages)}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Currency:</span>
+                    <span>{getPrimaryCurrency(selectedCountry.currencies)}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div style={{ 
+                marginTop: '24px',
+                padding: '16px',
+                background: 'rgba(0, 212, 255, 0.1)',
+                borderRadius: '8px',
+                border: '1px solid rgba(0, 212, 255, 0.2)',
+                textAlign: 'center'
+              }}>
+                <p style={{ 
+                  fontSize: '14px', 
+                  color: '#00D4FF',
+                  margin: '0 0 8px 0',
+                  fontWeight: '500'
+                }}>
+                  🌍 Exploring {selectedCountry.name.common}
+                </p>
+                <p style={{ 
+                  fontSize: '12px', 
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  margin: 0
+                }}>
+                  Click the × to close and continue exploring
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

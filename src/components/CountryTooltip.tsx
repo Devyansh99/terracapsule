@@ -25,7 +25,7 @@ export default function CountryTooltip({ countryInfo, position, visible }: Count
           style={{
             position: 'fixed',
             left: Math.min(position.x + 15, window.innerWidth - 320),
-            top: Math.max(position.y - 10, 10),
+            top: Math.max(position.y - 10, 80), // Account for navigation bar (approximately 80px)
             zIndex: 10000,
             pointerEvents: 'none',
           }}
