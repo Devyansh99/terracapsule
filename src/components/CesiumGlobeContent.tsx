@@ -215,10 +215,17 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
           hoverThrottle = setTimeout(async () => {
             const pickedObject = viewer.scene.pick(movement.endPosition);
             
-            // Update tooltip position
+            // Simple and reliable tooltip positioning
+            const canvas = viewer.scene.canvas;
+            const rect = canvas.getBoundingClientRect();
+            
+            // Mouse position relative to the entire viewport
+            const mouseX = rect.left + movement.endPosition.x;
+            const mouseY = rect.top + movement.endPosition.y;
+            
             setTooltipPosition({
-              x: movement.endPosition.x,
-              y: movement.endPosition.y
+              x: mouseX,
+              y: mouseY
             });
             
             if (Cesium.defined(pickedObject) && (pickedObject.id as any)?.countryInfo) {
@@ -435,41 +442,45 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
             boxShadow: '-10px 0 50px rgba(0, 0, 0, 0.5)'
           }}
         >
-          {/* Close button */}
+          {/* Enhanced Close button */}
           <button
             onClick={closeSidePanel}
             style={{
               position: 'absolute',
-              top: '20px',
+              top: '90px', // Moved below navigation bar height (~80px + margin)
               right: '20px',
-              width: '32px',
-              height: '32px',
-              background: 'rgba(255, 255, 255, 0.1)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              borderRadius: '50%',
+              width: '40px',
+              height: '40px',
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              borderRadius: '12px',
               color: '#fff',
-              fontSize: '18px',
+              fontSize: '20px',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               zIndex: 100001,
-              transition: 'all 0.2s ease'
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+              backdropFilter: 'blur(10px)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-              e.currentTarget.style.transform = 'scale(1.1)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(239, 68, 68, 0.8), rgba(220, 38, 38, 0.6))';
+              e.currentTarget.style.transform = 'scale(1.05) rotate(90deg)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(239, 68, 68, 0.4)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05))';
+              e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.3)';
             }}
           >
             ×
           </button>
           
           {/* Country Content - Custom layout for side panel */}
-          <div style={{ padding: '20px', paddingTop: '60px', color: '#fff' }}>
+          <div style={{ padding: '20px', paddingTop: '130px', color: '#fff' }}>
             {/* Header with Flag and Country Name */}
             <div style={{ 
               display: 'flex', 

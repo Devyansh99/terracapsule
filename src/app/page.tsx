@@ -10,6 +10,7 @@ export default function Home() {
   const [showEnterButton, setShowEnterButton] = useState(false);
   const [enterSite, setEnterSite] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [globeInteractive, setGlobeInteractive] = useState(false);
 
   // Ensure client-side rendering to prevent hydration issues
   useEffect(() => {
@@ -65,6 +66,60 @@ export default function Home() {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [showEnterButton, enterSite]);
+
+  // Click-to-Interact functionality for globe
+  useEffect(() => {
+    if (!enterSite) return;
+
+    let timeoutId2: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      if (!globeInteractive) {
+        const overlay = document.getElementById('click-to-interact-overlay');
+        if (overlay) {
+          overlay.style.opacity = '1';
+          overlay.style.pointerEvents = 'auto';
+        }
+      }
+    };
+
+    const handleGlobeClick = (e: Event) => {
+      e.stopPropagation();
+      setGlobeInteractive(true);
+      const overlay = document.getElementById('click-to-interact-overlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.pointerEvents = 'none';
+      }
+    };
+
+    const globeContainer = document.getElementById('globe-container');
+    const overlay = document.getElementById('click-to-interact-overlay');
+    
+    if (globeContainer && overlay) {
+      // Show overlay immediately when globe loads
+      overlay.style.opacity = '1';
+      overlay.style.pointerEvents = 'auto';
+
+      // Hide after 4 seconds if not clicked
+      timeoutId2 = setTimeout(() => {
+        if (!globeInteractive) {
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+        }
+      }, 4000);
+
+      // Add scroll listener
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      overlay.addEventListener('click', handleGlobeClick);
+      
+      return () => {
+        clearTimeout(timeoutId2);
+        window.removeEventListener('scroll', handleScroll);
+        overlay.removeEventListener('click', handleGlobeClick);
+      };
+    }
+  }, [enterSite, globeInteractive]);
 
   // TerraCapsule Logo Component
   const TerraCapsuleLogo = () => (
@@ -336,8 +391,9 @@ export default function Home() {
           </div>
         </motion.nav>
 
-        {/* Full-Screen Globe Container */}
+        {/* Full-Screen Globe Container with Click-to-Interact */}
         <div 
+          id="globe-container"
           style={{ 
             position: 'absolute',
             inset: 0,
@@ -350,10 +406,48 @@ export default function Home() {
             transition={{ duration: 3, delay: 0.5, ease: "easeOut" }}
             style={{ 
               width: '100%',
-              height: '100%'
+              height: '100%',
+              position: 'relative'
             }}
           >
             <CesiumGlobe className="w-full h-full" />
+            
+            {/* Click to Interact Overlay */}
+            <div
+              id="click-to-interact-overlay"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(0, 0, 0, 0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+                cursor: 'pointer',
+                opacity: 0,
+                pointerEvents: 'none',
+                transition: 'opacity 0.3s ease'
+              }}
+            >
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.9)',
+                backdropFilter: 'blur(20px)',
+                padding: '24px 32px',
+                borderRadius: '16px',
+                border: '1px solid rgba(0, 212, 255, 0.3)',
+                color: '#fff',
+                textAlign: 'center',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.5)'
+              }}>
+                <div style={{ fontSize: '24px', marginBottom: '12px' }}>🌍</div>
+                <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '8px' }}>
+                  Click to Interact with Globe
+                </h3>
+                <p style={{ fontSize: '14px', opacity: 0.8, margin: 0 }}>
+                  Tap anywhere to explore countries and hover for details
+                </p>
+              </div>
+            </div>
           </motion.div>
         </div>
 
