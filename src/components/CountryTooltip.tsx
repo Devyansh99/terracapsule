@@ -1,8 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CountryInfo, formatPopulation, formatArea, getPrimaryLanguage, getPrimaryCurrency } from '../utils/countryAPI';
+
+// API Keys
+const GEONAMES_USERNAME = 'devyansh_agarwal';
+const EVENTBRITE_TOKEN = 'RZWIX4RA7XXXZDQ7IN';
+
+// Quick weather fetch function
+async function fetchQuickWeather(country: string) {
+  try {
+    const geoRes = await fetch(`http://api.geonames.org/searchJSON?q=${country}&maxRows=1&username=${GEONAMES_USERNAME}`);
+    if (!geoRes.ok) return null;
+    const geoData = await geoRes.json();
+    const city = geoData.geonames?.[0];
+    if (!city) return null;
+    
+    const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true`);
+    if (!weatherRes.ok) return null;
+    const weatherData = await weatherRes.json();
+    return weatherData.current_weather || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+// Quick events preview fetch
+async function fetchEventsPreview(country: string) {
+  try {
+    const res = await fetch(`https://www.eventbriteapi.com/v3/events/search/?location.address=${country}&token=${EVENTBRITE_TOKEN}&page_size=2`);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.events || []).slice(0, 2);
+  } catch (error) {
+    return [];
+  }
+}
 
 interface CountryTooltipProps {
   countryInfo: CountryInfo | null;
@@ -11,6 +45,31 @@ interface CountryTooltipProps {
 }
 
 export default function CountryTooltip({ countryInfo, position, visible }: CountryTooltipProps) {
+  const [weather, setWeather] = useState<any>(null);
+  const [events, setEvents] = useState<any[]>([]);
+  const [loadingData, setLoadingData] = useState(false);
+
+  // Load additional data when tooltip becomes visible
+  useEffect(() => {
+    if (!visible || !countryInfo) {
+      setWeather(null);
+      setEvents([]);
+      return;
+    }
+
+    setLoadingData(true);
+    Promise.all([
+      fetchQuickWeather(countryInfo.name.common),
+      fetchEventsPreview(countryInfo.name.common)
+    ]).then(([weatherData, eventsData]) => {
+      setWeather(weatherData);
+      setEvents(eventsData);
+      setLoadingData(false);
+    }).catch(() => {
+      setLoadingData(false);
+    });
+  }, [visible, countryInfo?.name.common]);
+
   if (!countryInfo || !visible) return null;
 
   // Robust positioning logic to keep tooltip fully visible
@@ -195,6 +254,71 @@ export default function CountryTooltip({ countryInfo, position, visible }: Count
                   <span className="tooltip-label" style={{ fontWeight: 500, color: '#00d4ff', marginRight: 8 }}>🕐 Timezone</span>
                   <span className="tooltip-value" style={{ fontWeight: 400, color: '#eafcff' }}>{countryInfo.timezones[0]}</span>
                 </div>
+              )}
+
+              {/* Weather Section */}
+              {weather && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  style={{
+                    marginTop: '0.75rem',
+                    padding: '0.75rem',
+                    background: 'rgba(0, 212, 255, 0.08)',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(0, 212, 255, 0.15)'
+                  }}
+                >
+                  <div className="tooltip-row">
+                    <span className="tooltip-label" style={{ fontWeight: 500, color: '#03dac6', marginRight: 8 }}>🌤️ Current Weather</span>
+                    <span className="tooltip-value" style={{ fontWeight: 400, color: '#eafcff' }}>
+                      {weather.temperature}°C
+                    </span>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Events Preview */}
+              {events.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  style={{
+                    marginTop: '0.75rem',
+                    padding: '0.75rem',
+                    background: 'rgba(3, 218, 198, 0.08)',
+                    borderRadius: '12px',
+                    border: '1px solid rgba(3, 218, 198, 0.15)'
+                  }}
+                >
+                  <div style={{ fontSize: '0.85rem', fontWeight: 500, color: '#03dac6', marginBottom: '0.5rem' }}>
+                    🎉 Upcoming Events ({events.length})
+                  </div>
+                  {events.map((event, idx) => (
+                    <div key={idx} style={{ fontSize: '0.8rem', color: '#eafcff', marginBottom: idx < events.length - 1 ? '0.3rem' : 0 }}>
+                      {event.name?.text?.substring(0, 40)}...
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+
+              {/* Loading indicator for additional data */}
+              {loadingData && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{
+                    marginTop: '0.75rem',
+                    padding: '0.5rem',
+                    textAlign: 'center',
+                    fontSize: '0.8rem',
+                    color: 'rgba(0, 212, 255, 0.7)'
+                  }}
+                >
+                  Loading weather & events...
+                </motion.div>
               )}
             </motion.div>
 

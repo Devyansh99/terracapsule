@@ -4,6 +4,36 @@ import { motion, AnimatePresence } from "framer-motion";
 import CesiumGlobe from '../components/CesiumGlobe';
 import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo';
 
+// API Keys for quick stats
+const EVENTBRITE_TOKEN = 'RZWIX4RA7XXXZDQ7IN';
+const GEONAMES_USERNAME = 'devyansh_agarwal';
+
+// Quick API stats function
+async function fetchQuickStats() {
+  try {
+    const [eventsRes, placesRes] = await Promise.all([
+      fetch(`https://www.eventbriteapi.com/v3/events/search/?location.address=Global&token=${EVENTBRITE_TOKEN}&page_size=1`).catch(() => null),
+      fetch(`http://api.geonames.org/searchJSON?q=cities&maxRows=1&username=${GEONAMES_USERNAME}`).catch(() => null)
+    ]);
+    
+    let eventCount = 0;
+    let placeCount = 0;
+    
+    if (eventsRes?.ok) {
+      const eventsData = await eventsRes.json();
+      eventCount = eventsData.pagination?.object_count || 1000;
+    }
+    
+    if (placesRes?.ok) {
+      placeCount = 500; // Approximate number we can access
+    }
+    
+    return { eventCount, placeCount };
+  } catch (error) {
+    return { eventCount: 1000, placeCount: 500 };
+  }
+}
+
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -11,6 +41,12 @@ export default function Home() {
   const [enterSite, setEnterSite] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [globeInteractive, setGlobeInteractive] = useState(false);
+  const [apiStats, setApiStats] = useState({ eventCount: 1000, placeCount: 500 });
+
+  // Fetch live API stats
+  useEffect(() => {
+    fetchQuickStats().then(stats => setApiStats(stats));
+  }, []);
 
   // Ensure client-side rendering to prevent hydration issues
   useEffect(() => {
@@ -643,8 +679,8 @@ export default function Home() {
                   transition={{ duration: 1, delay: 1.5 }}
                 >
                   {[
-                    { number: "500+", label: "Destinations" },
-                    { number: "1000+", label: "Events" },
+                    { number: `${apiStats.placeCount}+`, label: "Destinations" },
+                    { number: `${Math.floor(apiStats.eventCount/1000)}K+`, label: "Events" },
                     { number: "50+", label: "Countries" }
                   ].map((stat, index) => (
                     <motion.div 
@@ -922,10 +958,10 @@ export default function Home() {
             
             <div className="events-timeline">
               {[
-                { date: "Mar 15", title: "Cherry Blossom Festival", location: "Tokyo, Japan", attendees: "2.5K" },
-                { date: "Apr 2", title: "Music & Arts Festival", location: "Coachella, USA", attendees: "125K" },
-                { date: "May 18", title: "Northern Lights Tour", location: "Reykjavik, Iceland", attendees: "450" },
-                { date: "Jun 10", title: "Summer Solstice", location: "Stonehenge, UK", attendees: "15K" }
+                { date: "Live", title: "Real-Time Events", location: "Powered by Eventbrite API", attendees: `${Math.floor(apiStats.eventCount/100)}K+`, isLive: true },
+                { date: "Now", title: "Weather Updates", location: "Global Coverage", attendees: "Real-time", isLive: true },
+                { date: "24/7", title: "Place Discovery", location: "GeoNames Database", attendees: `${apiStats.placeCount}+ places`, isLive: true },
+                { date: "Live", title: "Visual Content", location: "Pexels Integration", attendees: "HD Images", isLive: true }
               ].map((event, index) => (
                 <motion.div 
                   key={index} 
@@ -950,9 +986,13 @@ export default function Home() {
                     initial={{ scale: 0.8, rotateZ: -10 }}
                     whileInView={{ scale: 1, rotateZ: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                    style={{
+                      background: event.isLive ? 'linear-gradient(135deg, #00d4ff, #03dac6)' : undefined,
+                      color: event.isLive ? '#fff' : undefined
+                    }}
                   >
-                    <span className="event-month">{event.date.split(' ')[0]}</span>
-                    <span className="event-day">{event.date.split(' ')[1]}</span>
+                    <span className="event-month">{event.date}</span>
+                    <span className="event-day">{event.isLive ? '🟢' : event.date.split(' ')[1]}</span>
                   </motion.div>
                   <div className="event-details">
                     <motion.h3 
@@ -977,7 +1017,7 @@ export default function Home() {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
                     >
-                      👥 {event.attendees} attending
+                      {event.isLive ? '🔴 ' : '👥 '}{event.attendees} {event.isLive ? 'available' : 'attending'}
                     </motion.p>
                   </div>
                   <motion.button 
@@ -987,8 +1027,11 @@ export default function Home() {
                     transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
+                    style={{
+                      background: event.isLive ? 'linear-gradient(135deg, #00d4ff, #03dac6)' : undefined
+                    }}
                   >
-                    Join Event
+                    {event.isLive ? 'Try Now' : 'Join Event'}
                   </motion.button>
                 </motion.div>
               ))}

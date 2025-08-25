@@ -21,7 +21,43 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
   // Side panel states for click-to-pin functionality
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<CountryInfo | null>(null);
+  const [panelWeather, setPanelWeather] = useState<any>(null);
+  const [panelEventCount, setPanelEventCount] = useState<number>(0);
+  const [panelLoading, setPanelLoading] = useState(false);
+
+  // API Keys for enhanced data
+  const GEONAMES_USERNAME = 'devyansh_agarwal';
+  const EVENTBRITE_TOKEN = 'RZWIX4RA7XXXZDQ7IN';
   
+  // Helper functions for enhanced data
+  const fetchPanelWeather = async (countryName: string) => {
+    try {
+      const geoRes = await fetch(`http://api.geonames.org/searchJSON?q=${countryName}&maxRows=1&username=${GEONAMES_USERNAME}`);
+      if (!geoRes.ok) return null;
+      const geoData = await geoRes.json();
+      const city = geoData.geonames?.[0];
+      if (!city) return null;
+      
+      const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lng}&current_weather=true`);
+      if (!weatherRes.ok) return null;
+      const weatherData = await weatherRes.json();
+      return weatherData.current_weather || null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const fetchEventCount = async (countryName: string) => {
+    try {
+      const res = await fetch(`https://www.eventbriteapi.com/v3/events/search/?location.address=${countryName}&token=${EVENTBRITE_TOKEN}&page_size=1`);
+      if (!res.ok) return 0;
+      const data = await res.json();
+      return data.pagination?.object_count || 0;
+    } catch (error) {
+      return 0;
+    }
+  };
+
   // Helper function to get country code from country name
   const getCountryCodeFromName = (countryName: string): string => {
     const countryCodeMap: { [key: string]: string } = {
@@ -44,6 +80,9 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
   const closeSidePanel = () => {
     setIsPanelOpen(false);
     setSelectedCountry(null);
+    setPanelWeather(null);
+    setPanelEventCount(0);
+    setPanelLoading(false);
     // Hover will be re-enabled automatically since isPanelOpen will be false
   };
 
@@ -318,6 +357,19 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
                     entity.label.show = false;
                   }
                 });
+
+                // Load enhanced data for side panel
+                setPanelLoading(true);
+                Promise.all([
+                  fetchPanelWeather(country),
+                  fetchEventCount(country)
+                ]).then(([weatherData, eventCount]) => {
+                  setPanelWeather(weatherData);
+                  setPanelEventCount(eventCount);
+                  setPanelLoading(false);
+                }).catch(() => {
+                  setPanelLoading(false);
+                });
               }
             } catch (error) {
               console.warn('Error fetching detailed country data:', error);
@@ -584,6 +636,76 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
                 </div>
               </div>
 
+              {/* Live Weather */}
+              <div style={{ 
+                background: 'rgba(0, 212, 255, 0.08)', 
+                padding: '16px', 
+                borderRadius: '8px',
+                border: '1px solid rgba(0, 212, 255, 0.2)'
+              }}>
+                <h3 style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '600', 
+                  marginBottom: '12px',
+                  color: '#00D4FF'
+                }}>
+                  🌤️ Live Weather
+                </h3>
+                {panelLoading ? (
+                  <div style={{ textAlign: 'center', color: 'rgba(255, 255, 255, 0.7)' }}>
+                    Loading weather data...
+                  </div>
+                ) : panelWeather ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Temperature:</span>
+                      <span style={{ fontWeight: 'bold', color: '#00D4FF' }}>{panelWeather.temperature}°C</span>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Wind Speed:</span>
+                      <span>{panelWeather.windspeed} km/h</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ textAlign: 'center', color: 'rgba(255, 255, 255, 0.5)' }}>
+                    Weather data unavailable
+                  </div>
+                )}
+              </div>
+
+              {/* Events Preview */}
+              <div style={{ 
+                background: 'rgba(3, 218, 198, 0.08)', 
+                padding: '16px', 
+                borderRadius: '8px',
+                border: '1px solid rgba(3, 218, 198, 0.2)'
+              }}>
+                <h3 style={{ 
+                  fontSize: '16px', 
+                  fontWeight: '600', 
+                  marginBottom: '12px',
+                  color: '#03DAC6'
+                }}>
+                  🎉 Events Available
+                </h3>
+                {panelLoading ? (
+                  <div style={{ textAlign: 'center', color: 'rgba(255, 255, 255, 0.7)' }}>
+                    Counting events...
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Total Events:</span>
+                    <span style={{ 
+                      fontWeight: 'bold', 
+                      color: '#03DAC6',
+                      fontSize: '18px' 
+                    }}>
+                      {panelEventCount}
+                    </span>
+                  </div>
+                )}
+              </div>
+
               {/* Action buttons */}
               <div style={{ 
                 marginTop: '24px',
@@ -618,7 +740,7 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
                     e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 212, 255, 0.3)';
                   }}
                 >
-                  🌍 More Info & Events
+                  🌍 Explore {panelEventCount > 0 ? `${panelEventCount} Events` : 'More Info'} & Places
                 </a>
                 
                 <div style={{ 
