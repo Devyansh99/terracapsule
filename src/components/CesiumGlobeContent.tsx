@@ -22,6 +22,24 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<CountryInfo | null>(null);
   
+  // Helper function to get country code from country name
+  const getCountryCodeFromName = (countryName: string): string => {
+    const countryCodeMap: { [key: string]: string } = {
+      'United States': 'US',
+      'China': 'CN',
+      'Brazil': 'BR',
+      'Russia': 'RU',
+      'India': 'IN',
+      'Australia': 'AU',
+      'Japan': 'JP',
+      'United Kingdom': 'GB',
+      'France': 'FR',
+      'Germany': 'DE'
+    };
+    
+    return countryCodeMap[countryName] || countryName.substring(0, 2).toUpperCase();
+  };
+  
   // Function to close side panel and re-enable hover
   const closeSidePanel = () => {
     setIsPanelOpen(false);
@@ -316,24 +334,6 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
       }
     };
 
-    // Helper function to get country code from country name
-    const getCountryCodeFromName = (countryName: string): string => {
-      const countryCodeMap: { [key: string]: string } = {
-        'United States': 'US',
-        'China': 'CN',
-        'Brazil': 'BR',
-        'Russia': 'RU',
-        'India': 'IN',
-        'Australia': 'AU',
-        'Japan': 'JP',
-        'United Kingdom': 'GB',
-        'France': 'FR',
-        'Germany': 'DE'
-      };
-      
-      return countryCodeMap[countryName] || countryName.substring(0, 2).toUpperCase();
-    };
-
     initializeCesium();
 
     // Cleanup
@@ -587,27 +587,63 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
               {/* Action buttons */}
               <div style={{ 
                 marginTop: '24px',
-                padding: '16px',
-                background: 'rgba(0, 212, 255, 0.1)',
-                borderRadius: '8px',
-                border: '1px solid rgba(0, 212, 255, 0.2)',
-                textAlign: 'center'
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
               }}>
-                <p style={{ 
-                  fontSize: '14px', 
-                  color: '#00D4FF',
-                  margin: '0 0 8px 0',
-                  fontWeight: '500'
+                {/* More Info Button */}
+                <a 
+                  href={`/country/${getCountryCodeFromName(selectedCountry.name.common)}/events`}
+                  style={{
+                    display: 'block',
+                    padding: '14px 20px',
+                    background: 'linear-gradient(135deg, #00D4FF 0%, #03DAC6 100%)',
+                    color: '#fff',
+                    textDecoration: 'none',
+                    borderRadius: '10px',
+                    textAlign: 'center',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 15px rgba(0, 212, 255, 0.3)',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 25px rgba(0, 212, 255, 0.4)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 212, 255, 0.3)';
+                  }}
+                >
+                  🌍 More Info & Events
+                </a>
+                
+                <div style={{ 
+                  padding: '16px',
+                  background: 'rgba(0, 212, 255, 0.1)',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(0, 212, 255, 0.2)',
+                  textAlign: 'center'
                 }}>
-                  🌍 Exploring {selectedCountry.name.common}
-                </p>
-                <p style={{ 
-                  fontSize: '12px', 
-                  color: 'rgba(255, 255, 255, 0.6)',
-                  margin: 0
-                }}>
-                  Click the × to close and continue exploring
-                </p>
+                  <p style={{ 
+                    fontSize: '14px', 
+                    color: '#00D4FF',
+                    margin: '0 0 8px 0',
+                    fontWeight: '500'
+                  }}>
+                    🌍 Exploring {selectedCountry.name.common}
+                  </p>
+                  <p style={{ 
+                    fontSize: '12px', 
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    margin: 0
+                  }}>
+                    Click "More Info" for events and places, or × to continue exploring
+                  </p>
+                </div>
               </div>
             </div>
           </div>
