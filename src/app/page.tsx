@@ -522,17 +522,17 @@ export default function Home() {
       
       {/* Content Sections Below Globe */}
       <div style={{ position: 'relative', zIndex: 10 }}>
-        {/* Welcome Section - Appears with scroll in 3D */}
+        {/* Welcome Section - Professional Overview */}
         <motion.section 
           id="welcome"
           className="explore-3d-section"
           style={{ 
             background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%)',
-            minHeight: '80vh',
+            minHeight: '85vh',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '4rem 0'
+            padding: '6rem 0'
           }}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -567,22 +567,75 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
                 style={{ 
-                  fontSize: '1.25rem',
-                  maxWidth: '700px',
+                  fontSize: '1.3rem',
+                  maxWidth: '800px',
                   margin: '0 auto 3rem',
-                  lineHeight: '1.6'
+                  lineHeight: '1.6',
+                  color: 'rgba(255, 255, 255, 0.85)'
                 }}
               >
-                Explore our interactive 3D Earth and discover extraordinary destinations around the globe. 
-                Your ultimate travel experience starts here.
+                Experience our planet like never before through an immersive 3D interface. 
+                Discover fascinating destinations across carefully curated countries and explore their unique stories, 
+                cultures, and wonders from the comfort of your screen.
               </motion.p>
+
+              <motion.div 
+                className="hero-stats-3d"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: 1 }}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '2rem',
+                  margin: '4rem auto 3rem',
+                  maxWidth: '800px'
+                }}
+              >
+                {[
+                  { number: "25+", label: "Countries", icon: "🌍" },
+                  { number: "150+", label: "Destinations", icon: "📍" },
+                  { number: "Real-time", label: "Weather Data", icon: "🌤️" }
+                ].map((stat, index) => (
+                  <motion.div 
+                    key={stat.label}
+                    className="stat-item-3d"
+                    initial={{ opacity: 0, scale: 0.5, rotateY: -45 }}
+                    whileInView={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 1.2 + index * 0.2 }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      rotateY: 5,
+                      transition: { duration: 0.3 }
+                    }}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(0, 212, 255, 0.2)',
+                      borderRadius: '12px',
+                      padding: '2rem 1.5rem',
+                      textAlign: 'center'
+                    }}
+                  >
+                    <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>{stat.icon}</div>
+                    <span className="stat-number-3d" style={{ display: 'block', fontSize: '2rem', fontWeight: '700', color: '#00d4ff', marginBottom: '0.5rem' }}>
+                      {stat.number}
+                    </span>
+                    <span className="stat-label-3d" style={{ fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      {stat.label}
+                    </span>
+                  </motion.div>
+                ))}
+              </motion.div>
 
               <motion.div 
                 className="scroll-indicator"
                 initial={{ opacity: 0, y: 15 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.8 }}
+                transition={{ duration: 0.6, delay: 1.8 }}
                 style={{ 
                   display: 'flex',
                   flexDirection: 'column',
@@ -594,7 +647,7 @@ export default function Home() {
                   fontSize: '0.9rem', 
                   color: 'rgba(255, 255, 255, 0.7)' 
                 }}>
-                  Continue exploring below
+                  Discover what makes each destination special
                 </span>
                 <motion.div 
                   className="scroll-arrow"
@@ -618,7 +671,7 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* Explore in 3D Section */}
+        {/* Interactive Experience Section */}
         <motion.section 
           className="explore-3d-section"
           initial={{ opacity: 0, y: 100 }}
@@ -649,7 +702,7 @@ export default function Home() {
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, delay: 0.7 }}
                   >
-                    Explore the World in
+                    Immersive
                   </motion.span>
                   <motion.span 
                     className="title-accent-3d"
@@ -657,7 +710,7 @@ export default function Home() {
                     whileInView={{ opacity: 1, scale: 1, rotateZ: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, delay: 1 }}
-                  > 3D</motion.span>
+                  > 3D Experience</motion.span>
                 </motion.h1>
                 
                 <motion.p 
@@ -666,9 +719,16 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, delay: 1.2 }}
+                  style={{ 
+                    fontSize: '1.2rem',
+                    lineHeight: '1.6',
+                    marginBottom: '3rem',
+                    color: 'rgba(255, 255, 255, 0.85)'
+                  }}
                 >
-                  Discover extraordinary destinations, upcoming events, and hidden gems 
-                  through our immersive interactive experience.
+                  Navigate through a carefully curated selection of countries and regions. 
+                  Each destination offers rich cultural insights, historical landmarks, and stunning landscapes
+                  brought to life through interactive 3D visualization and real-time data integration.
                 </motion.p>
                 
                 <motion.div 
@@ -677,11 +737,17 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 1, delay: 1.5 }}
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                    gap: '1.5rem',
+                    marginBottom: '3rem'
+                  }}
                 >
                   {[
-                    { number: `${apiStats.placeCount}+`, label: "Destinations" },
-                    { number: `${Math.floor(apiStats.eventCount/1000)}K+`, label: "Events" },
-                    { number: "50+", label: "Countries" }
+                    { number: "Interactive", label: "Globe Navigation", icon: "🌐" },
+                    { number: "Real-time", label: "Weather Updates", icon: "⛅" },
+                    { number: "Detailed", label: "Country Information", icon: "📊" }
                   ].map((stat, index) => (
                     <motion.div 
                       key={stat.label}
@@ -691,13 +757,29 @@ export default function Home() {
                       viewport={{ once: true }}
                       transition={{ duration: 0.8, delay: 1.7 + index * 0.2 }}
                       whileHover={{ 
-                        scale: 1.1, 
-                        rotateY: 10,
+                        scale: 1.05, 
+                        rotateY: 5,
                         transition: { duration: 0.3 }
                       }}
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        padding: '1.5rem',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(0, 212, 255, 0.2)',
+                        borderRadius: '12px',
+                        textAlign: 'center'
+                      }}
                     >
-                      <span className="stat-number-3d">{stat.number}</span>
-                      <span className="stat-label-3d">{stat.label}</span>
+                      <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{stat.icon}</div>
+                      <span className="stat-number-3d" style={{ fontSize: '1rem', fontWeight: '600', color: '#00d4ff', marginBottom: '0.5rem' }}>
+                        {stat.number}
+                      </span>
+                      <span className="stat-label-3d" style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.7)', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                        {stat.label}
+                      </span>
                     </motion.div>
                   ))}
                 </motion.div>
@@ -708,11 +790,12 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 2.2 }}
+                  style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
                 >
                   {[
-                    { icon: "🌍", text: "Earth View", active: true },
-                    { icon: "📍", text: "Events", active: false },
-                    { icon: "✈️", text: "Flights", active: false }
+                    { icon: "🗺️", text: "Explore Countries", active: true },
+                    { icon: "🏛️", text: "Cultural Sites", active: false },
+                    { icon: "🌍", text: "Natural Wonders", active: false }
                   ].map((control, index) => (
                     <motion.button 
                       key={control.text}
@@ -727,6 +810,21 @@ export default function Home() {
                         transition: { duration: 0.2 }
                       }}
                       whileTap={{ scale: 0.95 }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        padding: '0.75rem 1.5rem',
+                        background: control.active ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                        backdropFilter: 'blur(10px)',
+                        border: `1px solid ${control.active ? 'rgba(0, 212, 255, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
+                        borderRadius: '25px',
+                        color: control.active ? '#00d4ff' : 'rgba(255, 255, 255, 0.8)',
+                        fontSize: '0.875rem',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
+                      }}
                     >
                       {control.icon} {control.text}
                     </motion.button>
@@ -745,7 +843,12 @@ export default function Home() {
                   transformStyle: "preserve-3d" 
                 }}
               >
-                <div className="explore-feature-grid">
+                <div className="explore-feature-grid" style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '1.5rem',
+                  maxWidth: '500px'
+                }}>
                   <motion.div 
                     className="feature-card-3d"
                     initial={{ opacity: 0, rotateX: -90 }}
@@ -758,10 +861,18 @@ export default function Home() {
                       scale: 1.02,
                       transition: { duration: 0.3 }
                     }}
+                    style={{
+                      padding: '2rem 1.5rem',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(0, 212, 255, 0.2)',
+                      borderRadius: '16px',
+                      textAlign: 'center'
+                    }}
                   >
-                    <div className="feature-icon">🗺️</div>
-                    <h3>Interactive Maps</h3>
-                    <p>Explore detailed 3D maps of destinations</p>
+                    <div className="feature-icon" style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌍</div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#00d4ff', marginBottom: '0.5rem' }}>Interactive Maps</h3>
+                    <p style={{ fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>Navigate through 3D country representations</p>
                   </motion.div>
 
                   <motion.div 
@@ -776,10 +887,18 @@ export default function Home() {
                       scale: 1.02,
                       transition: { duration: 0.3 }
                     }}
+                    style={{
+                      padding: '2rem 1.5rem',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(0, 212, 255, 0.2)',
+                      borderRadius: '16px',
+                      textAlign: 'center'
+                    }}
                   >
-                    <div className="feature-icon">📅</div>
-                    <h3>Live Events</h3>
-                    <p>Discover events happening around the world</p>
+                    <div className="feature-icon" style={{ fontSize: '2rem', marginBottom: '1rem' }}>🌤️</div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#00d4ff', marginBottom: '0.5rem' }}>Live Weather</h3>
+                    <p style={{ fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>Real-time weather conditions worldwide</p>
                   </motion.div>
 
                   <motion.div 
@@ -794,10 +913,18 @@ export default function Home() {
                       scale: 1.02,
                       transition: { duration: 0.3 }
                     }}
+                    style={{
+                      padding: '2rem 1.5rem',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(0, 212, 255, 0.2)',
+                      borderRadius: '16px',
+                      textAlign: 'center'
+                    }}
                   >
-                    <div className="feature-icon">🎯</div>
-                    <h3>Smart Recommendations</h3>
-                    <p>AI-powered travel suggestions</p>
+                    <div className="feature-icon" style={{ fontSize: '2rem', marginBottom: '1rem' }}>�️</div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#00d4ff', marginBottom: '0.5rem' }}>Cultural Insights</h3>
+                    <p style={{ fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>Discover history and heritage</p>
                   </motion.div>
 
                   <motion.div 
@@ -812,10 +939,18 @@ export default function Home() {
                       scale: 1.02,
                       transition: { duration: 0.3 }
                     }}
+                    style={{
+                      padding: '2rem 1.5rem',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      backdropFilter: 'blur(20px)',
+                      border: '1px solid rgba(0, 212, 255, 0.2)',
+                      borderRadius: '16px',
+                      textAlign: 'center'
+                    }}
                   >
-                    <div className="feature-icon">📱</div>
-                    <h3>Mobile Ready</h3>
-                    <p>Access from anywhere, anytime</p>
+                    <div className="feature-icon" style={{ fontSize: '2rem', marginBottom: '1rem' }}>�</div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#00d4ff', marginBottom: '0.5rem' }}>Data Visualization</h3>
+                    <p style={{ fontSize: '0.875rem', color: 'rgba(255, 255, 255, 0.7)', lineHeight: '1.4' }}>Comprehensive country statistics</p>
                   </motion.div>
                 </div>
               </motion.div>
@@ -834,7 +969,7 @@ export default function Home() {
                     scale: 0
                   }}
                   whileInView={{ 
-                    opacity: 0.4, 
+                    opacity: 0.3, 
                     scale: 1
                   }}
                   viewport={{ once: true }}
@@ -877,18 +1012,18 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h2 className="section-title">Featured Destinations</h2>
-              <p className="section-subtitle">Handpicked locations for your next adventure</p>
+              <h2 className="section-title">Curated Destinations</h2>
+              <p className="section-subtitle">Explore these carefully selected countries and regions through our 3D interface</p>
             </motion.div>
             
             <div className="destinations-grid">
               {[
-                { name: "Tokyo, Japan", image: "🏙️", events: 42, type: "Urban" },
-                { name: "Santorini, Greece", image: "🏛️", events: 18, type: "Island" },
-                { name: "Machu Picchu, Peru", image: "🏔️", events: 12, type: "Historical" },
-                { name: "Dubai, UAE", image: "🏗️", events: 35, type: "Modern" },
-                { name: "Bali, Indonesia", image: "🌴", events: 28, type: "Tropical" },
-                { name: "Iceland", image: "🌋", events: 15, type: "Nature" }
+                { name: "United States", image: "�🇸", landmarks: "Statue of Liberty, Grand Canyon", type: "Diverse" },
+                { name: "Japan", image: "�🇵", landmarks: "Mount Fuji, Tokyo", type: "Cultural" },
+                { name: "France", image: "�🇷", landmarks: "Eiffel Tower, Louvre", type: "Historical" },
+                { name: "Brazil", image: "�🇷", landmarks: "Christ the Redeemer, Amazon", type: "Natural" },
+                { name: "Australia", image: "�🇺", landmarks: "Sydney Opera House, Uluru", type: "Unique" },
+                { name: "Egypt", image: "�🇬", landmarks: "Pyramids, Sphinx", type: "Ancient" }
               ].map((destination, index) => (
                 <motion.div 
                   key={index} 
@@ -905,38 +1040,128 @@ export default function Home() {
                     scale: 1.03,
                     transition: { duration: 0.3 }
                   }}
+                  style={{
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    border: '1px solid rgba(0, 212, 255, 0.1)',
+                    borderRadius: '20px',
+                    overflow: 'hidden',
+                    transition: 'all 0.4s ease',
+                    backdropFilter: 'blur(15px)'
+                  }}
                 >
-                  <div className="destination-image">
-                    <span className="destination-emoji">{destination.image}</span>
+                  <div className="destination-image" style={{
+                    position: 'relative',
+                    height: '200px',
+                    background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(3, 218, 198, 0.1))',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    overflow: 'hidden'
+                  }}>
+                    <span className="destination-emoji" style={{
+                      fontSize: '4rem',
+                      filter: 'drop-shadow(0 4px 20px rgba(0, 212, 255, 0.3))'
+                    }}>{destination.image}</span>
                     <motion.div 
                       className="destination-overlay"
                       initial={{ opacity: 0 }}
                       whileHover={{ opacity: 1 }}
                       transition={{ duration: 0.3 }}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}
                     >
                       <motion.button 
                         className="explore-btn"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
+                        style={{
+                          padding: '0.75rem 2rem',
+                          background: 'linear-gradient(135deg, #00d4ff, #03dac6)',
+                          border: 'none',
+                          borderRadius: '50px',
+                          color: '#ffffff',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
                       >
-                        Explore
+                        Explore in 3D
                       </motion.button>
                     </motion.div>
                   </div>
-                  <div className="destination-info">
-                    <h3 className="destination-name">{destination.name}</h3>
-                    <div className="destination-meta">
-                      <span className="destination-type">{destination.type}</span>
-                      <span className="destination-events">{destination.events} events</span>
+                  <div className="destination-info" style={{ padding: '1.5rem' }}>
+                    <h3 className="destination-name" style={{
+                      fontFamily: 'Space Grotesk, sans-serif',
+                      fontSize: '1.25rem',
+                      fontWeight: '600',
+                      color: '#ffffff',
+                      marginBottom: '0.75rem'
+                    }}>{destination.name}</h3>
+                    <p style={{
+                      fontSize: '0.875rem',
+                      color: 'rgba(255, 255, 255, 0.7)',
+                      marginBottom: '0.75rem',
+                      lineHeight: '1.4'
+                    }}>{destination.landmarks}</p>
+                    <div className="destination-meta" style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center'
+                    }}>
+                      <span className="destination-type" style={{
+                        fontSize: '0.875rem',
+                        color: '#00d4ff',
+                        fontWeight: '500'
+                      }}>{destination.type}</span>
+                      <span style={{
+                        fontSize: '0.875rem',
+                        color: '#94a3b8'
+                      }}>Interactive 3D</span>
                     </div>
                   </div>
                 </motion.div>
               ))}
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              style={{
+                textAlign: 'center',
+                marginTop: '3rem',
+                padding: '2rem',
+                background: 'rgba(255, 255, 255, 0.02)',
+                borderRadius: '16px',
+                border: '1px solid rgba(0, 212, 255, 0.1)'
+              }}
+            >
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                color: '#00d4ff',
+                marginBottom: '1rem'
+              }}>More Countries Coming Soon</h3>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                lineHeight: '1.6',
+                maxWidth: '600px',
+                margin: '0 auto'
+              }}>
+                We're continuously expanding our 3D country collection. Each destination is carefully 
+                crafted to provide accurate geographical data, cultural insights, and immersive exploration experiences.
+              </p>
+            </motion.div>
           </div>
         </motion.section>
 
-        {/* Upcoming Events Section */}
+        {/* Platform Features Section */}
         <motion.section 
           className="events-section"
           initial={{ opacity: 0, y: 100 }}
@@ -952,17 +1177,47 @@ export default function Home() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h2 className="section-title">Upcoming Events</h2>
-              <p className="section-subtitle">Don't miss these amazing experiences</p>
+              <h2 className="section-title">Platform Features</h2>
+              <p className="section-subtitle">Discover what makes TerraCapsule a unique exploration experience</p>
             </motion.div>
             
-            <div className="events-timeline">
+            <div className="events-timeline" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
+              gap: '2rem',
+              maxWidth: '1200px',
+              margin: '0 auto'
+            }}>
               {[
-                { date: "Live", title: "Real-Time Events", location: "Powered by Eventbrite API", attendees: `${Math.floor(apiStats.eventCount/100)}K+`, isLive: true },
-                { date: "Now", title: "Weather Updates", location: "Global Coverage", attendees: "Real-time", isLive: true },
-                { date: "24/7", title: "Place Discovery", location: "GeoNames Database", attendees: `${apiStats.placeCount}+ places`, isLive: true },
-                { date: "Live", title: "Visual Content", location: "Pexels Integration", attendees: "HD Images", isLive: true }
-              ].map((event, index) => (
+                { 
+                  icon: "🌐", 
+                  title: "Interactive 3D Globe", 
+                  description: "Navigate seamlessly through countries with smooth 3D transitions and detailed geographical representation",
+                  capability: "Real-time Navigation",
+                  highlight: true 
+                },
+                { 
+                  icon: "🌤️", 
+                  title: "Live Weather Integration", 
+                  description: "Get current weather conditions for any location worldwide, updated in real-time",
+                  capability: "Global Coverage",
+                  highlight: true 
+                },
+                { 
+                  icon: "🏛️", 
+                  title: "Cultural Information Hub", 
+                  description: "Access comprehensive data about countries including history, culture, and notable landmarks",
+                  capability: "Educational Content",
+                  highlight: false 
+                },
+                { 
+                  icon: "📊", 
+                  title: "Geographic Data Visualization", 
+                  description: "Explore detailed statistics and geographical information presented through interactive visuals",
+                  capability: "Data-Driven Insights",
+                  highlight: false 
+                }
+              ].map((feature, index) => (
                 <motion.div 
                   key={index} 
                   className="event-card"
@@ -976,66 +1231,150 @@ export default function Home() {
                   }}
                   whileHover={{ 
                     scale: 1.02, 
-                    x: 10,
+                    y: -5,
                     transition: { duration: 0.3 }
                   }}
-                  style={{ transformStyle: "preserve-3d" }}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: '2.5rem',
+                    background: feature.highlight ? 'rgba(0, 212, 255, 0.05)' : 'rgba(15, 23, 42, 0.4)',
+                    border: feature.highlight ? '1px solid rgba(0, 212, 255, 0.3)' : '1px solid rgba(0, 212, 255, 0.1)',
+                    borderRadius: '20px',
+                    backdropFilter: 'blur(10px)',
+                    transformStyle: "preserve-3d"
+                  }}
                 >
                   <motion.div 
-                    className="event-date"
+                    className="event-icon"
                     initial={{ scale: 0.8, rotateZ: -10 }}
                     whileInView={{ scale: 1, rotateZ: 0 }}
                     transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                     style={{
-                      background: event.isLive ? 'linear-gradient(135deg, #00d4ff, #03dac6)' : undefined,
-                      color: event.isLive ? '#fff' : undefined
+                      fontSize: '3rem',
+                      marginBottom: '1.5rem',
+                      textAlign: 'center',
+                      filter: 'drop-shadow(0 4px 12px rgba(0, 212, 255, 0.3))'
                     }}
                   >
-                    <span className="event-month">{event.date}</span>
-                    <span className="event-day">{event.isLive ? '🟢' : event.date.split(' ')[1]}</span>
+                    {feature.icon}
                   </motion.div>
-                  <div className="event-details">
-                    <motion.h3 
-                      className="event-title"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                    >
-                      {event.title}
-                    </motion.h3>
-                    <motion.p 
-                      className="event-location"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                    >
-                      📍 {event.location}
-                    </motion.p>
-                    <motion.p 
-                      className="event-attendees"
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-                    >
-                      {event.isLive ? '🔴 ' : '👥 '}{event.attendees} {event.isLive ? 'available' : 'attending'}
-                    </motion.p>
-                  </div>
-                  <motion.button 
-                    className="event-action"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    style={{
-                      background: event.isLive ? 'linear-gradient(135deg, #00d4ff, #03dac6)' : undefined
-                    }}
+                  
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
                   >
-                    {event.isLive ? 'Try Now' : 'Join Event'}
-                  </motion.button>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'flex-start',
+                      marginBottom: '1rem'
+                    }}>
+                      <h3 className="event-title" style={{
+                        fontFamily: 'Space Grotesk, sans-serif',
+                        fontSize: '1.4rem',
+                        fontWeight: '600',
+                        color: '#ffffff',
+                        marginBottom: '0'
+                      }}>{feature.title}</h3>
+                      {feature.highlight && (
+                        <span style={{
+                          fontSize: '0.75rem',
+                          color: '#00d4ff',
+                          background: 'rgba(0, 212, 255, 0.1)',
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '12px',
+                          fontWeight: '500',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
+                        }}>
+                          Core Feature
+                        </span>
+                      )}
+                    </div>
+                    
+                    <p style={{
+                      fontSize: '0.95rem',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      lineHeight: '1.5',
+                      marginBottom: '1.5rem'
+                    }}>
+                      {feature.description}
+                    </p>
+                    
+                    <div style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem'
+                    }}>
+                      <span style={{
+                        fontSize: '0.875rem',
+                        color: '#00d4ff',
+                        fontWeight: '500'
+                      }}>
+                        🎯 {feature.capability}
+                      </span>
+                    </div>
+                  </motion.div>
                 </motion.div>
               ))}
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 1 }}
+              style={{
+                textAlign: 'center',
+                marginTop: '4rem',
+                padding: '3rem 2rem',
+                background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(3, 218, 198, 0.05))',
+                borderRadius: '20px',
+                border: '1px solid rgba(0, 212, 255, 0.2)'
+              }}
+            >
+              <h3 style={{
+                fontSize: '1.5rem',
+                fontWeight: '600',
+                color: '#ffffff',
+                marginBottom: '1rem'
+              }}>Experience the Future of Digital Exploration</h3>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.8)',
+                lineHeight: '1.6',
+                maxWidth: '700px',
+                margin: '0 auto 2rem',
+                fontSize: '1.1rem'
+              }}>
+                TerraCapsule combines cutting-edge 3D technology with comprehensive geographical data 
+                to create an unparalleled virtual travel experience. Start exploring the world from wherever you are.
+              </p>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  padding: '1rem 2.5rem',
+                  background: 'linear-gradient(135deg, #00d4ff, #03dac6)',
+                  border: 'none',
+                  borderRadius: '50px',
+                  color: '#ffffff',
+                  fontWeight: '600',
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 10px 30px rgba(0, 212, 255, 0.3)'
+                }}
+                onClick={() => {
+                  const globeContainer = document.getElementById('globe-container');
+                  if (globeContainer) {
+                    globeContainer.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+              >
+                Start Exploring Now
+              </motion.button>
+            </motion.div>
           </div>
         </motion.section>
 
