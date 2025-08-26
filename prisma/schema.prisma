@@ -1,0 +1,155 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Country model - Core country information
+model Country {
+  id            String   @id @default(cuid())
+  code          String   @unique // ISO country code (US, JP, etc.)
+  name          String
+  officialName  String
+  capital       String?
+  population    BigInt
+  area          Float    // in km²
+  region        String
+  subregion     String?
+  continent     String
+  latitude      Float
+  longitude     Float
+  flag          String   // Flag emoji
+  flagImageUrl  String?  // Flag image URL
+  timezone      String
+  languages     Json     // Array of languages
+  currencies    Json     // Currency information
+  description   String?  // Custom description for the country
+  highlights    Json?    // Key highlights and features
+  bestTimeToVisit String?
+  culturalTips  String?  // Cultural insights and tips
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  destinations  Destination[]
+  weatherData   WeatherData[]
+  events        Event[]
+  chatSessions  ChatSession[]
+}
+
+// Destinations within countries - Cities, landmarks, attractions
+model Destination {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // city, landmark, nature, cultural, etc.
+  description String
+  latitude    Float
+  longitude   Float
+  imageUrl    String?
+  highlights  Json?    // Key features and attractions
+  rating      Float?   // User rating (1-5)
+  visitCount  Int      @default(0)
+  bestTimeToVisit String?
+  entryFee    String?  // Entry cost information
+  openingHours String?
+  website     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  countryId   String
+  country     Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  events      Event[]
+  reviews     Review[]
+}
+
+// Weather data for countries and destinations
+model WeatherData {
+  id          String   @id @default(cuid())
+  temperature Float    // in Celsius
+  humidity    Int      // percentage
+  windSpeed   Float    // km/h
+  condition   String   // sunny, cloudy, rainy, etc.
+  description String?  // Detailed weather description
+  icon        String?  // Weather icon code
+  recordedAt  DateTime @default(now())
+  
+  // Relations
+  countryId   String
+  country     Country  @relation(fields: [countryId], references: [id], onDelete: Cascade)
+}
+
+// Events happening in countries/destinations
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  type        String   // cultural, festival, sports, etc.
+  startDate   DateTime
+  endDate     DateTime?
+  location    String
+  imageUrl    String?
+  ticketUrl   String?
+  price       String?  // Free, $50, etc.
+  capacity    Int?
+  attendees   Int      @default(0)
+  isVirtual   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  countryId     String
+  country       Country     @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  destinationId String?
+  destination   Destination? @relation(fields: [destinationId], references: [id])
+}
+
+// User reviews for destinations
+model Review {
+  id          String   @id @default(cuid())
+  rating      Int      // 1-5 stars
+  title       String?
+  comment     String
+  userName    String   // For now, just store name (later can be User model)
+  userEmail   String?
+  isVerified  Boolean  @default(false)
+  helpfulCount Int     @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+}
+
+// Chat sessions for the AI chatbot
+model ChatSession {
+  id        String   @id @default(cuid())
+  sessionId String   @unique // For tracking user sessions
+  context   String?  // Country or destination context
+  messages  Json     // Array of chat messages
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  countryId String?
+  country   Country? @relation(fields: [countryId], references: [id])
+}
+
+// User favorites/bookmarks (for future user system)
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String   // User identifier (can be session-based for now)
+  type      String   // country, destination, event
+  itemId    String   // ID of the favorited item
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, type, itemId])
+}

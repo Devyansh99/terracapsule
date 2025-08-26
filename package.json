@@ -6,16 +6,21 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:reset": "npx prisma db push --force-reset && npm run db:seed"
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.10",
+    "@prisma/client": "^6.14.0",
     "cesium": "^1.132.0",
     "critters": "^0.0.23",
     "framer-motion": "^12.23.12",
     "next": "15.5.0",
+    "prisma": "^6.14.0",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -26,6 +31,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.0",
     "tailwindcss": "^4",
+    "tsx": "^4.20.5",
     "typescript": "^5"
   }
 }

@@ -1,52 +1,69 @@
-"use client";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import CesiumGlobe from '../components/CesiumGlobe';
-import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo';
+'use client'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import CesiumGlobe from '../components/CesiumGlobe'
+import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo'
+import Link from 'next/link'
 
-// API Keys for quick stats
-const EVENTBRITE_TOKEN = 'RZWIX4RA7XXXZDQ7IN';
-const GEONAMES_USERNAME = 'devyansh_agarwal';
-
-// Quick API stats function
-async function fetchQuickStats() {
-  try {
-    const [eventsRes, placesRes] = await Promise.all([
-      fetch(`https://www.eventbriteapi.com/v3/events/search/?location.address=Global&token=${EVENTBRITE_TOKEN}&page_size=1`).catch(() => null),
-      fetch(`http://api.geonames.org/searchJSON?q=cities&maxRows=1&username=${GEONAMES_USERNAME}`).catch(() => null)
-    ]);
-    
-    let eventCount = 0;
-    let placeCount = 0;
-    
-    if (eventsRes?.ok) {
-      const eventsData = await eventsRes.json();
-      eventCount = eventsData.pagination?.object_count || 1000;
-    }
-    
-    if (placesRes?.ok) {
-      placeCount = 500; // Approximate number we can access
-    }
-    
-    return { eventCount, placeCount };
-  } catch (error) {
-    return { eventCount: 1000, placeCount: 500 };
-  }
+interface Country {
+  id: string
+  code: string
+  name: string
+  population: number
+  capital: string
+  continent: string
+  region: string
+  flag: string
+  coordinates: [number, number]
+  languages: string[]
+  area: number
+  description: string
+  highlights: string[]
 }
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const [showEnterButton, setShowEnterButton] = useState(false);
-  const [enterSite, setEnterSite] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [globeInteractive, setGlobeInteractive] = useState(false);
-  const [apiStats, setApiStats] = useState({ eventCount: 1000, placeCount: 500 });
+  const [loading, setLoading] = useState(true)
+  const [progress, setProgress] = useState(0)
+  const [showEnterButton, setShowEnterButton] = useState(false)
+  const [enterSite, setEnterSite] = useState(false)
+  const [isClient, setIsClient] = useState(false)
+  const [globeInteractive, setGlobeInteractive] = useState(false)
+  const [countries, setCountries] = useState<Country[]>([])
+  const [apiStats, setApiStats] = useState({ eventCount: 1000, placeCount: 500 })
 
-  // Fetch live API stats
+  // Fetch countries from our backend API
   useEffect(() => {
-    fetchQuickStats().then(stats => setApiStats(stats));
-  }, []);
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch('/api/countries')
+        const data = await response.json()
+        if (data.success) {
+          // Transform the data to match our interface
+          const transformedCountries = data.data.map((country: any) => ({
+            id: country.id,
+            code: country.code,
+            name: country.name,
+            population: parseInt(country.population),
+            capital: country.capital,
+            continent: country.continent,
+            region: country.region,
+            flag: country.flag,
+            coordinates: [country.latitude, country.longitude] as [number, number],
+            languages: country.languages,
+            area: country.area,
+            description: country.description,
+            highlights: country.highlights
+          }))
+          setCountries(transformedCountries)
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error)
+        // Keep empty array as fallback
+      }
+    }
+
+    fetchCountries()
+  }, [])
 
   // Ensure client-side rendering to prevent hydration issues
   useEffect(() => {
@@ -594,9 +611,9 @@ export default function Home() {
                 }}
               >
                 {[
-                  { number: "25+", label: "Countries", icon: "🌍" },
-                  { number: "150+", label: "Destinations", icon: "📍" },
-                  { number: "Real-time", label: "Weather Data", icon: "🌤️" }
+                  { number: `${countries.length}+`, label: "Countries", icon: "🌍" },
+                  { number: "Real-time", label: "Weather Data", icon: "🌤️" },
+                  { number: "Interactive", label: "3D Experience", icon: "�" }
                 ].map((stat, index) => (
                   <motion.div 
                     key={stat.label}
@@ -1017,16 +1034,9 @@ export default function Home() {
             </motion.div>
             
             <div className="destinations-grid">
-              {[
-                { name: "United States", image: "�🇸", landmarks: "Statue of Liberty, Grand Canyon", type: "Diverse" },
-                { name: "Japan", image: "�🇵", landmarks: "Mount Fuji, Tokyo", type: "Cultural" },
-                { name: "France", image: "�🇷", landmarks: "Eiffel Tower, Louvre", type: "Historical" },
-                { name: "Brazil", image: "�🇷", landmarks: "Christ the Redeemer, Amazon", type: "Natural" },
-                { name: "Australia", image: "�🇺", landmarks: "Sydney Opera House, Uluru", type: "Unique" },
-                { name: "Egypt", image: "�🇬", landmarks: "Pyramids, Sphinx", type: "Ancient" }
-              ].map((destination, index) => (
+              {countries.slice(0, 6).map((country, index) => (
                 <motion.div 
-                  key={index} 
+                  key={country.id} 
                   className="destination-card"
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -1061,7 +1071,7 @@ export default function Home() {
                     <span className="destination-emoji" style={{
                       fontSize: '4rem',
                       filter: 'drop-shadow(0 4px 20px rgba(0, 212, 255, 0.3))'
-                    }}>{destination.image}</span>
+                    }}>{country.flag || '🌍'}</span>
                     <motion.div 
                       className="destination-overlay"
                       initial={{ opacity: 0 }}
@@ -1076,22 +1086,24 @@ export default function Home() {
                         justifyContent: 'center'
                       }}
                     >
-                      <motion.button 
-                        className="explore-btn"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        style={{
-                          padding: '0.75rem 2rem',
-                          background: 'linear-gradient(135deg, #00d4ff, #03dac6)',
-                          border: 'none',
-                          borderRadius: '50px',
-                          color: '#ffffff',
-                          fontWeight: '600',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        Explore in 3D
-                      </motion.button>
+                      <Link href={`/country/${(country.code || 'us').toLowerCase()}`}>
+                        <motion.button 
+                          className="explore-btn"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          style={{
+                            padding: '0.75rem 2rem',
+                            background: 'linear-gradient(135deg, #00d4ff, #03dac6)',
+                            border: 'none',
+                            borderRadius: '50px',
+                            color: '#ffffff',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          Explore in 3D
+                        </motion.button>
+                      </Link>
                     </motion.div>
                   </div>
                   <div className="destination-info" style={{ padding: '1.5rem' }}>
@@ -1101,13 +1113,13 @@ export default function Home() {
                       fontWeight: '600',
                       color: '#ffffff',
                       marginBottom: '0.75rem'
-                    }}>{destination.name}</h3>
+                    }}>{country.name}</h3>
                     <p style={{
                       fontSize: '0.875rem',
                       color: 'rgba(255, 255, 255, 0.7)',
                       marginBottom: '0.75rem',
                       lineHeight: '1.4'
-                    }}>{destination.landmarks}</p>
+                    }}>{country.description ? country.description.substring(0, 100) + '...' : 'Discover this amazing destination'}</p>
                     <div className="destination-meta" style={{
                       display: 'flex',
                       justifyContent: 'space-between',
@@ -1117,11 +1129,11 @@ export default function Home() {
                         fontSize: '0.875rem',
                         color: '#00d4ff',
                         fontWeight: '500'
-                      }}>{destination.type}</span>
+                      }}>{country.capital || 'Capital'}</span>
                       <span style={{
                         fontSize: '0.875rem',
                         color: '#94a3b8'
-                      }}>Interactive 3D</span>
+                      }}>{country.region || 'Region'}</span>
                     </div>
                   </div>
                 </motion.div>
