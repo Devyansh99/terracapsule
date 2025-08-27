@@ -1,9 +1,7 @@
-'use client'
+'use client';
 
-import { useParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 
 interface Country {
   id: string
@@ -85,10 +83,6 @@ export default function CountryPage() {
       const response = await fetch(`/api/countries/${code}`)
       const data = await response.json()
       
-      // Debug logging
-      console.log('API Response:', data)
-      console.log('Response success:', data.success)
-      
       if (data.success) {
         setCountry(data.data)
       } else {
@@ -102,282 +96,456 @@ export default function CountryPage() {
     }
   }
 
-  const formatPopulation = (pop: string) => {
-    const num = parseInt(pop)
-    if (num >= 1000000000) return `${(num / 1000000000).toFixed(1)}B`
-    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
-    if (num >= 1000) return `${(num / 1000).toFixed(0)}K`
-    return num.toLocaleString()
-  }
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full"
-        />
-        <span className="ml-4 text-white text-lg">Loading country data...</span>
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white p-8 animate-fade-in relative overflow-hidden flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold mb-4 animate-bounce-subtle">
+            🌍 Loading...
+          </h1>
+          <p className="text-xl">Fetching country information</p>
+        </div>
       </div>
     )
   }
 
-  if (error || !country) {
+  if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-red-600 via-red-700 to-red-800 text-white p-8 animate-fade-in relative overflow-hidden flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">Country Not Found</h1>
-          <p className="text-cyan-300 mb-6">{error}</p>
-          <Link href="/" className="bg-cyan-500 text-white px-6 py-3 rounded-lg hover:bg-cyan-600 transition-colors">
-            Return Home
-          </Link>
+          <h1 className="text-6xl font-bold mb-4">
+            ❌ Error
+          </h1>
+          <p className="text-xl mb-4">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-white text-red-600 px-6 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!country) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-600 via-gray-700 to-gray-800 text-white p-8 animate-fade-in relative overflow-hidden flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold mb-4">
+            🔍 Not Found
+          </h1>
+          <p className="text-xl">Country not found</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 bg-black/30 backdrop-blur-md border-b border-cyan-400/20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-            TerraCapsule
-          </Link>
-          <div className="flex items-center gap-4">
-            <span className="text-cyan-300 text-lg">{country.flag}</span>
-            <h1 className="text-xl font-semibold">{country.name}</h1>
+    <div 
+      className="min-h-screen text-white relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #312e81 100%)',
+        fontFamily: 'Inter, system-ui, sans-serif'
+      }}
+    >
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div 
+          className="absolute rounded-full animate-pulse"
+          style={{
+            top: '-160px',
+            right: '-160px',
+            width: '320px',
+            height: '320px',
+            background: 'rgba(147, 51, 234, 0.2)',
+            filter: 'blur(60px)'
+          }}
+        ></div>
+        <div 
+          className="absolute rounded-full animate-pulse"
+          style={{
+            bottom: '-160px',
+            left: '-160px',
+            width: '384px',
+            height: '384px',
+            background: 'rgba(59, 130, 246, 0.15)',
+            filter: 'blur(60px)',
+            animationDelay: '2s'
+          }}
+        ></div>
+        <div 
+          className="absolute rounded-full animate-pulse"
+          style={{
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '256px',
+            height: '256px',
+            background: 'rgba(6, 182, 212, 0.1)',
+            filter: 'blur(60px)',
+            animationDelay: '4s'
+          }}
+        ></div>
+      </div>
+
+      {/* Header Navigation */}
+      <nav 
+        style={{
+          background: 'rgba(0, 0, 0, 0.2)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+        }}
+        className="relative z-50"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex justify-between items-center">
+            <button 
+              onClick={() => window.history.back()} 
+              className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+              style={{ fontSize: '16px', fontWeight: '500' }}
+            >
+              <span style={{ marginRight: '8px' }}>←</span>
+              <span>Back to Globe</span>
+            </button>
+            <div className="flex items-center space-x-6">
+              <span style={{ color: '#9ca3af', fontSize: '14px' }}>TerraCapsule</span>
+              <div 
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                🌍
+              </div>
+            </div>
           </div>
         </div>
       </nav>
-
-      {/* Hero Section */}
-      <motion.section 
-        className="relative py-20 px-6"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-8xl mb-6"
+      
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <div 
+            className="inline-block mb-6 transition-transform duration-500 hover:scale-110 cursor-pointer"
+            style={{
+              fontSize: '128px',
+              filter: 'drop-shadow(0 0 30px rgba(59, 130, 246, 0.5))'
+            }}
+          >
+            {country.flag}
+          </div>
+          
+          <h1 
+            style={{
+              fontSize: 'clamp(3rem, 8vw, 6rem)',
+              fontWeight: '700',
+              background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              marginBottom: '16px',
+              lineHeight: '1.1'
+            }}
+          >
+            {country.name}
+          </h1>
+          
+          <p 
+            style={{
+              fontSize: '24px',
+              color: '#cbd5e1',
+              fontWeight: '300',
+              marginBottom: '24px'
+            }}
+          >
+            {country.officialName}
+          </p>
+          
+          <div className="max-w-4xl mx-auto">
+            <p 
+              style={{
+                fontSize: '18px',
+                color: '#94a3b8',
+                lineHeight: '1.7'
+              }}
             >
-              {country.flag}
-            </motion.div>
-            <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              {country.name}
-            </h1>
-            <p className="text-xl text-cyan-300 mb-6">{country.officialName}</p>
-            <p className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed">
               {country.description}
             </p>
           </div>
-
-          {/* Quick Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
-            {[
-              { label: 'Population', value: formatPopulation(country.population.toString()), icon: '👥' },
-              { label: 'Capital', value: country.capital, icon: '🏛️' },
-              { label: 'Area', value: `${country.area.toLocaleString()} km²`, icon: '📏' },
-              { label: 'Region', value: country.region, icon: '🌍' }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-                className="bg-white/5 backdrop-blur-sm rounded-lg p-4 text-center border border-cyan-400/20"
-              >
-                <div className="text-2xl mb-2">{stat.icon}</div>
-                <div className="text-lg font-semibold text-cyan-400">{stat.value}</div>
-                <div className="text-sm text-gray-400">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
         </div>
-      </motion.section>
 
-      {/* Destinations */}
-      {Array.isArray(country.destinations) && country.destinations.length > 0 && (
-        <motion.section 
-          className="py-16 px-6"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
+        {/* Quick Stats Cards */}
+        <div 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '24px',
+            marginBottom: '80px'
+          }}
         >
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Top Destinations</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(Array.isArray(country.destinations) ? country.destinations : []).map((destination, index) => (
-                <motion.div
-                  key={destination.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-cyan-400/20 hover:border-cyan-400/40 transition-all group"
+          {[
+            { icon: '👥', value: parseInt(country.population).toLocaleString(), label: 'Population', gradient: 'linear-gradient(135deg, #22d3ee, #3b82f6)', hoverColor: 'rgba(34, 211, 238, 0.2)' },
+            { icon: '🏛️', value: country.capital, label: 'Capital City', gradient: 'linear-gradient(135deg, #10b981, #059669)', hoverColor: 'rgba(16, 185, 129, 0.2)' },
+            { icon: '📏', value: country.area.toLocaleString(), label: 'Square KM', gradient: 'linear-gradient(135deg, #8b5cf6, #ec4899)', hoverColor: 'rgba(139, 92, 246, 0.2)' },
+            { icon: '🌍', value: country.region, label: 'Region', gradient: 'linear-gradient(135deg, #f59e0b, #ea580c)', hoverColor: 'rgba(245, 158, 11, 0.2)' }
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="group transition-all duration-300 hover:scale-105 cursor-pointer"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '24px',
+                padding: '32px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                textAlign: 'center'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(34, 211, 238, 0.5)';
+                e.currentTarget.style.boxShadow = `0 20px 40px ${stat.hoverColor}`;
+                e.currentTarget.style.transform = 'scale(1.05)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <div 
+                style={{ 
+                  fontSize: '48px', 
+                  marginBottom: '16px',
+                  transition: 'transform 0.3s ease'
+                }}
+                className="group-hover:scale-110"
+              >
+                {stat.icon}
+              </div>
+              <div 
+                style={{
+                  fontSize: '32px',
+                  fontWeight: '700',
+                  marginBottom: '8px',
+                  background: stat.gradient,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
+                {stat.value}
+              </div>
+              <div 
+                style={{
+                  color: '#94a3b8',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+              >
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Additional Information Sections */}
+        <div 
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
+            gap: '48px',
+            marginBottom: '80px'
+          }}
+        >
+          {/* Country Details */}
+          <div 
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: '32px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            <h3 
+              style={{
+                fontSize: '28px',
+                fontWeight: '700',
+                marginBottom: '24px',
+                background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              🌟 Country Details
+            </h3>
+            <div className="space-y-4">
+              {[
+                { label: 'Continent', value: country.continent },
+                { label: 'Time Zone', value: country.timezone || 'Multiple zones' },
+                { label: 'Languages', value: Array.isArray(country.languages) ? country.languages.join(', ') : 'Multiple languages' },
+                { label: 'Coordinates', value: `${country.latitude.toFixed(2)}°, ${country.longitude.toFixed(2)}°` }
+              ].map((item, index) => (
+                <div 
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '12px 0',
+                    borderBottom: index < 3 ? '1px solid rgba(255, 255, 255, 0.1)' : 'none'
+                  }}
                 >
-                  {destination.imageUrl && (
-                    <div className="h-48 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 flex items-center justify-center">
-                      <img 
-                        src={destination.imageUrl} 
-                        alt={destination.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  )}
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-semibold text-cyan-400">{destination.name}</h3>
-                      <span className="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded-full">
-                        {destination.type}
-                      </span>
-                    </div>
-                    <p className="text-gray-300 text-sm mb-4">{destination.description}</p>
-                    {Array.isArray(destination.highlights) && destination.highlights.length > 0 && (
-                      <div className="mb-4">
-                        <h4 className="text-sm font-semibold text-cyan-300 mb-2">Highlights:</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {destination.highlights.slice(0, 3).map((highlight, i) => (
-                            <span key={i} className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">
-                              {highlight}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    <div className="flex justify-between items-center">
-                      {destination.averageRating && (
-                        <div className="flex items-center">
-                          <span className="text-yellow-400">⭐</span>
-                          <span className="ml-1 text-sm">{destination.averageRating.toFixed(1)}</span>
-                          <span className="text-gray-400 text-xs ml-1">({destination.totalReviews})</span>
-                        </div>
-                      )}
-                      <button className="text-cyan-400 text-sm hover:text-cyan-300 transition-colors">
-                        Learn More →
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
+                  <span style={{ color: '#94a3b8', fontWeight: '500' }}>{item.label}</span>
+                  <span style={{ color: '#ffffff', fontWeight: '600' }}>{item.value}</span>
+                </div>
               ))}
             </div>
           </div>
-        </motion.section>
-      )}
 
-      {/* Cultural Information */}
-      <motion.section 
-        className="py-16 px-6 bg-black/20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Highlights */}
-            <div>
-              <h2 className="text-3xl font-bold mb-6 text-cyan-400">Must-See Highlights</h2>
-              <div className="space-y-4">
-                {(() => {
-                  try {
-                    const highlights = Array.isArray(country.highlights) 
-                      ? country.highlights 
-                      : typeof country.highlights === 'string' 
-                        ? JSON.parse(country.highlights) 
-                        : [];
-                    return highlights.map((highlight: string, index: number) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="flex items-center p-4 bg-white/5 rounded-lg border border-cyan-400/20"
-                      >
-                        <span className="text-cyan-400 mr-3">✨</span>
-                        <span>{highlight}</span>
-                      </motion.div>
-                    ));
-                  } catch (error) {
-                    return [];
-                  }
-                })()}
+          {/* Travel Information */}
+          <div 
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: '32px',
+              border: '1px solid rgba(255, 255, 255, 0.2)'
+            }}
+          >
+            <h3 
+              style={{
+                fontSize: '28px',
+                fontWeight: '700',
+                marginBottom: '24px',
+                background: 'linear-gradient(90deg, #10b981, #059669)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              ✈️ Travel Information
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#22d3ee' }}>
+                  📅 Best Time to Visit
+                </h4>
+                <p style={{ color: '#cbd5e1', lineHeight: '1.6' }}>
+                  {country.bestTimeToVisit || 'Year-round destination with seasonal highlights'}
+                </p>
               </div>
-            </div>
-
-            {/* Travel Info */}
-            <div>
-              <h2 className="text-3xl font-bold mb-6 text-cyan-400">Travel Information</h2>
-              <div className="space-y-6">
-                <div className="p-4 bg-white/5 rounded-lg border border-cyan-400/20">
-                  <h3 className="font-semibold text-cyan-300 mb-2">🌤️ Best Time to Visit</h3>
-                  <p className="text-gray-300">{country.bestTimeToVisit}</p>
-                </div>
-                <div className="p-4 bg-white/5 rounded-lg border border-cyan-400/20">
-                  <h3 className="font-semibold text-cyan-300 mb-2">🏛️ Cultural Tips</h3>
-                  <p className="text-gray-300">{country.culturalTips}</p>
-                </div>
-                <div className="p-4 bg-white/5 rounded-lg border border-cyan-400/20">
-                  <h3 className="font-semibold text-cyan-300 mb-2">🗣️ Languages</h3>
-                  <p className="text-gray-300">{(() => {
-                    try {
-                      const languages = Array.isArray(country.languages) 
-                        ? country.languages 
-                        : typeof country.languages === 'string' 
-                          ? JSON.parse(country.languages) 
-                          : [];
-                      return languages.join(', ') || 'Multiple languages spoken';
-                    } catch (error) {
-                      return 'Multiple languages spoken';
-                    }
-                  })()}</p>
-                </div>
+              <div>
+                <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px', color: '#22d3ee' }}>
+                  🏛️ Cultural Tips
+                </h4>
+                <p style={{ color: '#cbd5e1', lineHeight: '1.6' }}>
+                  {country.culturalTips || 'Respect local customs and traditions when visiting'}
+                </p>
               </div>
             </div>
           </div>
         </div>
-      </motion.section>
 
-      {/* Weather */}
-      {Array.isArray(country.weatherData) && country.weatherData.length > 0 && (
-        <motion.section 
-          className="py-16 px-6"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="max-w-7xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">Current Weather</h2>
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-8 border border-cyan-400/20 max-w-md mx-auto">
-              <div className="text-4xl mb-4">{country.weatherData[0].temperature}°C</div>
-              <div className="text-cyan-400 font-semibold mb-2">{country.weatherData[0].condition}</div>
-              <div className="text-gray-300 text-sm">Humidity: {country.weatherData[0].humidity}%</div>
+        {/* Call to Action */}
+        <div className="text-center">
+          <div 
+            style={{
+              background: 'linear-gradient(90deg, rgba(34, 211, 238, 0.2), rgba(59, 130, 246, 0.2))',
+              backdropFilter: 'blur(20px)',
+              borderRadius: '24px',
+              padding: '48px',
+              border: '1px solid rgba(34, 211, 238, 0.3)'
+            }}
+          >
+            <h2 
+              style={{
+                fontSize: '36px',
+                fontWeight: '700',
+                marginBottom: '16px',
+                background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              🎉 Explore More
+            </h2>
+            <p 
+              style={{
+                fontSize: '20px',
+                color: '#cbd5e1',
+                marginBottom: '32px',
+                maxWidth: '600px',
+                margin: '0 auto 32px'
+              }}
+            >
+              Discover amazing destinations, local events, and hidden gems in {country.name}
+            </p>
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button 
+                style={{
+                  padding: '16px 32px',
+                  background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                  borderRadius: '16px',
+                  fontWeight: '600',
+                  color: 'white',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  fontSize: '16px'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'scale(1.05)';
+                  target.style.boxShadow = '0 20px 40px rgba(34, 211, 238, 0.25)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'scale(1)';
+                  target.style.boxShadow = 'none';
+                }}
+              >
+                🗺️ View Destinations →
+              </button>
+              <button 
+                style={{
+                  padding: '16px 32px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '16px',
+                  fontWeight: '600',
+                  color: 'white',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  fontSize: '16px'
+                }}
+                onMouseEnter={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'scale(1.05)';
+                  target.style.background = 'rgba(255, 255, 255, 0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  const target = e.target as HTMLElement;
+                  target.style.transform = 'scale(1)';
+                  target.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+              >
+                🎯 Local Events
+              </button>
             </div>
           </div>
-        </motion.section>
-      )}
-
-      {/* Chat Section Placeholder */}
-      <motion.section 
-        className="py-16 px-6 bg-black/20"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">Ask About {country.name}</h2>
-          <p className="text-gray-300 mb-8">
-            Have questions about visiting {country.name}? Our AI travel assistant can help you plan your trip!
-          </p>
-          <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white px-8 py-4 rounded-lg font-semibold hover:from-cyan-600 hover:to-blue-600 transition-all">
-            🤖 Chat with AI Assistant (Coming Soon)
-          </button>
         </div>
-      </motion.section>
+      </div>
     </div>
   )
 }
