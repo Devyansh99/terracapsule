@@ -75,6 +75,77 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
     
     return countryCodeMap[countryName] || countryName.substring(0, 2).toUpperCase();
   };
+
+  // Auto-select country functionality
+  const autoSelectCountry = async (countryName: string) => {
+    if (!viewerRef.current) return;
+    
+    const viewer = viewerRef.current;
+    const countryData = [
+      { name: 'United States', lat: 39.8283, lng: -98.5795 },
+      { name: 'China', lat: 35.8617, lng: 104.1954 },
+      { name: 'Brazil', lat: -14.2350, lng: -51.9253 },
+      { name: 'Russia', lat: 61.5240, lng: 105.3188 },
+      { name: 'India', lat: 20.5937, lng: 78.9629 },
+      { name: 'Australia', lat: -25.2744, lng: 133.7751 },
+      { name: 'Japan', lat: 36.2048, lng: 138.2529 },
+      { name: 'United Kingdom', lat: 55.3781, lng: -3.4360 },
+      { name: 'France', lat: 46.2276, lng: 2.2137 },
+      { name: 'Germany', lat: 51.1657, lng: 10.4515 }
+    ];
+
+    const country = countryData.find(c => c.name === countryName);
+    if (!country) return;
+
+    // Fly to country with smooth animation and closer zoom
+    viewer.camera.flyTo({
+      destination: viewer.scene.globe.ellipsoid.cartographicToCartesian({
+        longitude: country.lng * Math.PI / 180,
+        latitude: country.lat * Math.PI / 180,
+        height: 2000000 // Closer zoom - 2M meters instead of 6M
+      }),
+      duration: 2.5, // Slightly longer animation for smoother effect
+      complete: () => {
+        console.log(`Successfully zoomed to ${countryName}`);
+      }
+    });
+
+    // Get detailed country information and open side panel
+    try {
+      const detailedCountryInfo = await getCountryInfo(getCountryCodeFromName(countryName));
+      if (detailedCountryInfo) {
+        setSelectedCountry(detailedCountryInfo);
+        setIsPanelOpen(true);
+        
+        // Hide hover tooltip and disable hover interactions
+        setTooltipVisible(false);
+        setCountryInfo(null);
+        setHoveredCountry(null);
+        
+        // Hide all labels
+        viewer.entities.values.forEach((entity: any) => {
+          if (entity.label) {
+            entity.label.show = false;
+          }
+        });
+
+        // Load enhanced data for side panel
+        setPanelLoading(true);
+        Promise.all([
+          fetchPanelWeather(countryName),
+          fetchEventCount(countryName)
+        ]).then(([weatherData, eventCount]) => {
+          setPanelWeather(weatherData);
+          setPanelEventCount(eventCount);
+          setPanelLoading(false);
+        }).catch(() => {
+          setPanelLoading(false);
+        });
+      }
+    } catch (error) {
+      console.warn('Error fetching detailed country data:', error);
+    }
+  };
   
   // Function to close side panel and re-enable hover
   const closeSidePanel = () => {
@@ -388,8 +459,36 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
 
     initializeCesium();
 
+    // Check for pre-selected country from localStorage
+    const checkPreSelectedCountry = () => {
+      const preSelectedCountry = localStorage.getItem('selectedCountry');
+      if (preSelectedCountry && viewerRef.current) {
+        localStorage.removeItem('selectedCountry'); // Clean up
+        setTimeout(() => {
+          autoSelectCountry(preSelectedCountry);
+        }, 2000); // Allow viewer to fully initialize
+      }
+    };
+
+    // Listen for auto-selection events
+    const handleAutoSelectCountry = (event: CustomEvent) => {
+      const countryName = event.detail.countryName;
+      if (viewerRef.current) {
+        setTimeout(() => {
+          autoSelectCountry(countryName);
+        }, 1000); // Small delay for smooth transition
+      }
+    };
+
+    window.addEventListener('autoSelectCountry', handleAutoSelectCountry as EventListener);
+
+    // Check for pre-selected country after initialization delay
+    const checkPreSelectedTimeout = setTimeout(checkPreSelectedCountry, 3000);
+
     // Cleanup
     return () => {
+      clearTimeout(checkPreSelectedTimeout);
+      window.removeEventListener('autoSelectCountry', handleAutoSelectCountry as EventListener);
       if (rotationAnimationFrame) {
         cancelAnimationFrame(rotationAnimationFrame);
       }
@@ -715,7 +814,7 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
               }}>
                 {/* More Info Button */}
                 <a 
-                  href={`/country/${getCountryCodeFromName(selectedCountry.name.common)}/events`}
+                  href={`/country/${getCountryCodeFromName(selectedCountry.name.common).toLowerCase()}`}
                   style={{
                     display: 'block',
                     padding: '14px 20px',
@@ -740,7 +839,7 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
                     e.currentTarget.style.boxShadow = '0 4px 15px rgba(0, 212, 255, 0.3)';
                   }}
                 >
-                  🌍 Explore {panelEventCount > 0 ? `${panelEventCount} Events` : 'More Info'} & Places
+                  🗺️ Explore {selectedCountry.name.common}
                 </a>
                 
                 <div style={{ 
@@ -763,7 +862,7 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
                     color: 'rgba(255, 255, 255, 0.6)',
                     margin: 0
                   }}>
-                    Click "More Info" for events and places, or × to continue exploring
+                    Click "Explore Country" to discover destinations, or × to continue exploring
                   </p>
                 </div>
               </div>

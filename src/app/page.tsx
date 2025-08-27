@@ -65,6 +65,29 @@ export default function Home() {
     fetchCountries()
   }, [])
 
+  // Function to get country-specific landscape images
+  const getCountryImageUrl = (countryName: string) => {
+    const countryImages: { [key: string]: string } = {
+      'United States': 'https://images.unsplash.com/photo-1564596184263-5b8e8600c0ee?w=400&h=300&fit=crop', // Grand Canyon
+      'China': 'https://images.unsplash.com/photo-1538298867774-6a54d3c0d75d?w=400&h=300&fit=crop', // Great Wall
+      'Brazil': 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=400&h=300&fit=crop', // Christ the Redeemer
+      'Russia': 'https://images.unsplash.com/photo-1520637836862-4d197d17c92a?w=400&h=300&fit=crop', // Red Square
+      'India': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400&h=300&fit=crop', // Taj Mahal
+      'Australia': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop', // Sydney Opera House
+      'Japan': 'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&h=300&fit=crop', // Mount Fuji
+      'United Kingdom': 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&h=300&fit=crop', // London
+      'France': 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400&h=300&fit=crop', // Eiffel Tower
+      'Germany': 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&h=300&fit=crop', // Brandenburg Gate
+      'Canada': 'https://images.unsplash.com/photo-1503614472-8c93d56cd8d1?w=400&h=300&fit=crop', // Banff
+      'Mexico': 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=400&h=300&fit=crop', // Chichen Itza
+      'Italy': 'https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=400&h=300&fit=crop', // Colosseum
+      'Spain': 'https://images.unsplash.com/photo-1571843667267-8fc6dd8b74ce?w=400&h=300&fit=crop', // Sagrada Familia
+      'Egypt': 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=400&h=300&fit=crop', // Pyramids
+    };
+    
+    return countryImages[countryName] || `https://images.unsplash.com/1600x900/?${encodeURIComponent(countryName)}+landscape+landmark&w=400&h=300&fit=crop`;
+  };
+
   // Ensure client-side rendering to prevent hydration issues
   useEffect(() => {
     setIsClient(true);
@@ -810,41 +833,42 @@ export default function Home() {
                   style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}
                 >
                   {[
-                    { icon: "🗺️", text: "Explore Countries", active: true },
-                    { icon: "🏛️", text: "Cultural Sites", active: false },
-                    { icon: "🌍", text: "Natural Wonders", active: false }
+                    { icon: "🗺️", text: "Explore United States", link: "/country/us", active: true },
+                    { icon: "🏛️", text: "Explore Canada", link: "/country/ca", active: false },
+                    { icon: "🌍", text: "Explore United Kingdom", link: "/country/gb", active: false }
                   ].map((control, index) => (
-                    <motion.button 
-                      key={control.text}
-                      className={`action-btn-3d ${control.active ? 'active' : ''}`}
-                      initial={{ opacity: 0, x: -20, rotateZ: -10 }}
-                      whileInView={{ opacity: 1, x: 0, rotateZ: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.6, delay: 2.4 + index * 0.1 }}
-                      whileHover={{ 
-                        scale: 1.05, 
-                        rotateZ: 2,
-                        transition: { duration: 0.2 }
-                      }}
-                      whileTap={{ scale: 0.95 }}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        padding: '0.75rem 1.5rem',
-                        background: control.active ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
-                        backdropFilter: 'blur(10px)',
-                        border: `1px solid ${control.active ? 'rgba(0, 212, 255, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
-                        borderRadius: '25px',
-                        color: control.active ? '#00d4ff' : 'rgba(255, 255, 255, 0.8)',
-                        fontSize: '0.875rem',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease'
-                      }}
-                    >
-                      {control.icon} {control.text}
-                    </motion.button>
+                    <Link key={control.text} href={control.link}>
+                      <motion.button 
+                        className={`action-btn-3d ${control.active ? 'active' : ''}`}
+                        initial={{ opacity: 0, x: -20, rotateZ: -10 }}
+                        whileInView={{ opacity: 1, x: 0, rotateZ: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 2.4 + index * 0.1 }}
+                        whileHover={{ 
+                          scale: 1.05, 
+                          rotateZ: 2,
+                          transition: { duration: 0.2 }
+                        }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          padding: '0.75rem 1.5rem',
+                          background: control.active ? 'rgba(0, 212, 255, 0.2)' : 'rgba(255, 255, 255, 0.05)',
+                          backdropFilter: 'blur(10px)',
+                          border: `1px solid ${control.active ? 'rgba(0, 212, 255, 0.4)' : 'rgba(255, 255, 255, 0.1)'}`,
+                          borderRadius: '25px',
+                          color: control.active ? '#00d4ff' : 'rgba(255, 255, 255, 0.8)',
+                          fontSize: '0.875rem',
+                          fontWeight: '500',
+                          cursor: 'pointer',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        {control.icon} {control.text}
+                      </motion.button>
+                    </Link>
                   ))}
                 </motion.div>
               </motion.div>
@@ -1062,16 +1086,39 @@ export default function Home() {
                   <div className="destination-image" style={{
                     position: 'relative',
                     height: '200px',
-                    background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(3, 218, 198, 0.1))',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden'
                   }}>
-                    <span className="destination-emoji" style={{
-                      fontSize: '4rem',
-                      filter: 'drop-shadow(0 4px 20px rgba(0, 212, 255, 0.3))'
-                    }}>{country.flag || '🌍'}</span>
+                    <img 
+                      src={getCountryImageUrl(country.name)} 
+                      alt={`${country.name} landscape`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0
+                      }}
+                      onError={(e) => {
+                        // Fallback to gradient background if image fails to load
+                        const target = e.currentTarget;
+                        target.style.display = 'none';
+                        if (target.parentElement) {
+                          target.parentElement.style.background = 'linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(3, 218, 198, 0.1))';
+                        }
+                      }}
+                    />
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      fontSize: '2rem',
+                      filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5))',
+                      zIndex: 2
+                    }}>{country.flag || '🌍'}</div>
                     <motion.div 
                       className="destination-overlay"
                       initial={{ opacity: 0 }}
@@ -1086,24 +1133,39 @@ export default function Home() {
                         justifyContent: 'center'
                       }}
                     >
-                      <Link href={`/country/${(country.code || 'us').toLowerCase()}`}>
-                        <motion.button 
-                          className="explore-btn"
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          style={{
-                            padding: '0.75rem 2rem',
-                            background: 'linear-gradient(135deg, #00d4ff, #03dac6)',
-                            border: 'none',
-                            borderRadius: '50px',
-                            color: '#ffffff',
-                            fontWeight: '600',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          Explore in 3D
-                        </motion.button>
-                      </Link>
+                      <motion.button 
+                        className="explore-btn"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{
+                          padding: '0.75rem 2rem',
+                          background: 'linear-gradient(135deg, #00d4ff, #03dac6)',
+                          border: 'none',
+                          borderRadius: '50px',
+                          color: '#ffffff',
+                          fontWeight: '600',
+                          cursor: 'pointer'
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // Scroll to globe and trigger country selection
+                          const globeContainer = document.getElementById('globe-container');
+                          if (globeContainer) {
+                            globeContainer.scrollIntoView({ behavior: 'smooth' });
+                            // Add a delay to allow scroll to complete, then simulate country click
+                            setTimeout(() => {
+                              // Store the country to auto-select in localStorage
+                              localStorage.setItem('autoSelectCountry', country.name);
+                              // Dispatch custom event to trigger globe interaction
+                              window.dispatchEvent(new CustomEvent('autoSelectCountry', { 
+                                detail: { countryName: country.name } 
+                              }));
+                            }, 1000);
+                          }
+                        }}
+                      >
+                        Explore in 3D
+                      </motion.button>
                     </motion.div>
                   </div>
                   <div className="destination-info" style={{ padding: '1.5rem' }}>
@@ -1378,13 +1440,13 @@ export default function Home() {
                   boxShadow: '0 10px 30px rgba(0, 212, 255, 0.3)'
                 }}
                 onClick={() => {
-                  const globeContainer = document.getElementById('globe-container');
-                  if (globeContainer) {
-                    globeContainer.scrollIntoView({ behavior: 'smooth' });
+                  const destinationsSection = document.getElementById('destinations');
+                  if (destinationsSection) {
+                    destinationsSection.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
               >
-                Start Exploring Now
+                View All Countries
               </motion.button>
             </motion.div>
           </div>

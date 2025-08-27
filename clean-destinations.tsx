@@ -27,16 +27,36 @@
                   <div className="destination-image" style={{
                     position: 'relative',
                     height: '200px',
-                    background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(3, 218, 198, 0.1))',
+                    background: `url('https://images.unsplash.com/1600x900/?${country.name}+landscape+landmark') center/cover`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     overflow: 'hidden'
                   }}>
-                    <span className="destination-emoji" style={{
-                      fontSize: '4rem',
-                      filter: 'drop-shadow(0 4px 20px rgba(0, 212, 255, 0.3))'
-                    }}>{country.flag}</span>
+                    <img 
+                      src={getCountryImageUrl(country.name)} 
+                      alt={`${country.name} landscape`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0
+                      }}
+                      onError={(e) => {
+                        // Fallback to flag if image fails to load
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      fontSize: '2rem',
+                      filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.5))',
+                      zIndex: 2
+                    }}>{country.flag}</div>
                     <motion.div 
                       className="destination-overlay"
                       initial={{ opacity: 0 }}
@@ -51,7 +71,7 @@
                         justifyContent: 'center'
                       }}
                     >
-                      <Link href={`/country/${country.code?.toLowerCase() || 'unknown'}`} passHref>
+                      <Link href={`/?country=${encodeURIComponent(country.name)}`} passHref>
                         <motion.button 
                           className="explore-btn"
                           whileHover={{ scale: 1.05 }}
