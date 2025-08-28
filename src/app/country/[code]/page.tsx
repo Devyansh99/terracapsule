@@ -121,13 +121,266 @@ export default function CountryPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-700 to-indigo-800 text-white p-8 animate-fade-in relative overflow-hidden flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-6xl font-bold mb-4 animate-bounce-subtle">
-            🌍 Loading...
-          </h1>
-          <p className="text-xl">Fetching country information</p>
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center" style={{
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 30%, #312e81 60%, #0f172a 100%)',
+        fontFamily: 'Inter, system-ui, sans-serif'
+      }}>
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Floating particles */}
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: Math.random() * 6 + 2 + 'px',
+                height: Math.random() * 6 + 2 + 'px',
+                background: `rgba(${Math.random() > 0.5 ? '34, 211, 238' : '59, 130, 246'}, ${Math.random() * 0.3 + 0.1})`,
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                animation: `float ${Math.random() * 10 + 15}s ease-in-out infinite`,
+                animationDelay: Math.random() * 5 + 's'
+              }}
+            />
+          ))}
+          
+          {/* Gradient orbs */}
+          <div 
+            className="absolute rounded-full animate-pulse"
+            style={{
+              top: '10%',
+              right: '15%',
+              width: '200px',
+              height: '200px',
+              background: 'radial-gradient(circle, rgba(34, 211, 238, 0.1), transparent)',
+              filter: 'blur(40px)'
+            }}
+          />
+          <div 
+            className="absolute rounded-full animate-pulse"
+            style={{
+              bottom: '20%',
+              left: '10%',
+              width: '300px',
+              height: '300px',
+              background: 'radial-gradient(circle, rgba(139, 92, 246, 0.08), transparent)',
+              filter: 'blur(60px)',
+              animationDelay: '2s'
+            }}
+          />
         </div>
+        
+        <div className="relative z-10 text-center">
+          {/* Enhanced Loading Globe */}
+          <div className="relative mb-8 flex justify-center">
+            <div 
+              className="relative"
+              style={{ width: '120px', height: '120px' }}
+            >
+              {/* Outer ring */}
+              <div 
+                className="absolute inset-0 rounded-full border-2 border-transparent"
+                style={{
+                  background: 'linear-gradient(45deg, #22d3ee, #3b82f6, #8b5cf6, #22d3ee)',
+                  backgroundSize: '200% 200%',
+                  animation: 'gradientSpin 3s ease-in-out infinite, rotate 8s linear infinite'
+                }}
+              />
+              
+              {/* Main globe */}
+              <div 
+                className="absolute inset-2 rounded-full overflow-hidden"
+                style={{
+                  background: 'radial-gradient(circle at 40% 30%, #22d3ee, #1e40af)',
+                  boxShadow: 'inset 0 4px 20px rgba(0, 0, 0, 0.3), 0 8px 40px rgba(34, 211, 238, 0.3)'
+                }}
+              >
+                {/* Animated continents */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '25%',
+                    left: '20%',
+                    width: '20px',
+                    height: '15px',
+                    background: '#10b981',
+                    borderRadius: '50%',
+                    opacity: 0.9,
+                    animation: 'pulse 2s ease-in-out infinite'
+                  }}
+                />
+                <div 
+                  style={{
+                    position: 'absolute',
+                    bottom: '30%',
+                    right: '25%',
+                    width: '15px',
+                    height: '20px',
+                    background: '#059669',
+                    borderRadius: '50%',
+                    opacity: 0.8,
+                    animation: 'pulse 2s ease-in-out infinite 0.5s'
+                  }}
+                />
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '60%',
+                    left: '45%',
+                    width: '12px',
+                    height: '8px',
+                    background: '#34d399',
+                    borderRadius: '50%',
+                    opacity: 0.7,
+                    animation: 'pulse 2s ease-in-out infinite 1s'
+                  }}
+                />
+                
+                {/* Glossy shine effect */}
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '10%',
+                    left: '15%',
+                    width: '50%',
+                    height: '50%',
+                    background: 'radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.6), transparent)',
+                    borderRadius: '50%',
+                    filter: 'blur(8px)',
+                    animation: 'shimmer 3s ease-in-out infinite'
+                  }}
+                />
+              </div>
+              
+              {/* Multiple orbiting satellites */}
+              {[0, 1, 2].map(i => (
+                <div 
+                  key={i}
+                  className="absolute"
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    background: `linear-gradient(90deg, ${i === 0 ? '#22d3ee' : i === 1 ? '#8b5cf6' : '#f59e0b'}, ${i === 0 ? '#06b6d4' : i === 1 ? '#a855f7' : '#f97316'})`,
+                    borderRadius: '50%',
+                    boxShadow: `0 0 12px ${i === 0 ? 'rgba(34, 211, 238, 0.8)' : i === 1 ? 'rgba(139, 92, 246, 0.8)' : 'rgba(245, 158, 11, 0.8)'}`,
+                    left: '50%',
+                    top: i === 0 ? '-4px' : i === 1 ? '50%' : 'auto',
+                    bottom: i === 2 ? '-4px' : 'auto',
+                    right: i === 1 ? '-4px' : 'auto',
+                    transformOrigin: i === 1 ? '-56px center' : 'center 64px',
+                    animation: `orbit ${8 + i * 2}s linear infinite`,
+                    animationDelay: `${i * 1.5}s`
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          
+          {/* Loading Text */}
+          <div className="space-y-4">
+            <h1 
+              style={{
+                fontSize: '2.5rem',
+                fontWeight: '700',
+                background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
+                backgroundClip: 'text',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontFamily: 'Orbitron, system-ui, sans-serif',
+                letterSpacing: '0.05em',
+                marginBottom: '1rem'
+              }}
+            >
+              TERRACAPSULE
+            </h1>
+            
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div 
+                style={{
+                  fontSize: '1.5rem',
+                  color: '#22d3ee',
+                  animation: 'bounce 1s ease-in-out infinite'
+                }}
+              >
+                🌍
+              </div>
+              <h2 
+                style={{
+                  fontSize: '1.8rem',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  textShadow: '0 2px 10px rgba(34, 211, 238, 0.3)'
+                }}
+              >
+                Loading Country Data...
+              </h2>
+            </div>
+            
+            <p 
+              style={{
+                fontSize: '1.1rem',
+                color: '#94a3b8',
+                fontWeight: '400',
+                maxWidth: '400px',
+                margin: '0 auto',
+                lineHeight: '1.6'
+              }}
+            >
+              Preparing your immersive journey to discover amazing destinations and hidden gems
+            </p>
+            
+            {/* Loading progress bar */}
+            <div 
+              className="w-64 h-1 mx-auto mt-8 rounded-full overflow-hidden"
+              style={{ background: 'rgba(255, 255, 255, 0.1)' }}
+            >
+              <div 
+                className="h-full rounded-full"
+                style={{
+                  background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                  width: '100%',
+                  animation: 'loading 2s ease-in-out infinite'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+        
+        {/* Enhanced CSS animations */}
+        <style jsx>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+          }
+          @keyframes gradientSpin {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+          @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          @keyframes shimmer {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.1); }
+          }
+          @keyframes loading {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
+          }
+          @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+            40%, 43% { transform: translateY(-8px); }
+            70% { transform: translateY(-4px); }
+            90% { transform: translateY(-2px); }
+          }
+        `}</style>
       </div>
     )
   }
@@ -215,9 +468,12 @@ export default function CountryPage() {
       {/* Header Navigation */}
       <nav 
         style={{
-          background: 'rgba(0, 0, 0, 0.2)',
-          backdropFilter: 'blur(20px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+          background: 'rgba(0, 0, 0, 0.3)',
+          backdropFilter: 'blur(30px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50
         }}
         className="relative z-50"
       >
@@ -225,31 +481,140 @@ export default function CountryPage() {
           <div className="flex justify-between items-center">
             <button 
               onClick={() => window.history.back()} 
-              className="flex items-center space-x-2 text-cyan-400 hover:text-cyan-300 transition-colors"
+              className="group flex items-center space-x-3 text-cyan-400 hover:text-cyan-300 transition-all duration-300 hover:scale-105"
               style={{ fontSize: '16px', fontWeight: '500' }}
             >
-              <span style={{ marginRight: '8px' }}>←</span>
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-400/10 group-hover:bg-cyan-400/20 transition-colors duration-300">
+                <span style={{ fontSize: '18px' }}>←</span>
+              </div>
               <span>Back to Globe</span>
             </button>
-            <div className="flex items-center space-x-6">
-              <span style={{ color: '#9ca3af', fontSize: '14px' }}>TerraCapsule</span>
+            
+            {/* Professional TerraCapsule Logo */}
+            <div className="flex items-center space-x-3">
               <div 
+                className="relative"
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  width: '48px',
+                  height: '48px'
                 }}
               >
-                🌍
+                {/* Animated Globe Logo */}
+                <div 
+                  className="absolute inset-0 rounded-full"
+                  style={{
+                    background: 'linear-gradient(45deg, rgba(34, 211, 238, 0.2), rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.2))',
+                    backdropFilter: 'blur(20px)',
+                    border: '2px solid rgba(34, 211, 238, 0.3)',
+                    animation: 'spin 20s linear infinite'
+                  }}
+                />
+                <div 
+                  className="absolute inset-2 rounded-full overflow-hidden"
+                  style={{
+                    background: 'radial-gradient(circle at 60% 40%, #22d3ee, #3b82f6)',
+                    boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.2)'
+                  }}
+                >
+                  {/* Continent spots */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '30%',
+                      left: '20%',
+                      width: '8px',
+                      height: '6px',
+                      background: '#10b981',
+                      borderRadius: '50%',
+                      opacity: 0.9
+                    }}
+                  />
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      bottom: '25%',
+                      right: '20%',
+                      width: '6px',
+                      height: '8px',
+                      background: '#10b981',
+                      borderRadius: '50%',
+                      opacity: 0.8
+                    }}
+                  />
+                  {/* Shine effect */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      top: '10%',
+                      left: '20%',
+                      width: '60%',
+                      height: '40%',
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.4), transparent)',
+                      borderRadius: '50%',
+                      filter: 'blur(4px)'
+                    }}
+                  />
+                </div>
+                
+                {/* Orbiting element */}
+                <div 
+                  className="absolute"
+                  style={{
+                    width: '4px',
+                    height: '4px',
+                    background: 'linear-gradient(90deg, #22d3ee, #06b6d4)',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 8px rgba(34, 211, 238, 0.6)',
+                    left: '50%',
+                    top: '-2px',
+                    transformOrigin: 'center 26px',
+                    animation: 'orbit 8s linear infinite'
+                  }}
+                />
+              </div>
+              
+              <div className="flex flex-col">
+                <span 
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    fontFamily: 'Orbitron, system-ui, sans-serif',
+                    letterSpacing: '0.05em'
+                  }}
+                >
+                  TERRACAPSULE
+                </span>
+                <span 
+                  style={{
+                    fontSize: '10px',
+                    color: '#94a3b8',
+                    letterSpacing: '0.1em',
+                    fontWeight: '500'
+                  }}
+                >
+                  EXPLORE • DISCOVER • TRAVEL
+                </span>
               </div>
             </div>
           </div>
         </div>
       </nav>
+
+      {/* Add CSS animations */}
+      <style jsx>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes orbit {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
       
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
         {/* Hero Image Section */}
