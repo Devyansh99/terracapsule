@@ -71,6 +71,29 @@ export default function CountryPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Function to get country-specific hero images
+  const getCountryHeroImage = (countryName: string) => {
+    const countryImages: { [key: string]: string } = {
+      'United States': 'https://images.unsplash.com/photo-1564596184263-5b8e8600c0ee?w=1200&h=600&fit=crop', // Grand Canyon
+      'China': 'https://images.unsplash.com/photo-1538298867774-6a54d3c0d75d?w=1200&h=600&fit=crop', // Great Wall
+      'Brazil': 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1200&h=600&fit=crop', // Christ the Redeemer
+      'Russia': 'https://images.unsplash.com/photo-1520637836862-4d197d17c92a?w=1200&h=600&fit=crop', // Red Square
+      'India': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200&h=600&fit=crop', // Taj Mahal
+      'Australia': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=600&fit=crop', // Sydney Opera House
+      'Japan': 'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=1200&h=600&fit=crop', // Mount Fuji
+      'United Kingdom': 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1200&h=600&fit=crop', // London
+      'France': 'https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=1200&h=600&fit=crop', // Eiffel Tower
+      'Germany': 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1200&h=600&fit=crop', // Brandenburg Gate
+      'Canada': 'https://images.unsplash.com/photo-1503614472-8c93d56cd8d1?w=1200&h=600&fit=crop', // Banff
+      'Mexico': 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=1200&h=600&fit=crop', // Chichen Itza
+      'Italy': 'https://images.unsplash.com/photo-1520175480921-4edfa2983e0f?w=1200&h=600&fit=crop', // Colosseum
+      'Spain': 'https://images.unsplash.com/photo-1571843667267-8fc6dd8b74ce?w=1200&h=600&fit=crop', // Sagrada Familia
+      'Egypt': 'https://images.unsplash.com/photo-1572252009286-268acec5ca0a?w=1200&h=600&fit=crop', // Pyramids
+    };
+    
+    return countryImages[countryName] || `https://images.unsplash.com/1200x600/?${encodeURIComponent(countryName)}+landscape+landmark&w=1200&h=600&fit=crop`;
+  };
+
   useEffect(() => {
     if (params.code) {
       fetchCountryData(params.code as string)
@@ -229,50 +252,69 @@ export default function CountryPage() {
       </nav>
       
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-16">
-          <div 
-            className="inline-block mb-6 transition-transform duration-500 hover:scale-110 cursor-pointer"
-            style={{
-              fontSize: '128px',
-              filter: 'drop-shadow(0 0 30px rgba(59, 130, 246, 0.5))'
-            }}
-          >
-            {country.flag}
+        {/* Hero Image Section */}
+        <div 
+          className="relative mb-16 rounded-3xl overflow-hidden"
+          style={{
+            height: '400px',
+            background: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('${getCountryHeroImage(country.name)}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        >
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="text-center">
+              <div 
+                className="inline-block mb-6 transition-transform duration-500 hover:scale-110 cursor-pointer"
+                style={{
+                  fontSize: '96px',
+                  filter: 'drop-shadow(0 0 30px rgba(59, 130, 246, 0.5))'
+                }}
+              >
+                {country.flag}
+              </div>
+              
+              <h1 
+                style={{
+                  fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+                  fontWeight: '700',
+                  color: 'white',
+                  marginBottom: '16px',
+                  textShadow: '0 4px 20px rgba(0, 0, 0, 0.5)',
+                  lineHeight: '1.1'
+                }}
+              >
+                {country.name}
+              </h1>
+              
+              <p 
+                style={{
+                  fontSize: '20px',
+                  color: 'rgba(255, 255, 255, 0.9)',
+                  fontWeight: '300',
+                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)'
+                }}
+              >
+                {country.officialName}
+              </p>
+            </div>
           </div>
-          
-          <h1 
-            style={{
-              fontSize: 'clamp(3rem, 8vw, 6rem)',
-              fontWeight: '700',
-              background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '16px',
-              lineHeight: '1.1'
-            }}
-          >
-            {country.name}
-          </h1>
-          
-          <p 
-            style={{
-              fontSize: '24px',
-              color: '#cbd5e1',
-              fontWeight: '300',
-              marginBottom: '24px'
-            }}
-          >
-            {country.officialName}
-          </p>
-          
+        </div>
+
+        {/* Description Section */}
+        <div className="text-center mb-16">
           <div className="max-w-4xl mx-auto">
             <p 
               style={{
                 fontSize: '18px',
                 color: '#94a3b8',
-                lineHeight: '1.7'
+                lineHeight: '1.7',
+                background: 'rgba(255, 255, 255, 0.1)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '20px',
+                padding: '32px',
+                border: '1px solid rgba(255, 255, 255, 0.2)'
               }}
             >
               {country.description}
