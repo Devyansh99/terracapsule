@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface Country {
   id: string
@@ -67,6 +68,7 @@ interface WeatherData {
 
 export default function CountryPage() {
   const params = useParams()
+  const router = useRouter()
   const [country, setCountry] = useState<Country | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -465,68 +467,121 @@ export default function CountryPage() {
         ></div>
       </div>
 
-      {/* Header Navigation */}
+      {/* Professional Navigation Bar */}
       <nav 
         style={{
-          background: 'rgba(0, 0, 0, 0.3)',
-          backdropFilter: 'blur(30px)',
+          background: 'rgba(0, 0, 0, 0.2)',
+          backdropFilter: 'blur(20px)',
           borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-          position: 'sticky',
-          top: 0,
+          position: 'relative',
           zIndex: 50
         }}
-        className="relative z-50"
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
+            {/* Back Button */}
             <button 
-              onClick={() => window.history.back()} 
-              className="group flex items-center space-x-3 text-cyan-400 hover:text-cyan-300 transition-all duration-300 hover:scale-105"
+              onClick={() => router.push('/')}
+              className="flex items-center space-x-3 text-cyan-400 hover:text-cyan-300 transition-all duration-300 group"
               style={{ fontSize: '16px', fontWeight: '500' }}
             >
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-400/10 group-hover:bg-cyan-400/20 transition-colors duration-300">
-                <span style={{ fontSize: '18px' }}>←</span>
-              </div>
+              <span 
+                style={{ 
+                  marginRight: '8px',
+                  transition: 'transform 0.3s ease'
+                }}
+                className="group-hover:-translate-x-1"
+              >
+                ←
+              </span>
               <span>Back to Globe</span>
             </button>
-            
-            {/* Professional TerraCapsule Logo */}
-            <div className="flex items-center space-x-3">
-              <div 
-                className="relative"
-                style={{
-                  width: '48px',
-                  height: '48px'
-                }}
-              >
-                {/* Animated Globe Logo */}
+
+            {/* TerraCapsule Logo */}
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
                 <div 
-                  className="absolute inset-0 rounded-full"
                   style={{
-                    background: 'linear-gradient(45deg, rgba(34, 211, 238, 0.2), rgba(59, 130, 246, 0.3), rgba(139, 92, 246, 0.2))',
-                    backdropFilter: 'blur(20px)',
-                    border: '2px solid rgba(34, 211, 238, 0.3)',
-                    animation: 'spin 20s linear infinite'
-                  }}
-                />
-                <div 
-                  className="absolute inset-2 rounded-full overflow-hidden"
-                  style={{
-                    background: 'radial-gradient(circle at 60% 40%, #22d3ee, #3b82f6)',
-                    boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.2)'
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    letterSpacing: '0.05em'
                   }}
                 >
-                  {/* Continent spots */}
+                  TERRACAPSULE
+                </div>
+                <div 
+                  style={{
+                    fontSize: '12px',
+                    color: '#94a3b8',
+                    fontWeight: '400',
+                    letterSpacing: '0.1em'
+                  }}
+                >
+                  Explore the World
+                </div>
+              </div>
+              
+              {/* Animated Globe Logo */}
+              <div 
+                className="relative w-12 h-12 cursor-pointer"
+                onClick={() => router.push('/')}
+                style={{ animation: 'float 3s ease-in-out infinite' }}
+              >
+                {/* CSS for animations */}
+                <style jsx>{`
+                  @keyframes float {
+                    0%, 100% { transform: translateY(0px); }
+                    50% { transform: translateY(-6px); }
+                  }
+                  @keyframes rotate {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                  }
+                  @keyframes gradientSpin {
+                    0% { background-position: 0% 50%; }
+                    50% { background-position: 100% 50%; }
+                    100% { background-position: 0% 50%; }
+                  }
+                  @keyframes pulse {
+                    0%, 100% { opacity: 0.7; transform: scale(1); }
+                    50% { opacity: 1; transform: scale(1.1); }
+                  }
+                `}</style>
+                
+                {/* Outer ring */}
+                <div 
+                  className="absolute inset-0 rounded-full border-2 border-transparent"
+                  style={{
+                    background: 'linear-gradient(45deg, #22d3ee, #3b82f6, #8b5cf6, #22d3ee)',
+                    backgroundSize: '200% 200%',
+                    animation: 'gradientSpin 3s ease-in-out infinite, rotate 8s linear infinite'
+                  }}
+                />
+                
+                {/* Main globe */}
+                <div 
+                  className="absolute inset-1 rounded-full overflow-hidden"
+                  style={{
+                    background: 'radial-gradient(circle at 40% 30%, #22d3ee, #1e40af)',
+                    boxShadow: 'inset 0 2px 10px rgba(0, 0, 0, 0.3), 0 4px 20px rgba(34, 211, 238, 0.3)'
+                  }}
+                >
+                  {/* Animated continents */}
                   <div 
                     style={{
                       position: 'absolute',
-                      top: '30%',
-                      left: '20%',
+                      top: '20%',
+                      left: '15%',
                       width: '8px',
                       height: '6px',
                       background: '#10b981',
                       borderRadius: '50%',
-                      opacity: 0.9
+                      opacity: 0.9,
+                      animation: 'pulse 2s ease-in-out infinite'
                     }}
                   />
                   <div 
@@ -536,85 +591,90 @@ export default function CountryPage() {
                       right: '20%',
                       width: '6px',
                       height: '8px',
-                      background: '#10b981',
+                      background: '#059669',
                       borderRadius: '50%',
-                      opacity: 0.8
+                      opacity: 0.8,
+                      animation: 'pulse 2s ease-in-out infinite 0.5s'
                     }}
                   />
-                  {/* Shine effect */}
                   <div 
                     style={{
                       position: 'absolute',
-                      top: '10%',
-                      left: '20%',
-                      width: '60%',
-                      height: '40%',
-                      background: 'linear-gradient(135deg, rgba(255,255,255,0.4), transparent)',
+                      top: '55%',
+                      left: '40%',
+                      width: '5px',
+                      height: '4px',
+                      background: '#047857',
                       borderRadius: '50%',
-                      filter: 'blur(4px)'
+                      opacity: 0.7,
+                      animation: 'pulse 2s ease-in-out infinite 1s'
                     }}
                   />
                 </div>
-                
-                {/* Orbiting element */}
-                <div 
-                  className="absolute"
-                  style={{
-                    width: '4px',
-                    height: '4px',
-                    background: 'linear-gradient(90deg, #22d3ee, #06b6d4)',
-                    borderRadius: '50%',
-                    boxShadow: '0 0 8px rgba(34, 211, 238, 0.6)',
-                    left: '50%',
-                    top: '-2px',
-                    transformOrigin: 'center 26px',
-                    animation: 'orbit 8s linear infinite'
-                  }}
-                />
               </div>
-              
-              <div className="flex flex-col">
-                <span 
-                  style={{
-                    fontSize: '20px',
-                    fontWeight: '700',
-                    background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    fontFamily: 'Orbitron, system-ui, sans-serif',
-                    letterSpacing: '0.05em'
-                  }}
-                >
-                  TERRACAPSULE
-                </span>
-                <span 
-                  style={{
-                    fontSize: '10px',
-                    color: '#94a3b8',
-                    letterSpacing: '0.1em',
-                    fontWeight: '500'
-                  }}
-                >
-                  EXPLORE • DISCOVER • TRAVEL
-                </span>
-              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-3">
+              <button
+                onClick={() => router.push(`/country/${params.code}/events`)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                🎉 Events
+              </button>
+              <button
+                onClick={() => {
+                  // Store country info and redirect to globe
+                  if (country) {
+                    localStorage.setItem('selectedCountry', country.name);
+                    router.push('/?autoSelect=true');
+                  }
+                }}
+                style={{
+                  background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: '#ffffff',
+                  padding: '8px 16px',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px) scale(1.05)';
+                  e.currentTarget.style.boxShadow = '0 8px 25px rgba(34, 211, 238, 0.3)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                🌍 View on Globe
+              </button>
             </div>
           </div>
         </div>
       </nav>
-
-      {/* Add CSS animations */}
-      <style jsx>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes orbit {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
       
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
         {/* Hero Image Section */}
@@ -899,6 +959,12 @@ export default function CountryPage() {
             </p>
             <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
               <button 
+                onClick={() => {
+                  // Navigate to destinations (for now, we'll scroll to destinations or go to a future destinations page)
+                  // You can later create a destinations page for each country
+                  console.log(`Navigate to destinations for ${country.name}`);
+                  alert(`Destinations page for ${country.name} is coming soon!`);
+                }}
                 style={{
                   padding: '16px 32px',
                   background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
@@ -924,6 +990,7 @@ export default function CountryPage() {
                 🗺️ View Destinations →
               </button>
               <button 
+                onClick={() => router.push(`/country/${params.code}/events`)}
                 style={{
                   padding: '16px 32px',
                   background: 'rgba(255, 255, 255, 0.1)',

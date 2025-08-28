@@ -2324,3 +2324,685 @@ export default function Home() {
     </div>
   );
 }
+                  <div className="flex items-center mb-6">
+                    <div className="w-16 h-16 mr-4">
+                      <SimpleAnimatedLogo />
+                    </div>
+                    <div>
+                      <h1 
+                        style={{
+                          fontSize: '2.5rem',
+                          fontWeight: '700',
+                          background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
+                          backgroundClip: 'text',
+                          WebkitBackgroundClip: 'text',
+                          WebkitTextFillColor: 'transparent',
+                          marginBottom: '0.5rem'
+                        }}
+                      >
+                        TerraCapsule
+                      </h1>
+                      <p style={{ color: '#94a3b8', fontSize: '1.2rem' }}>
+                        Explore the World Through Immersive 3D Technology
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="px-8 pb-8">
+                  <div style={{ display: 'grid', gap: '2rem' }}>
+                    {/* Mission */}
+                    <div>
+                      <h2 
+                        style={{
+                          fontSize: '1.5rem',
+                          fontWeight: '600',
+                          color: '#22d3ee',
+                          marginBottom: '1rem'
+                        }}
+                      >
+                        🌍 Our Mission
+                      </h2>
+                      <p style={{ color: '#cbd5e1', lineHeight: '1.7', fontSize: '1.1rem' }}>
+                        TerraCapsule revolutionizes travel discovery through cutting-edge 3D globe visualization, 
+                        real-time data integration, and immersive country exploration. We make the world accessible 
+                        to everyone, offering detailed insights into destinations, events, and cultural experiences 
+                        before you even pack your bags.
+                      </p>
+                    </div>
+
+                    {/* Features Grid */}
+                    <div>
+                      <h2 
+                        style={{
+                          fontSize: '1.5rem',
+                          fontWeight: '600',
+                          color: '#22d3ee',
+                          marginBottom: '1.5rem'
+                        }}
+                      >
+                        ✨ What Makes Us Special
+                      </h2>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+                        {[
+                          { icon: '🌐', title: 'Interactive 3D Globe', desc: 'Explore countries with our immersive CesiumJS-powered globe' },
+                          { icon: '📊', title: 'Real-Time Data', desc: 'Live weather, events, and destination information' },
+                          { icon: '🎯', title: 'Smart Recommendations', desc: 'AI-powered suggestions based on your interests' },
+                          { icon: '📱', title: 'Responsive Design', desc: 'Perfect experience across all devices' },
+                          { icon: '🔐', title: 'Secure & Private', desc: 'Your data is protected with industry-standard security' },
+                          { icon: '🌟', title: 'Community Driven', desc: 'Reviews and insights from fellow travelers' }
+                        ].map((feature, index) => (
+                          <div 
+                            key={index}
+                            style={{
+                              background: 'rgba(255, 255, 255, 0.05)',
+                              borderRadius: '12px',
+                              padding: '1.5rem',
+                              border: '1px solid rgba(255, 255, 255, 0.1)',
+                              textAlign: 'center'
+                            }}
+                          >
+                            <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{feature.icon}</div>
+                            <h3 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', marginBottom: '0.5rem' }}>
+                              {feature.title}
+                            </h3>
+                            <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: '1.5' }}>
+                              {feature.desc}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Stats */}
+                    <div>
+                      <h2 
+                        style={{
+                          fontSize: '1.5rem',
+                          fontWeight: '600',
+                          color: '#22d3ee',
+                          marginBottom: '1.5rem'
+                        }}
+                      >
+                        📈 By the Numbers
+                      </h2>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem' }}>
+                        {[
+                          { number: '195+', label: 'Countries' },
+                          { number: '50K+', label: 'Events Tracked' },
+                          { number: '1M+', label: 'Data Points' },
+                          { number: '24/7', label: 'Real-time Updates' }
+                        ].map((stat, index) => (
+                          <div key={index} style={{ textAlign: 'center' }}>
+                            <div 
+                              style={{
+                                fontSize: '2rem',
+                                fontWeight: '700',
+                                background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                              }}
+                            >
+                              {stat.number}
+                            </div>
+                            <div style={{ color: '#94a3b8', fontSize: '0.9rem' }}>{stat.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Contact */}
+                    <div>
+                      <h2 
+                        style={{
+                          fontSize: '1.5rem',
+                          fontWeight: '600',
+                          color: '#22d3ee',
+                          marginBottom: '1rem'
+                        }}
+                      >
+                        📧 Get in Touch
+                      </h2>
+                      <p style={{ color: '#cbd5e1', lineHeight: '1.7', fontSize: '1.1rem', marginBottom: '1rem' }}>
+                        Have questions or suggestions? We'd love to hear from you!
+                      </p>
+                      <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+                        <a 
+                          href="mailto:hello@terracapsule.com"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.75rem 1.5rem',
+                            background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                            borderRadius: '8px',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontWeight: '500'
+                          }}
+                        >
+                          📧 hello@terracapsule.com
+                        </a>
+                        <a 
+                          href="https://twitter.com/terracapsule"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.75rem 1.5rem',
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            color: 'white',
+                            textDecoration: 'none',
+                            fontWeight: '500',
+                            border: '1px solid rgba(255, 255, 255, 0.2)'
+                          }}
+                        >
+                          🐦 @terracapsule
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Sign In Modal */}
+        <AnimatePresence>
+          {showSignInModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+              style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                backdropFilter: 'blur(10px)'
+              }}
+              onClick={() => setShowSignInModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-md"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 58, 138, 0.95))',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '24px',
+                  border: '1px solid rgba(34, 211, 238, 0.3)',
+                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
+                }}
+              >
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowSignInModal(false)}
+                  className="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                >
+                  <span style={{ color: '#fff', fontSize: '16px' }}>×</span>
+                </button>
+
+                <div className="p-8">
+                  {/* Header */}
+                  <div className="text-center mb-8">
+                    <div className="w-12 h-12 mx-auto mb-4">
+                      <SimpleAnimatedLogo />
+                    </div>
+                    <h1 
+                      style={{
+                        fontSize: '1.8rem',
+                        fontWeight: '700',
+                        color: '#ffffff',
+                        marginBottom: '0.5rem'
+                      }}
+                    >
+                      Welcome Back
+                    </h1>
+                    <p style={{ color: '#94a3b8', fontSize: '1rem' }}>
+                      Sign in to your TerraCapsule account
+                    </p>
+                  </div>
+
+                  {/* Form */}
+                  <form className="space-y-6">
+                    <div>
+                      <label 
+                        style={{ 
+                          display: 'block', 
+                          color: '#cbd5e1', 
+                          fontSize: '0.9rem', 
+                          marginBottom: '0.5rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: '#ffffff',
+                          fontSize: '1rem',
+                          outline: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#22d3ee';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label 
+                        style={{ 
+                          display: 'block', 
+                          color: '#cbd5e1', 
+                          fontSize: '0.9rem', 
+                          marginBottom: '0.5rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Enter your password"
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: '#ffffff',
+                          fontSize: '1rem',
+                          outline: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#22d3ee';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                        <input type="checkbox" style={{ marginRight: '8px' }} />
+                        <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Remember me</span>
+                      </label>
+                      <a 
+                        href="#"
+                        style={{ color: '#22d3ee', fontSize: '0.9rem', textDecoration: 'none' }}
+                      >
+                        Forgot password?
+                      </a>
+                    </div>
+
+                    <button
+                      type="submit"
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                        border: 'none',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '1rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 10px 30px rgba(34, 211, 238, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert('Sign in functionality coming soon! This will connect to our authentication system.');
+                      }}
+                    >
+                      Sign In
+                    </button>
+                  </form>
+
+                  <div className="mt-6 text-center">
+                    <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+                      Don't have an account?{' '}
+                      <button
+                        onClick={() => {
+                          setShowSignInModal(false);
+                          setShowGetStartedModal(true);
+                        }}
+                        style={{
+                          color: '#22d3ee',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textDecoration: 'underline'
+                        }}
+                      >
+                        Get Started
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Get Started Modal */}
+        <AnimatePresence>
+          {showGetStartedModal && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+              style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                backdropFilter: 'blur(10px)'
+              }}
+              onClick={() => setShowGetStartedModal(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-md"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 58, 138, 0.95))',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '24px',
+                  border: '1px solid rgba(34, 211, 238, 0.3)',
+                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
+                }}
+              >
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowGetStartedModal(false)}
+                  className="absolute top-6 right-6 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                >
+                  <span style={{ color: '#fff', fontSize: '16px' }}>×</span>
+                </button>
+
+                <div className="p-8">
+                  {/* Header */}
+                  <div className="text-center mb-8">
+                    <div className="w-12 h-12 mx-auto mb-4">
+                      <SimpleAnimatedLogo />
+                    </div>
+                    <h1 
+                      style={{
+                        fontSize: '1.8rem',
+                        fontWeight: '700',
+                        color: '#ffffff',
+                        marginBottom: '0.5rem'
+                      }}
+                    >
+                      Join TerraCapsule
+                    </h1>
+                    <p style={{ color: '#94a3b8', fontSize: '1rem' }}>
+                      Start your journey around the world
+                    </p>
+                  </div>
+
+                  {/* Form */}
+                  <form className="space-y-6">
+                    <div>
+                      <label 
+                        style={{ 
+                          display: 'block', 
+                          color: '#cbd5e1', 
+                          fontSize: '0.9rem', 
+                          marginBottom: '0.5rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Full Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter your full name"
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: '#ffffff',
+                          fontSize: '1rem',
+                          outline: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#22d3ee';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label 
+                        style={{ 
+                          display: 'block', 
+                          color: '#cbd5e1', 
+                          fontSize: '0.9rem', 
+                          marginBottom: '0.5rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: '#ffffff',
+                          fontSize: '1rem',
+                          outline: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#22d3ee';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label 
+                        style={{ 
+                          display: 'block', 
+                          color: '#cbd5e1', 
+                          fontSize: '0.9rem', 
+                          marginBottom: '0.5rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Create a strong password"
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: '#ffffff',
+                          fontSize: '1rem',
+                          outline: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#22d3ee';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label 
+                        style={{ 
+                          display: 'block', 
+                          color: '#cbd5e1', 
+                          fontSize: '0.9rem', 
+                          marginBottom: '0.5rem',
+                          fontWeight: '500'
+                        }}
+                      >
+                        Confirm Password
+                      </label>
+                      <input
+                        type="password"
+                        placeholder="Confirm your password"
+                        style={{
+                          width: '100%',
+                          padding: '12px 16px',
+                          background: 'rgba(255, 255, 255, 0.1)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: '#ffffff',
+                          fontSize: '1rem',
+                          outline: 'none',
+                          transition: 'all 0.3s ease'
+                        }}
+                        onFocus={(e) => {
+                          e.target.style.borderColor = '#22d3ee';
+                          e.target.style.boxShadow = '0 0 0 3px rgba(34, 211, 238, 0.1)';
+                        }}
+                        onBlur={(e) => {
+                          e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                          e.target.style.boxShadow = 'none';
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ marginTop: '20px', marginBottom: '20px' }}>
+                      <label style={{ display: 'flex', alignItems: 'flex-start', cursor: 'pointer' }}>
+                        <input 
+                          type="checkbox" 
+                          style={{ marginRight: '12px', marginTop: '3px', minWidth: '16px' }} 
+                        />
+                        <span style={{ color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.4' }}>
+                          I agree to TerraCapsule's{' '}
+                          <a 
+                            href="#"
+                            style={{ color: '#22d3ee', textDecoration: 'underline' }}
+                          >
+                            Terms of Service
+                          </a>
+                          {' '}and{' '}
+                          <a 
+                            href="#"
+                            style={{ color: '#22d3ee', textDecoration: 'underline' }}
+                          >
+                            Privacy Policy
+                          </a>
+                        </span>
+                      </label>
+                    </div>
+
+                    <button
+                      type="submit"
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        background: 'linear-gradient(90deg, #10b981, #22d3ee)',
+                        border: 'none',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '1rem',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-2px)';
+                        e.currentTarget.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.3)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = 'none';
+                      }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        alert('Account creation coming soon! This will create your TerraCapsule profile.');
+                      }}
+                    >
+                      Create Account
+                    </button>
+                  </form>
+
+                  <div className="mt-6 text-center">
+                    <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
+                      Already have an account?{' '}
+                      <button
+                        onClick={() => {
+                          setShowGetStartedModal(false);
+                          setShowSignInModal(true);
+                        }}
+                        style={{
+                          color: '#22d3ee',
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textDecoration: 'underline'
+                        }}
+                      >
+                        Sign In
+                      </button>
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
