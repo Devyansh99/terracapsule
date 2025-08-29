@@ -978,6 +978,647 @@ export default function Home() {
         )}
       </AnimatePresence>
 
+      {/* Sign In Modal - Top Level for Immediate Access */}
+      <AnimatePresence>
+        {showSignInModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999999,
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              backdropFilter: 'blur(20px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              margin: 0
+            }}
+            onClick={() => setShowSignInModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0, y: 50 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '500px',
+                width: '100%',
+                maxHeight: '90vh',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 58, 138, 0.95))',
+                backdropFilter: 'blur(25px)',
+                borderRadius: '24px',
+                border: '1px solid rgba(34, 211, 238, 0.4)',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6), 0 0 100px rgba(34, 211, 238, 0.1)',
+                overflow: 'hidden',
+                position: 'relative'
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowSignInModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1
+                }}
+              >
+                ×
+              </button>
+
+              {/* Header */}
+              <div style={{ padding: '40px 40px 20px 40px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
+                  <div style={{ width: '50px', height: '50px', marginRight: '15px' }}>
+                    <SimpleAnimatedLogo />
+                  </div>
+                  <div>
+                    <h2 style={{
+                      fontSize: '28px',
+                      fontWeight: '700',
+                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      marginBottom: '8px',
+                      margin: 0
+                    }}>
+                      Welcome Back
+                    </h2>
+                    <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>
+                      Sign in to your TerraCapsule account
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Sign In Form */}
+              <div style={{ padding: '0 40px 40px 40px' }}>
+                <form style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {/* Email Field */}
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      marginBottom: '8px'
+                    }}>
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="Enter your email"
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  {/* Password Field */}
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      marginBottom: '8px'
+                    }}>
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Enter your password"
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  {/* Remember Me & Forgot Password */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '8px',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      fontSize: '14px',
+                      cursor: 'pointer'
+                    }}>
+                      <input
+                        type="checkbox"
+                        style={{
+                          accentColor: '#22d3ee',
+                          borderRadius: '4px'
+                        }}
+                      />
+                      Remember me
+                    </label>
+                    <button
+                      type="button"
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#22d3ee',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        textDecoration: 'underline'
+                      }}
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+
+                  {/* Sign In Button */}
+                  <button
+                    type="submit"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      marginTop: '8px'
+                    }}
+                  >
+                    Sign In
+                  </button>
+
+                  {/* Divider */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px',
+                    margin: '8px 0'
+                  }}>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>or</span>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
+                  </div>
+
+                  {/* Social Sign In */}
+                  <button
+                    type="button"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    🌐 Continue with Google
+                  </button>
+                </form>
+
+                {/* Sign Up Link */}
+                <div style={{ marginTop: '24px', textAlign: 'center' }}>
+                  <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                    Don't have an account?{' '}
+                    <button
+                      onClick={() => {
+                        setShowSignInModal(false);
+                        setShowGetStartedModal(true);
+                      }}
+                      style={{
+                        color: '#22d3ee',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        fontSize: '14px'
+                      }}
+                    >
+                      Get Started
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Get Started Modal - Top Level for Immediate Access */}
+      <AnimatePresence>
+        {showGetStartedModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999999,
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              backdropFilter: 'blur(20px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              margin: 0
+            }}
+            onClick={() => setShowGetStartedModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0, y: 50 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '550px',
+                width: '100%',
+                maxHeight: '90vh',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 58, 138, 0.95))',
+                backdropFilter: 'blur(25px)',
+                borderRadius: '24px',
+                border: '1px solid rgba(34, 211, 238, 0.4)',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6), 0 0 100px rgba(34, 211, 238, 0.1)',
+                overflow: 'hidden',
+                position: 'relative',
+                overflowY: 'auto'
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowGetStartedModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  fontSize: '20px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 1
+                }}
+              >
+                ×
+              </button>
+
+              {/* Header */}
+              <div style={{ padding: '40px 40px 20px 40px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
+                  <div style={{ width: '50px', height: '50px', marginRight: '15px' }}>
+                    <SimpleAnimatedLogo />
+                  </div>
+                  <div>
+                    <h2 style={{
+                      fontSize: '28px',
+                      fontWeight: '700',
+                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      marginBottom: '8px',
+                      margin: 0
+                    }}>
+                      Join TerraCapsule
+                    </h2>
+                    <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>
+                      Start your journey of exploration
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Registration Form */}
+              <div style={{ padding: '0 40px 40px 40px' }}>
+                <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {/* Name Fields */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <label style={{
+                        display: 'block',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontSize: '15px',
+                        fontWeight: '500',
+                        marginBottom: '8px'
+                      }}>
+                        First Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="John"
+                        style={{
+                          width: '100%',
+                          padding: '14px 16px',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: 'white',
+                          fontSize: '16px',
+                          outline: 'none',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{
+                        display: 'block',
+                        color: 'rgba(255, 255, 255, 0.9)',
+                        fontSize: '15px',
+                        fontWeight: '500',
+                        marginBottom: '8px'
+                      }}>
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Doe"
+                        style={{
+                          width: '100%',
+                          padding: '14px 16px',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          borderRadius: '12px',
+                          color: 'white',
+                          fontSize: '16px',
+                          outline: 'none',
+                          boxSizing: 'border-box'
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email Field */}
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      marginBottom: '8px'
+                    }}>
+                      Email Address
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="john@example.com"
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  {/* Password Field */}
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      marginBottom: '8px'
+                    }}>
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Create a strong password"
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  {/* Confirm Password Field */}
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      color: 'rgba(255, 255, 255, 0.9)',
+                      fontSize: '15px',
+                      fontWeight: '500',
+                      marginBottom: '8px'
+                    }}>
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      placeholder="Confirm your password"
+                      style={{
+                        width: '100%',
+                        padding: '14px 16px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '12px',
+                        color: 'white',
+                        fontSize: '16px',
+                        outline: 'none',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                  </div>
+
+                  {/* Terms Checkbox */}
+                  <div>
+                    <label style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '12px',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      lineHeight: '1.4'
+                    }}>
+                      <input
+                        type="checkbox"
+                        style={{
+                          accentColor: '#22d3ee',
+                          borderRadius: '4px',
+                          marginTop: '2px'
+                        }}
+                      />
+                      <span>
+                        I agree to the{' '}
+                        <button
+                          type="button"
+                          style={{
+                            color: '#22d3ee',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                            padding: 0,
+                            fontSize: 'inherit'
+                          }}
+                        >
+                          Terms of Service
+                        </button>
+                        {' '}and{' '}
+                        <button
+                          type="button"
+                          style={{
+                            color: '#22d3ee',
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                            padding: 0,
+                            fontSize: 'inherit'
+                          }}
+                        >
+                          Privacy Policy
+                        </button>
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Create Account Button */}
+                  <button
+                    type="submit"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                      border: 'none',
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontSize: '16px',
+                      fontWeight: '600',
+                      cursor: 'pointer',
+                      marginTop: '8px'
+                    }}
+                  >
+                    Create Account
+                  </button>
+
+                  {/* Divider */}
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '16px',
+                    margin: '8px 0'
+                  }}>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
+                    <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '14px' }}>or</span>
+                    <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
+                  </div>
+
+                  {/* Social Sign Up */}
+                  <button
+                    type="button"
+                    style={{
+                      width: '100%',
+                      padding: '16px',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '12px',
+                      color: 'white',
+                      fontSize: '16px',
+                      fontWeight: '500',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    🌐 Continue with Google
+                  </button>
+                </form>
+
+                {/* Sign In Link */}
+                <div style={{ marginTop: '24px', textAlign: 'center' }}>
+                  <p style={{ color: '#94a3b8', fontSize: '14px' }}>
+                    Already have an account?{' '}
+                    <button
+                      onClick={() => {
+                        setShowGetStartedModal(false);
+                        setShowSignInModal(true);
+                      }}
+                      style={{
+                        color: '#22d3ee',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        textDecoration: 'underline',
+                        fontSize: '14px'
+                      }}
+                    >
+                      Sign In
+                    </button>
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Full-Screen Immersive Globe Hero Section */}
       <section 
         style={{ 
@@ -2073,251 +2714,6 @@ export default function Home() {
             </div>
           </div>
         </footer>
-
-        {/* Sign In Modal */}
-        <AnimatePresence>
-          {showSignInModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
-              style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                backdropFilter: 'blur(10px)'
-              }}
-              onClick={() => setShowSignInModal(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className="relative w-full max-w-md"
-                style={{
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 58, 138, 0.95))',
-                  backdropFilter: 'blur(20px)',
-                  borderRadius: '24px',
-                  border: '1px solid rgba(34, 211, 238, 0.3)',
-                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5)'
-                }}
-              >
-                {/* Close Button */}
-                <button
-                  onClick={() => setShowSignInModal(false)}
-                  className="absolute top-4 right-4 text-white hover:text-gray-300"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: 'none',
-                    borderRadius: '50%',
-                    width: '40px',
-                    height: '40px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    fontSize: '1.2rem'
-                  }}
-                >
-                  ✕
-                </button>
-
-                {/* Header */}
-                <div className="p-8 pb-6">
-                  <div className="flex items-center mb-6">
-                    <div className="w-12 h-12 mr-3">
-                      <SimpleAnimatedLogo />
-                    </div>
-                    <div>
-                      <h2 style={{
-                        fontSize: '1.8rem',
-                        fontWeight: '700',
-                        background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        marginBottom: '0.25rem'
-                      }}>
-                        Welcome Back
-                      </h2>
-                      <p style={{ color: '#94a3b8', fontSize: '0.95rem' }}>
-                        Sign in to your TerraCapsule account
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Sign In Form */}
-                <div className="px-8 pb-8">
-                  <form style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                    {/* Email Field */}
-                    <div>
-                      <label style={{
-                        display: 'block',
-                        color: 'rgba(255, 255, 255, 0.9)',
-                        fontSize: '0.9rem',
-                        fontWeight: '500',
-                        marginBottom: '0.5rem'
-                      }}>
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        placeholder="Enter your email"
-                        style={{
-                          width: '100%',
-                          padding: '0.75rem',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          borderRadius: '12px',
-                          color: 'white',
-                          fontSize: '1rem',
-                          outline: 'none'
-                        }}
-                      />
-                    </div>
-
-                    {/* Password Field */}
-                    <div>
-                      <label style={{
-                        display: 'block',
-                        color: 'rgba(255, 255, 255, 0.9)',
-                        fontSize: '0.9rem',
-                        fontWeight: '500',
-                        marginBottom: '0.5rem'
-                      }}>
-                        Password
-                      </label>
-                      <input
-                        type="password"
-                        placeholder="Enter your password"
-                        style={{
-                          width: '100%',
-                          padding: '0.75rem',
-                          background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          borderRadius: '12px',
-                          color: 'white',
-                          fontSize: '1rem',
-                          outline: 'none'
-                        }}
-                      />
-                    </div>
-
-                    {/* Remember Me & Forgot Password */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <label style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '0.5rem',
-                        color: 'rgba(255, 255, 255, 0.8)',
-                        fontSize: '0.9rem',
-                        cursor: 'pointer'
-                      }}>
-                        <input
-                          type="checkbox"
-                          style={{
-                            accentColor: '#22d3ee',
-                            borderRadius: '4px'
-                          }}
-                        />
-                        Remember me
-                      </label>
-                      <button
-                        type="button"
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#22d3ee',
-                          fontSize: '0.9rem',
-                          cursor: 'pointer',
-                          textDecoration: 'underline'
-                        }}
-                      >
-                        Forgot password?
-                      </button>
-                    </div>
-
-                    {/* Sign In Button */}
-                    <button
-                      type="submit"
-                      style={{
-                        width: '100%',
-                        padding: '0.875rem',
-                        background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
-                        border: 'none',
-                        borderRadius: '12px',
-                        color: 'white',
-                        fontSize: '1rem',
-                        fontWeight: '600',
-                        cursor: 'pointer',
-                        marginTop: '0.5rem'
-                      }}
-                    >
-                      Sign In
-                    </button>
-
-                    {/* Divider */}
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1rem',
-                      margin: '1rem 0'
-                    }}>
-                      <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
-                      <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.9rem' }}>or</span>
-                      <div style={{ flex: 1, height: '1px', background: 'rgba(255, 255, 255, 0.2)' }}></div>
-                    </div>
-
-                    {/* Social Sign In */}
-                    <button
-                      type="button"
-                      style={{
-                        width: '100%',
-                        padding: '0.875rem',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '12px',
-                        color: 'white',
-                        fontSize: '1rem',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.5rem'
-                      }}
-                    >
-                      🌐 Continue with Google
-                    </button>
-                  </form>
-
-                  {/* Sign Up Link */}
-                  <div className="mt-6 text-center">
-                    <p style={{ color: '#94a3b8', fontSize: '0.9rem' }}>
-                      Don't have an account?{' '}
-                      <button
-                        onClick={() => {
-                          setShowSignInModal(false);
-                          setShowGetStartedModal(true);
-                        }}
-                        style={{
-                          color: '#22d3ee',
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          textDecoration: 'underline'
-                        }}
-                      >
-                        Get Started
-                      </button>
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Get Started Modal */}
         <AnimatePresence>
