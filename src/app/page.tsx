@@ -41,6 +41,11 @@ export default function Home() {
   ])
   const [newMessage, setNewMessage] = useState('')
 
+  // Form states
+  const [isLoading, setIsLoading] = useState(false)
+  const [formErrors, setFormErrors] = useState<{[key: string]: string}>({})
+  const [user, setUser] = useState<any>(null)
+
   // Lock/unlock body scroll when modals are open
   useEffect(() => {
     if (showAboutModal || showChatModal || showSignInModal || showGetStartedModal) {
@@ -111,6 +116,112 @@ export default function Home() {
       document.documentElement.style.height = ''
     }
   }, [showAboutModal, showChatModal, showSignInModal, showGetStartedModal])
+
+  // Handle user registration
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setFormErrors({})
+
+    const formData = new FormData(e.currentTarget)
+    const firstName = formData.get('firstName') as string
+    const lastName = formData.get('lastName') as string
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+    const confirmPassword = formData.get('confirmPassword') as string
+    const agreeToTerms = formData.get('agreeToTerms') as string
+
+    // Client-side validation
+    const errors: {[key: string]: string} = {}
+    
+    if (!firstName?.trim()) errors.firstName = 'First name is required'
+    if (!lastName?.trim()) errors.lastName = 'Last name is required'
+    if (!email?.trim()) errors.email = 'Email is required'
+    if (!password) errors.password = 'Password is required'
+    if (!confirmPassword) errors.confirmPassword = 'Please confirm your password'
+    if (password !== confirmPassword) errors.confirmPassword = 'Passwords do not match'
+    if (!agreeToTerms) errors.agreeToTerms = 'You must agree to the terms'
+    if (password && password.length < 6) errors.password = 'Password must be at least 6 characters'
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          email,
+          password,
+          confirmPassword
+        })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setUser(data.user)
+        setShowGetStartedModal(false)
+        alert('Account created successfully! Welcome to TerraCapsule!')
+      } else {
+        setFormErrors({ submit: data.error || 'Registration failed' })
+      }
+    } catch (error) {
+      setFormErrors({ submit: 'Network error. Please try again.' })
+    }
+
+    setIsLoading(false)
+  }
+
+  // Handle user login
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setFormErrors({})
+
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    // Client-side validation
+    const errors: {[key: string]: string} = {}
+    
+    if (!email?.trim()) errors.email = 'Email is required'
+    if (!password) errors.password = 'Password is required'
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors)
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setUser(data.user)
+        setShowSignInModal(false)
+        alert(`Welcome back, ${data.user.name}!`)
+      } else {
+        setFormErrors({ submit: data.error || 'Login failed' })
+      }
+    } catch (error) {
+      setFormErrors({ submit: 'Network error. Please try again.' })
+    }
+
+    setIsLoading(false)
+  }
 
   // Fetch countries from our backend API
   useEffect(() => {
@@ -1073,7 +1184,21 @@ export default function Home() {
 
               {/* Sign In Form */}
               <div style={{ padding: '0 40px 40px 40px' }}>
-                <form style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {/* Display form error */}
+                  {formErrors.submit && (
+                    <div style={{
+                      padding: '12px',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      borderRadius: '8px',
+                      color: '#fca5a5',
+                      fontSize: '14px'
+                    }}>
+                      {formErrors.submit}
+                    </div>
+                  )}
+
                   {/* Email Field */}
                   <div>
                     <label style={{
@@ -1086,13 +1211,15 @@ export default function Home() {
                       Email Address
                     </label>
                     <input
+                      name="email"
                       type="email"
                       placeholder="Enter your email"
+                      required
                       style={{
                         width: '100%',
                         padding: '14px 16px',
                         background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${formErrors.email ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                         borderRadius: '12px',
                         color: 'white',
                         fontSize: '16px',
@@ -1100,6 +1227,11 @@ export default function Home() {
                         boxSizing: 'border-box'
                       }}
                     />
+                    {formErrors.email && (
+                      <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                        {formErrors.email}
+                      </p>
+                    )}
                   </div>
 
                   {/* Password Field */}
@@ -1114,13 +1246,15 @@ export default function Home() {
                       Password
                     </label>
                     <input
+                      name="password"
                       type="password"
                       placeholder="Enter your password"
+                      required
                       style={{
                         width: '100%',
                         padding: '14px 16px',
                         background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${formErrors.password ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                         borderRadius: '12px',
                         color: 'white',
                         fontSize: '16px',
@@ -1128,6 +1262,11 @@ export default function Home() {
                         boxSizing: 'border-box'
                       }}
                     />
+                    {formErrors.password && (
+                      <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                        {formErrors.password}
+                      </p>
+                    )}
                   </div>
 
                   {/* Remember Me & Forgot Password */}
@@ -1167,20 +1306,24 @@ export default function Home() {
                   {/* Sign In Button */}
                   <button
                     type="submit"
+                    disabled={isLoading}
                     style={{
                       width: '100%',
                       padding: '16px',
-                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                      background: isLoading 
+                        ? 'rgba(255, 255, 255, 0.1)' 
+                        : 'linear-gradient(90deg, #22d3ee, #3b82f6)',
                       border: 'none',
                       borderRadius: '12px',
                       color: 'white',
                       fontSize: '16px',
                       fontWeight: '600',
-                      cursor: 'pointer',
-                      marginTop: '8px'
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      marginTop: '8px',
+                      opacity: isLoading ? 0.7 : 1
                     }}
                   >
-                    Sign In
+                    {isLoading ? 'Signing In...' : 'Sign In'}
                   </button>
 
                   {/* Divider */}
@@ -1342,7 +1485,21 @@ export default function Home() {
 
               {/* Registration Form */}
               <div style={{ padding: '0 40px 40px 40px' }}>
-                <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {/* Display form error */}
+                  {formErrors.submit && (
+                    <div style={{
+                      padding: '12px',
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      borderRadius: '8px',
+                      color: '#fca5a5',
+                      fontSize: '14px'
+                    }}>
+                      {formErrors.submit}
+                    </div>
+                  )}
+
                   {/* Name Fields */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                     <div>
@@ -1356,13 +1513,15 @@ export default function Home() {
                         First Name
                       </label>
                       <input
+                        name="firstName"
                         type="text"
                         placeholder="John"
+                        required
                         style={{
                           width: '100%',
                           padding: '14px 16px',
                           background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          border: `1px solid ${formErrors.firstName ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                           borderRadius: '12px',
                           color: 'white',
                           fontSize: '16px',
@@ -1370,6 +1529,11 @@ export default function Home() {
                           boxSizing: 'border-box'
                         }}
                       />
+                      {formErrors.firstName && (
+                        <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                          {formErrors.firstName}
+                        </p>
+                      )}
                     </div>
                     <div>
                       <label style={{
@@ -1382,13 +1546,15 @@ export default function Home() {
                         Last Name
                       </label>
                       <input
+                        name="lastName"
                         type="text"
                         placeholder="Doe"
+                        required
                         style={{
                           width: '100%',
                           padding: '14px 16px',
                           background: 'rgba(255, 255, 255, 0.05)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          border: `1px solid ${formErrors.lastName ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                           borderRadius: '12px',
                           color: 'white',
                           fontSize: '16px',
@@ -1396,6 +1562,11 @@ export default function Home() {
                           boxSizing: 'border-box'
                         }}
                       />
+                      {formErrors.lastName && (
+                        <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                          {formErrors.lastName}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -1411,13 +1582,15 @@ export default function Home() {
                       Email Address
                     </label>
                     <input
+                      name="email"
                       type="email"
                       placeholder="john@example.com"
+                      required
                       style={{
                         width: '100%',
                         padding: '14px 16px',
                         background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${formErrors.email ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                         borderRadius: '12px',
                         color: 'white',
                         fontSize: '16px',
@@ -1425,6 +1598,11 @@ export default function Home() {
                         boxSizing: 'border-box'
                       }}
                     />
+                    {formErrors.email && (
+                      <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                        {formErrors.email}
+                      </p>
+                    )}
                   </div>
 
                   {/* Password Field */}
@@ -1439,13 +1617,15 @@ export default function Home() {
                       Password
                     </label>
                     <input
+                      name="password"
                       type="password"
                       placeholder="Create a strong password"
+                      required
                       style={{
                         width: '100%',
                         padding: '14px 16px',
                         background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${formErrors.password ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                         borderRadius: '12px',
                         color: 'white',
                         fontSize: '16px',
@@ -1453,6 +1633,11 @@ export default function Home() {
                         boxSizing: 'border-box'
                       }}
                     />
+                    {formErrors.password && (
+                      <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                        {formErrors.password}
+                      </p>
+                    )}
                   </div>
 
                   {/* Confirm Password Field */}
@@ -1467,13 +1652,15 @@ export default function Home() {
                       Confirm Password
                     </label>
                     <input
+                      name="confirmPassword"
                       type="password"
                       placeholder="Confirm your password"
+                      required
                       style={{
                         width: '100%',
                         padding: '14px 16px',
                         background: 'rgba(255, 255, 255, 0.05)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        border: `1px solid ${formErrors.confirmPassword ? 'rgba(239, 68, 68, 0.5)' : 'rgba(255, 255, 255, 0.2)'}`,
                         borderRadius: '12px',
                         color: 'white',
                         fontSize: '16px',
@@ -1481,6 +1668,11 @@ export default function Home() {
                         boxSizing: 'border-box'
                       }}
                     />
+                    {formErrors.confirmPassword && (
+                      <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                        {formErrors.confirmPassword}
+                      </p>
+                    )}
                   </div>
 
                   {/* Terms Checkbox */}
@@ -1495,7 +1687,9 @@ export default function Home() {
                       lineHeight: '1.4'
                     }}>
                       <input
+                        name="agreeToTerms"
                         type="checkbox"
+                        required
                         style={{
                           accentColor: '#22d3ee',
                           borderRadius: '4px',
@@ -1535,25 +1729,34 @@ export default function Home() {
                         </button>
                       </span>
                     </label>
+                    {formErrors.agreeToTerms && (
+                      <p style={{ color: '#fca5a5', fontSize: '12px', margin: '4px 0 0 0' }}>
+                        {formErrors.agreeToTerms}
+                      </p>
+                    )}
                   </div>
 
                   {/* Create Account Button */}
                   <button
                     type="submit"
+                    disabled={isLoading}
                     style={{
                       width: '100%',
                       padding: '16px',
-                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                      background: isLoading 
+                        ? 'rgba(255, 255, 255, 0.1)' 
+                        : 'linear-gradient(90deg, #22d3ee, #3b82f6)',
                       border: 'none',
                       borderRadius: '12px',
                       color: 'white',
                       fontSize: '16px',
                       fontWeight: '600',
-                      cursor: 'pointer',
-                      marginTop: '8px'
+                      cursor: isLoading ? 'not-allowed' : 'pointer',
+                      marginTop: '8px',
+                      opacity: isLoading ? 0.7 : 1
                     }}
                   >
-                    Create Account
+                    {isLoading ? 'Creating Account...' : 'Create Account'}
                   </button>
 
                   {/* Divider */}

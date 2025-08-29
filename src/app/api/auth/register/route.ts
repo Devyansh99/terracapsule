@@ -5,11 +5,25 @@ import clientPromise from '@/lib/mongodb'
 
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, password } = await request.json()
+    console.log('Registration API called');
+    const body = await request.json()
+    console.log('Request body:', { ...body, password: '[HIDDEN]', confirmPassword: '[HIDDEN]' });
+    const { firstName, lastName, name, email, password, confirmPassword } = body
 
-    if (!name || !email || !password) {
+    // Handle both name formats (direct name or firstName + lastName)
+    const fullName = name || (firstName && lastName ? `${firstName} ${lastName}` : firstName || lastName)
+
+    if (!fullName || !email || !password) {
       return NextResponse.json(
         { error: 'Name, email and password are required' },
+        { status: 400 }
+      )
+    }
+
+    // Validate password confirmation if provided
+    if (confirmPassword && password !== confirmPassword) {
+      return NextResponse.json(
+        { error: 'Passwords do not match' },
         { status: 400 }
       )
     }
@@ -32,6 +46,7 @@ export async function POST(request: NextRequest) {
     }
 
     const client = await clientPromise
+    console.log('MongoDB connection successful');
     const db = client.db('terracapsule')
     const users = db.collection('users')
 
@@ -50,11 +65,14 @@ export async function POST(request: NextRequest) {
 
     // Create user
     const newUser = {
-      name,
+      name: fullName,
+      firstName: firstName || fullName.split(' ')[0] || '',
+      lastName: lastName || fullName.split(' ').slice(1).join(' ') || '',
       email,
       password: hashedPassword,
       createdAt: new Date(),
-      lastLogin: new Date()
+      lastLogin: new Date(),
+      profileComplete: !!(firstName && lastName && email) // Track if profile is complete
     }
 
     const result = await users.insertOne(newUser)
@@ -64,7 +82,9 @@ export async function POST(request: NextRequest) {
       { 
         userId: result.insertedId, 
         email: newUser.email,
-        name: newUser.name 
+        name: newUser.name,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName
       },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '7d' }
@@ -77,7 +97,10 @@ export async function POST(request: NextRequest) {
         user: { 
           id: result.insertedId, 
           email: newUser.email, 
-          name: newUser.name 
+          name: newUser.name,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+          profileComplete: newUser.profileComplete
         }
       },
       { status: 201 }

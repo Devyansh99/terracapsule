@@ -5,7 +5,9 @@ import clientPromise from '@/lib/mongodb'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('Login API called');
     const { email, password } = await request.json()
+    console.log('Login attempt for email:', email);
 
     if (!email || !password) {
       return NextResponse.json(
@@ -15,6 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const client = await clientPromise
+    console.log('MongoDB connection successful for login');
     const db = client.db('terracapsule')
     const users = db.collection('users')
 
