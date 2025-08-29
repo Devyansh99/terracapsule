@@ -35,6 +35,82 @@ export default function Home() {
   const [showAboutModal, setShowAboutModal] = useState(false)
   const [showSignInModal, setShowSignInModal] = useState(false)
   const [showGetStartedModal, setShowGetStartedModal] = useState(false)
+  const [showChatModal, setShowChatModal] = useState(false)
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, sender: 'bot', message: 'Hello! Welcome to TerraCapsule! How can I help you today?', time: new Date() }
+  ])
+  const [newMessage, setNewMessage] = useState('')
+
+  // Lock/unlock body scroll when modals are open
+  useEffect(() => {
+    if (showAboutModal || showChatModal || showSignInModal || showGetStartedModal) {
+      // Save current scroll position
+      const scrollY = window.scrollY
+      
+      // Lock the scroll completely
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.left = '0'
+      document.body.style.right = '0'
+      document.body.style.width = '100%'
+      document.body.style.height = '100%'
+      
+      // Also prevent scrolling on document and html
+      document.documentElement.style.overflow = 'hidden'
+      document.documentElement.style.position = 'fixed'
+      document.documentElement.style.top = `-${scrollY}px`
+      document.documentElement.style.left = '0'
+      document.documentElement.style.right = '0'
+      document.documentElement.style.width = '100%'
+      document.documentElement.style.height = '100%'
+      
+    } else {
+      // Get the scroll position from the body's top style
+      const scrollY = document.body.style.top
+      
+      // Restore body styles
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+      
+      // Restore html styles
+      document.documentElement.style.overflow = ''
+      document.documentElement.style.position = ''
+      document.documentElement.style.top = ''
+      document.documentElement.style.left = ''
+      document.documentElement.style.right = ''
+      document.documentElement.style.width = ''
+      document.documentElement.style.height = ''
+      
+      // Restore scroll position
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1)
+      }
+    }
+
+    return () => {
+      // Cleanup on unmount
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.left = ''
+      document.body.style.right = ''
+      document.body.style.width = ''
+      document.body.style.height = ''
+      document.documentElement.style.overflow = ''
+      document.documentElement.style.position = ''
+      document.documentElement.style.top = ''
+      document.documentElement.style.left = ''
+      document.documentElement.style.right = ''
+      document.documentElement.style.width = ''
+      document.documentElement.style.height = ''
+    }
+  }, [showAboutModal, showChatModal, showSignInModal, showGetStartedModal])
 
   // Fetch countries from our backend API
   useEffect(() => {
@@ -415,6 +491,493 @@ export default function Home() {
   // Main Site After Loading
   return (
     <div className="main-site">
+      {/* About Modal - Fixed Position Overlay (Top Level) */}
+      <AnimatePresence>
+        {showAboutModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999999,
+              backgroundColor: 'rgba(0, 0, 0, 0.85)',
+              backdropFilter: 'blur(20px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              margin: 0
+            }}
+            onClick={() => setShowAboutModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.7, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.7, opacity: 0, y: 50 }}
+              transition={{ type: "spring", duration: 0.5 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                maxWidth: '800px',
+                width: '100%',
+                maxHeight: '90vh',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 58, 138, 0.95))',
+                backdropFilter: 'blur(25px)',
+                borderRadius: '24px',
+                border: '1px solid rgba(34, 211, 238, 0.4)',
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6), 0 0 100px rgba(34, 211, 238, 0.1)',
+                overflow: 'hidden',
+                position: 'relative'
+              }}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setShowAboutModal(false)}
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '20px',
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#ffffff',
+                  fontSize: '24px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  zIndex: 10
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                ×
+              </button>
+
+              {/* Modal Content - No Scroll, Compact */}
+              <div style={{ 
+                padding: '40px',
+                color: '#ffffff'
+              }}>
+                {/* Header Section */}
+                <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                  <div style={{ 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    gap: '15px',
+                    marginBottom: '15px'
+                  }}>
+                    <div style={{ fontSize: '40px' }}>🌍</div>
+                    <h1 style={{
+                      fontSize: '36px',
+                      fontWeight: '800',
+                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      margin: 0,
+                      fontFamily: 'Orbitron, system-ui, sans-serif'
+                    }}>
+                      TERRACAPSULE
+                    </h1>
+                  </div>
+                  <p style={{
+                    fontSize: '18px',
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    fontWeight: '300',
+                    letterSpacing: '0.5px'
+                  }}>
+                    Explore • Discover • Travel
+                  </p>
+                </div>
+
+                {/* Mission Section */}
+                <div style={{ marginBottom: '30px' }}>
+                  <h2 style={{
+                    fontSize: '24px',
+                    fontWeight: '700',
+                    color: '#22d3ee',
+                    marginBottom: '15px',
+                    textAlign: 'center'
+                  }}>
+                    Our Mission
+                  </h2>
+                  <p style={{
+                    fontSize: '16px',
+                    lineHeight: '1.6',
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    textAlign: 'center',
+                    maxWidth: '600px',
+                    margin: '0 auto'
+                  }}>
+                    TerraCapsule revolutionizes travel exploration by combining cutting-edge 3D technology 
+                    with comprehensive destination information, creating immersive experiences that inspire 
+                    wanderlust and meaningful discoveries.
+                  </p>
+                </div>
+
+                {/* Features Grid */}
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+                  gap: '20px',
+                  marginBottom: '25px'
+                }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '10px' }}>🌐</div>
+                    <h3 style={{ fontSize: '16px', color: '#22d3ee', marginBottom: '8px' }}>Interactive 3D Globe</h3>
+                    <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>
+                      Explore countries in stunning 3D with real-time interactions.
+                    </p>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '10px' }}>🎯</div>
+                    <h3 style={{ fontSize: '16px', color: '#3b82f6', marginBottom: '8px' }}>Smart Discovery</h3>
+                    <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>
+                      AI-powered recommendations for destinations and attractions.
+                    </p>
+                  </div>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontSize: '32px', marginBottom: '10px' }}>🌟</div>
+                    <h3 style={{ fontSize: '16px', color: '#8b5cf6', marginBottom: '8px' }}>Travel Intelligence</h3>
+                    <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px' }}>
+                      Real-time weather, cultural tips, and travel insights.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Contact Info - Compact */}
+                <div style={{ 
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  textAlign: 'center',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  <h3 style={{ fontSize: '18px', color: '#22d3ee', marginBottom: '12px' }}>
+                    Ready to Explore?
+                  </h3>
+                  <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '15px', fontSize: '14px' }}>
+                    Join thousands of travelers discovering their next adventure.
+                  </p>
+                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
+                    <button
+                      onClick={() => {
+                        setShowAboutModal(false);
+                        setShowGetStartedModal(true);
+                      }}
+                      style={{
+                        padding: '10px 20px',
+                        background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                        border: 'none',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.05)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                      }}
+                    >
+                      Get Started
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowAboutModal(false);
+                      }}
+                      style={{
+                        padding: '10px 20px',
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '8px',
+                        color: '#ffffff',
+                        fontWeight: '600',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                      }}
+                    >
+                      Continue Exploring
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Chat Button - Top Level for Immediate Access */}
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 2, type: "spring" }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowChatModal(true)}
+        style={{
+          position: 'fixed',
+          bottom: '30px',
+          right: '30px',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #22d3ee, #3b82f6)',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '24px',
+          color: 'white',
+          boxShadow: '0 8px 25px rgba(34, 211, 238, 0.4)',
+          zIndex: 10000,
+          transition: 'all 0.3s ease'
+        }}
+      >
+        💬
+      </motion.button>
+
+      {/* Chat Modal - Top Level for Immediate Access */}
+      <AnimatePresence>
+        {showChatModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999999,
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+              backdropFilter: 'blur(10px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              margin: 0
+            }}
+            onClick={() => setShowChatModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: '500px',
+                height: '600px',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 58, 138, 0.95))',
+                backdropFilter: 'blur(25px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(34, 211, 238, 0.3)',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+              }}
+            >
+              {/* Chat Header */}
+              <div style={{
+                padding: '20px',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'rgba(0, 0, 0, 0.2)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #22d3ee, #3b82f6)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px'
+                  }}>
+                    🤖
+                  </div>
+                  <div>
+                    <h3 style={{ color: 'white', margin: 0, fontSize: '18px' }}>TerraCapsule Assistant</h3>
+                    <p style={{ color: 'rgba(255, 255, 255, 0.7)', margin: 0, fontSize: '12px' }}>Online • Ready to help</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowChatModal(false)}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    fontSize: '18px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Chat Messages */}
+              <div style={{
+                flex: 1,
+                padding: '20px',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}>
+                {chatMessages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    style={{
+                      alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                      maxWidth: '80%'
+                    }}
+                  >
+                    <div style={{
+                      padding: '12px 16px',
+                      borderRadius: msg.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                      background: msg.sender === 'user' 
+                        ? 'linear-gradient(135deg, #22d3ee, #3b82f6)'
+                        : 'rgba(255, 255, 255, 0.1)',
+                      color: 'white',
+                      fontSize: '14px',
+                      lineHeight: '1.4'
+                    }}>
+                      {msg.message}
+                    </div>
+                    <p style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      margin: '4px 0 0 0',
+                      textAlign: msg.sender === 'user' ? 'right' : 'left'
+                    }}>
+                      {msg.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Chat Input */}
+              <div style={{
+                padding: '20px',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'rgba(0, 0, 0, 0.2)'
+              }}>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    if (newMessage.trim()) {
+                      const userMsg = {
+                        id: chatMessages.length + 1,
+                        sender: 'user' as const,
+                        message: newMessage,
+                        time: new Date()
+                      }
+                      setChatMessages([...chatMessages, userMsg])
+                      
+                      // Auto-reply after a short delay
+                      setTimeout(() => {
+                        const botReplies = [
+                          "Thanks for your message! I'm here to help you explore the world with TerraCapsule.",
+                          "That's a great question! Our 3D globe feature lets you discover countries in an immersive way.",
+                          "I'd be happy to help! You can explore different destinations and get real-time information.",
+                          "Excellent! Feel free to click on any country in our 3D globe to learn more about it.",
+                          "Perfect! Our platform offers detailed insights about countries, weather, and cultural information."
+                        ]
+                        const randomReply = botReplies[Math.floor(Math.random() * botReplies.length)]
+                        const botMsg = {
+                          id: chatMessages.length + 2,
+                          sender: 'bot' as const,
+                          message: randomReply,
+                          time: new Date()
+                        }
+                        setChatMessages(prev => [...prev, botMsg])
+                      }, 1000)
+                      
+                      setNewMessage('')
+                    }
+                  }}
+                  style={{ display: 'flex', gap: '12px' }}
+                >
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    style={{
+                      flex: 1,
+                      padding: '12px 16px',
+                      borderRadius: '25px',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      color: 'white',
+                      fontSize: '14px',
+                      outline: 'none'
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #22d3ee, #3b82f6)',
+                      border: 'none',
+                      color: 'white',
+                      fontSize: '18px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    ➤
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Full-Screen Immersive Globe Hero Section */}
       <section 
         style={{ 
@@ -1510,248 +2073,6 @@ export default function Home() {
             </div>
           </div>
         </footer>
-
-        {/* About Modal - Professional Fixed Position */}
-        <AnimatePresence>
-          {showAboutModal && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 99999,
-                backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                backdropFilter: 'blur(20px)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '20px'
-              }}
-              onClick={() => setShowAboutModal(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.7, opacity: 0, y: 50 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.7, opacity: 0, y: 50 }}
-                transition={{ type: "spring", duration: 0.5 }}
-                onClick={(e) => e.stopPropagation()}
-                style={{
-                  maxWidth: '900px',
-                  width: '100%',
-                  maxHeight: '85vh',
-                  background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 58, 138, 0.95))',
-                  backdropFilter: 'blur(25px)',
-                  borderRadius: '24px',
-                  border: '1px solid rgba(34, 211, 238, 0.4)',
-                  boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6), 0 0 100px rgba(34, 211, 238, 0.1)',
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}
-              >
-                {/* Close Button */}
-                <button
-                  onClick={() => setShowAboutModal(false)}
-                  style={{
-                    position: 'absolute',
-                    top: '20px',
-                    right: '20px',
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    background: 'rgba(255, 255, 255, 0.1)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    color: '#ffffff',
-                    fontSize: '24px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.3s ease',
-                    zIndex: 10
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.8)';
-                    e.currentTarget.style.transform = 'scale(1.1)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                    e.currentTarget.style.transform = 'scale(1)';
-                  }}
-                >
-                  ×
-                </button>
-
-                {/* Modal Content with Scroll */}
-                <div style={{ 
-                  padding: '40px',
-                  maxHeight: '85vh',
-                  overflowY: 'auto',
-                  color: '#ffffff'
-                }}>
-                  {/* Header Section */}
-                  <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-                    <div style={{ 
-                      display: 'inline-flex', 
-                      alignItems: 'center', 
-                      gap: '15px',
-                      marginBottom: '20px'
-                    }}>
-                      <div style={{ fontSize: '48px' }}>🌍</div>
-                      <h1 style={{
-                        fontSize: '48px',
-                        fontWeight: '800',
-                        background: 'linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        margin: 0,
-                        fontFamily: 'Orbitron, system-ui, sans-serif'
-                      }}>
-                        TERRACAPSULE
-                      </h1>
-                    </div>
-                    <p style={{
-                      fontSize: '20px',
-                      color: 'rgba(255, 255, 255, 0.8)',
-                      fontWeight: '300',
-                      letterSpacing: '0.5px'
-                    }}>
-                      Explore • Discover • Travel
-                    </p>
-                  </div>
-
-                  {/* Mission Section */}
-                  <div style={{ marginBottom: '40px' }}>
-                    <h2 style={{
-                      fontSize: '28px',
-                      fontWeight: '700',
-                      color: '#22d3ee',
-                      marginBottom: '20px',
-                      textAlign: 'center'
-                    }}>
-                      Our Mission
-                    </h2>
-                    <p style={{
-                      fontSize: '18px',
-                      lineHeight: '1.7',
-                      color: 'rgba(255, 255, 255, 0.9)',
-                      textAlign: 'center',
-                      maxWidth: '700px',
-                      margin: '0 auto'
-                    }}>
-                      TerraCapsule is revolutionizing how people explore our beautiful planet. 
-                      We combine cutting-edge 3D technology with comprehensive travel information 
-                      to create immersive experiences that inspire wanderlust and facilitate 
-                      meaningful travel discoveries.
-                    </p>
-                  </div>
-
-                  {/* Features Grid */}
-                  <div style={{ 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-                    gap: '30px',
-                    marginBottom: '40px'
-                  }}>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '48px', marginBottom: '15px' }}>🌐</div>
-                      <h3 style={{ fontSize: '20px', color: '#22d3ee', marginBottom: '10px' }}>Interactive 3D Globe</h3>
-                      <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
-                        Explore countries in stunning 3D with real-time interactions and detailed information.
-                      </p>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '48px', marginBottom: '15px' }}>🎯</div>
-                      <h3 style={{ fontSize: '20px', color: '#3b82f6', marginBottom: '10px' }}>Smart Discovery</h3>
-                      <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
-                        Find events, attractions, and hidden gems with our intelligent recommendation system.
-                      </p>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: '48px', marginBottom: '15px' }}>🌟</div>
-                      <h3 style={{ fontSize: '20px', color: '#8b5cf6', marginBottom: '10px' }}>Travel Intelligence</h3>
-                      <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '16px' }}>
-                        Get real-time weather, cultural tips, and travel insights for every destination.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Contact Info */}
-                  <div style={{ 
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    borderRadius: '16px',
-                    padding: '30px',
-                    textAlign: 'center',
-                    border: '1px solid rgba(255, 255, 255, 0.1)'
-                  }}>
-                    <h3 style={{ fontSize: '24px', color: '#22d3ee', marginBottom: '20px' }}>
-                      Ready to Explore?
-                    </h3>
-                    <p style={{ color: 'rgba(255, 255, 255, 0.8)', marginBottom: '25px' }}>
-                      Join thousands of travelers who have discovered their next adventure with TerraCapsule.
-                    </p>
-                    <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', flexWrap: 'wrap' }}>
-                      <button
-                        onClick={() => {
-                          setShowAboutModal(false);
-                          setShowGetStartedModal(true);
-                        }}
-                        style={{
-                          padding: '12px 30px',
-                          background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
-                          border: 'none',
-                          borderRadius: '12px',
-                          color: '#ffffff',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'scale(1.05)';
-                          e.currentTarget.style.boxShadow = '0 10px 25px rgba(34, 211, 238, 0.3)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'scale(1)';
-                          e.currentTarget.style.boxShadow = 'none';
-                        }}
-                      >
-                        Get Started
-                      </button>
-                      <button
-                        onClick={() => {
-                          setShowAboutModal(false);
-                        }}
-                        style={{
-                          padding: '12px 30px',
-                          background: 'rgba(255, 255, 255, 0.1)',
-                          border: '1px solid rgba(255, 255, 255, 0.2)',
-                          borderRadius: '12px',
-                          color: '#ffffff',
-                          fontWeight: '600',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-                        }}
-                      >
-                        Continue Exploring
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Sign In Modal */}
         <AnimatePresence>
