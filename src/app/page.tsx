@@ -1739,15 +1739,9 @@ export default function Home() {
       
       {/* Content Sections Below Globe */}
       <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)' }}>
-        {/* Scrollable ChatBot Component - positioned for sticky behavior */}
-        <div style={{ 
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 1000
-        }}>
-          <ChatBot />
-        </div>
+        {/* ChatBot Component - self-positioned with fixed positioning */}
+        <ChatBot />
+        
         {/* Welcome Section - Professional Overview */}
         <motion.section 
           id="welcome"

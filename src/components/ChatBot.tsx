@@ -21,7 +21,6 @@ export default function ChatBot() {
   ])
   const [newMessage, setNewMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
-  const [scrollOffset, setScrollOffset] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
@@ -31,24 +30,6 @@ export default function ChatBot() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
-
-  // Create scrollable behavior by following scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      // Move the chatbot slightly with scroll to create scrollable effect
-      const scrollY = window.scrollY
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-      const scrollPercent = Math.min(scrollY / Math.max(maxScroll, 1), 1)
-      
-      // Apply a subtle parallax effect - button moves up as you scroll down
-      setScrollOffset(scrollPercent * 100) // Move up to 100px based on scroll
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll() // Initial call
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return
@@ -101,13 +82,17 @@ export default function ChatBot() {
   }
 
   return (
-    <div style={{ 
-      position: 'fixed', 
-      bottom: `${20 + scrollOffset}px`, 
-      right: '20px', 
-      zIndex: 1000,
-      transition: 'bottom 0.1s ease-out'
-    }}>
+    <div 
+      style={{ 
+        position: 'fixed', 
+        bottom: '20px', 
+        right: '20px', 
+        zIndex: 2147483647, // Maximum possible z-index value
+        pointerEvents: 'auto', 
+        willChange: 'transform',
+        isolation: 'isolate'
+      }}
+    >
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
@@ -369,7 +354,16 @@ export default function ChatBot() {
 
       {/* Chat Button */}
       <motion.button
-        whileHover={{ scale: 1.1 }}
+        // Add gentle floating animation to make it more noticeable
+        animate={{
+          y: [0, -8, 0], // Gentle up and down float
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        whileHover={{ scale: 1.1, y: -12 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
         style={{
@@ -386,7 +380,9 @@ export default function ChatBot() {
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: '24px',
-          boxShadow: '0 8px 32px rgba(34, 211, 238, 0.4)',
+          boxShadow: isOpen 
+            ? '0 12px 40px rgba(239, 68, 68, 0.5)' 
+            : '0 8px 32px rgba(34, 211, 238, 0.4)',
           position: 'relative',
           overflow: 'hidden',
           transition: 'all 0.3s ease'
