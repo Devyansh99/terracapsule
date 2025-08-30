@@ -15,7 +15,7 @@ export default function ChatBot() {
     { 
       id: 1, 
       sender: 'bot', 
-      message: 'Hello! Welcome to TerraCapsule! 🌍 How can I help you explore our platform today?', 
+      message: 'Hey there! 👋 I\'m your TerraCapsule AI assistant!\n\nI can help you explore countries, terrain, and geography. Try asking:\n• "Tell me about Japan"\n• "What\'s the terrain like in Switzerland?"\n• Or type "/" for quick commands! ⚡', 
       time: new Date() 
     }
   ])
@@ -42,32 +42,67 @@ export default function ChatBot() {
     }
 
     setMessages(prev => [...prev, userMessage])
+    const currentMessage = newMessage
     setNewMessage('')
     setIsTyping(true)
 
-    // Simulate bot response
-    setTimeout(() => {
-      const botResponses = [
-        "That's a great question! TerraCapsule offers advanced 3D mapping and terrain analysis tools.",
-        "I can help you navigate through our features. Would you like to know about our country exploration tools?",
-        "TerraCapsule provides real-time geographical data and interactive visualizations. What specific feature interests you?",
-        "Our platform combines satellite imagery with AI-powered insights. Feel free to ask about any country or location!",
-        "Thanks for your interest! You can explore countries, view terrain data, and get detailed geographical information.",
-        "I'm here to help you discover the world through TerraCapsule's advanced mapping technology!"
-      ]
+    try {
+      // Prepare conversation history (last 10 messages for context)
+      const recentHistory = messages.slice(-10).map(msg => ({
+        sender: msg.sender,
+        message: msg.message,
+        time: msg.time.toISOString()
+      }))
 
-      const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)]
+      // Call the Gemini API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: currentMessage,
+          history: recentHistory
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        const botMessage: Message = {
+          id: messages.length + 2,
+          sender: 'bot',
+          message: data.message,
+          time: new Date()
+        }
+
+        setMessages(prev => [...prev, botMessage])
+      } else {
+        // Error fallback
+        const errorMessage: Message = {
+          id: messages.length + 2,
+          sender: 'bot',
+          message: "I'm experiencing some technical difficulties. Please try again! In the meantime, try using commands like /help, /features, or ask me about countries and terrain. 🌍",
+          time: new Date()
+        }
+
+        setMessages(prev => [...prev, errorMessage])
+      }
+    } catch (error) {
+      console.error('Chat API Error:', error)
       
-      const botMessage: Message = {
+      // Network error fallback
+      const fallbackMessage: Message = {
         id: messages.length + 2,
         sender: 'bot',
-        message: randomResponse,
+        message: "Sorry, I'm having connection issues right now. Please check your internet connection and try again! 🌐",
         time: new Date()
       }
 
-      setMessages(prev => [...prev, botMessage])
+      setMessages(prev => [...prev, fallbackMessage])
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -75,6 +110,48 @@ export default function ChatBot() {
       e.preventDefault()
       handleSendMessage()
     }
+  }
+
+  // Function to format message text with basic markdown support
+  const formatMessage = (text: string) => {
+    // Split by double newlines for paragraphs
+    const paragraphs = text.split('\n\n')
+    
+    return paragraphs.map((paragraph, index) => (
+      <div key={index} style={{ marginBottom: index < paragraphs.length - 1 ? '12px' : '0' }}>
+        {paragraph.split('\n').map((line, lineIndex) => {
+          // Handle bullet points
+          if (line.startsWith('• ') || line.startsWith('- ')) {
+            return (
+              <div key={lineIndex} style={{ 
+                marginLeft: '16px', 
+                marginBottom: '4px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '8px'
+              }}>
+                <span style={{ color: '#22d3ee', fontSize: '12px', marginTop: '2px' }}>•</span>
+                <span>{line.substring(2)}</span>
+              </div>
+            )
+          }
+          
+          // Handle bold text **text**
+          const boldRegex = /\*\*(.*?)\*\*/g
+          const parts = line.split(boldRegex)
+          
+          return (
+            <div key={lineIndex} style={{ marginBottom: lineIndex < paragraph.split('\n').length - 1 ? '4px' : '0' }}>
+              {parts.map((part, partIndex) => 
+                partIndex % 2 === 1 ? 
+                  <strong key={partIndex} style={{ color: '#22d3ee', fontWeight: '600' }}>{part}</strong> : 
+                  <span key={partIndex}>{part}</span>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    ))
   }
 
   const formatTime = (date: Date) => {
@@ -220,7 +297,48 @@ export default function ChatBot() {
                     lineHeight: '1.4',
                     backdropFilter: msg.sender === 'bot' ? 'blur(10px)' : 'none'
                   }}>
-                    <p style={{ margin: 0, marginBottom: '4px' }}>{msg.message}</p>
+                    {/* Enhanced message display */}
+                    {/* Enhanced message display */}
+                    <div style={{ marginBottom: '4px' }}>
+                      {msg.sender === 'user' ? (
+                        <div>
+                          {/* Show command indicator for user commands */}
+                          {msg.message.startsWith('/') && (
+                            <div style={{
+                              background: 'rgba(255, 255, 255, 0.2)',
+                              padding: '2px 8px',
+                              borderRadius: '10px',
+                              fontSize: '10px',
+                              marginBottom: '6px',
+                              display: 'inline-block',
+                              fontWeight: '500'
+                            }}>
+                              ⚡ Command
+                            </div>
+                          )}
+                          <div>{msg.message}</div>
+                        </div>
+                      ) : (
+                        <div>
+                          {/* AI response indicator for helpful suggestions */}
+                          {msg.message.includes('💡') && (
+                            <div style={{
+                              background: 'rgba(34, 211, 238, 0.15)',
+                              padding: '3px 8px',
+                              borderRadius: '10px',
+                              fontSize: '10px',
+                              marginBottom: '6px',
+                              display: 'inline-block',
+                              border: '1px solid rgba(34, 211, 238, 0.3)',
+                              fontWeight: '500'
+                            }}>
+                              💡 Helpful tip
+                            </div>
+                          )}
+                          {formatMessage(msg.message)}
+                        </div>
+                      )}
+                    </div>
                     <p style={{ 
                       margin: 0, 
                       fontSize: '11px', 
@@ -243,17 +361,17 @@ export default function ChatBot() {
                   }}
                 >
                   <div style={{
-                    padding: '12px 16px',
+                    padding: '8px 12px',
                     borderRadius: '18px 18px 18px 4px',
                     background: 'rgba(255, 255, 255, 0.1)',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '6px'
+                    gap: '8px'
                   }}>
                     <div style={{
                       display: 'flex',
-                      gap: '3px'
+                      gap: '2px'
                     }}>
                       {[0, 1, 2].map((i) => (
                         <motion.div
@@ -268,8 +386,8 @@ export default function ChatBot() {
                             delay: i * 0.2
                           }}
                           style={{
-                            width: '6px',
-                            height: '6px',
+                            width: '4px',
+                            height: '4px',
                             borderRadius: '50%',
                             background: '#22d3ee'
                           }}
@@ -277,11 +395,10 @@ export default function ChatBot() {
                       ))}
                     </div>
                     <span style={{ 
-                      color: 'rgba(255, 255, 255, 0.7)', 
-                      fontSize: '12px',
-                      marginLeft: '4px'
+                      color: 'rgba(255, 255, 255, 0.8)', 
+                      fontSize: '11px'
                     }}>
-                      Assistant is typing...
+                      Thinking...
                     </span>
                   </div>
                 </motion.div>
@@ -295,6 +412,29 @@ export default function ChatBot() {
               borderTop: '1px solid rgba(34, 211, 238, 0.2)',
               background: 'rgba(15, 23, 42, 0.8)'
             }}>
+              {/* Command suggestions when user types "/" */}
+              {newMessage.startsWith('/') && newMessage.length > 1 && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  style={{
+                    background: 'rgba(34, 211, 238, 0.1)',
+                    border: '1px solid rgba(34, 211, 238, 0.3)',
+                    borderRadius: '12px',
+                    padding: '10px',
+                    marginBottom: '10px',
+                    fontSize: '11px'
+                  }}
+                >
+                  <div style={{ color: '#22d3ee', fontWeight: '600', marginBottom: '4px', fontSize: '12px' }}>
+                    💡 Quick Commands:
+                  </div>
+                  <div style={{ color: 'rgba(255, 255, 255, 0.9)', lineHeight: '1.3' }}>
+                    <strong>/explore</strong> Japan • <strong>/terrain</strong> Alps • <strong>/weather</strong> Iceland • <strong>/help</strong>
+                  </div>
+                </motion.div>
+              )}
+              
               <div style={{
                 display: 'flex',
                 gap: '12px',
@@ -304,20 +444,25 @@ export default function ChatBot() {
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Type your message..."
+                  placeholder={newMessage.startsWith('/') ? 'Try: /explore Japan' : 'Ask about any country or place...'}
                   style={{
                     flex: 1,
                     padding: '12px 16px',
                     borderRadius: '20px',
-                    border: '1px solid rgba(34, 211, 238, 0.3)',
-                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: newMessage.startsWith('/') 
+                      ? '1px solid rgba(34, 211, 238, 0.5)' 
+                      : '1px solid rgba(34, 211, 238, 0.3)',
+                    background: newMessage.startsWith('/') 
+                      ? 'rgba(34, 211, 238, 0.1)' 
+                      : 'rgba(255, 255, 255, 0.1)',
                     color: 'white',
                     fontSize: '14px',
                     outline: 'none',
                     resize: 'none',
                     minHeight: '20px',
                     maxHeight: '80px',
-                    fontFamily: 'inherit'
+                    fontFamily: 'inherit',
+                    transition: 'all 0.2s ease'
                   }}
                   rows={1}
                 />
@@ -331,7 +476,9 @@ export default function ChatBot() {
                     borderRadius: '50%',
                     border: 'none',
                     background: newMessage.trim() 
-                      ? 'linear-gradient(135deg, #22d3ee, #3b82f6)'
+                      ? newMessage.startsWith('/') 
+                        ? 'linear-gradient(135deg, #22d3ee, #06b6d4)'
+                        : 'linear-gradient(135deg, #22d3ee, #3b82f6)'
                       : 'rgba(255, 255, 255, 0.2)',
                     color: 'white',
                     cursor: newMessage.trim() ? 'pointer' : 'not-allowed',
@@ -344,7 +491,7 @@ export default function ChatBot() {
                     transition: 'all 0.2s ease'
                   }}
                 >
-                  ➤
+                  {newMessage.startsWith('/') ? '⚡' : '➤'}
                 </motion.button>
               </div>
             </div>
