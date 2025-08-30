@@ -598,6 +598,9 @@ export default function Home() {
   // Main Site After Loading
   return (
     <div className="main-site">
+      {/* Professional ChatBot Component - Fixed Position */}
+      <ChatBot />
+
       {/* About Modal - Fixed Position Overlay (Top Level) */}
       <AnimatePresence>
         {showAboutModal && (
@@ -832,6 +835,257 @@ export default function Home() {
                     </button>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Floating Chat Button - Top Level for Immediate Access */}
+      {/* Old chat system removed - now using professional ChatBot component */}
+    </div>
+  )
+}
+      <motion.button
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 2, type: "spring" }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => setShowChatModal(true)}
+        style={{
+          position: 'fixed',
+          bottom: '30px',
+          right: '30px',
+          width: '60px',
+          height: '60px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #22d3ee, #3b82f6)',
+          border: 'none',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '24px',
+          color: 'white',
+          boxShadow: '0 8px 25px rgba(34, 211, 238, 0.4)',
+          zIndex: 10000,
+          transition: 'all 0.3s ease'
+        }}
+      >
+        💬
+      </motion.button>
+
+      {/* Chat Modal - Top Level for Immediate Access */}
+      <AnimatePresence>
+        {showChatModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999999,
+              backgroundColor: 'rgba(0, 0, 0, 0.75)',
+              backdropFilter: 'blur(10px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '20px',
+              margin: 0
+            }}
+            onClick={() => setShowChatModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.8, opacity: 0, y: 50 }}
+              transition={{ type: "spring", duration: 0.4 }}
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                width: '100%',
+                maxWidth: '500px',
+                height: '600px',
+                background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 58, 138, 0.95))',
+                backdropFilter: 'blur(25px)',
+                borderRadius: '20px',
+                border: '1px solid rgba(34, 211, 238, 0.3)',
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
+                position: 'relative',
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+              }}
+            >
+              {/* Chat Header */}
+              <div style={{
+                padding: '20px',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'rgba(0, 0, 0, 0.2)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #22d3ee, #3b82f6)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px'
+                  }}>
+                    🤖
+                  </div>
+                  <div>
+                    <h3 style={{ color: 'white', margin: 0, fontSize: '18px' }}>TerraCapsule Assistant</h3>
+                    <p style={{ color: 'rgba(255, 255, 255, 0.7)', margin: 0, fontSize: '12px' }}>Online • Ready to help</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowChatModal(false)}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: 'white',
+                    fontSize: '18px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Chat Messages */}
+              <div style={{
+                flex: 1,
+                padding: '20px',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px'
+              }}>
+                {chatMessages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    style={{
+                      alignSelf: msg.sender === 'user' ? 'flex-end' : 'flex-start',
+                      maxWidth: '80%'
+                    }}
+                  >
+                    <div style={{
+                      padding: '12px 16px',
+                      borderRadius: msg.sender === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
+                      background: msg.sender === 'user' 
+                        ? 'linear-gradient(135deg, #22d3ee, #3b82f6)'
+                        : 'rgba(255, 255, 255, 0.1)',
+                      color: 'white',
+                      fontSize: '14px',
+                      lineHeight: '1.4'
+                    }}>
+                      {msg.message}
+                    </div>
+                    <p style={{
+                      fontSize: '10px',
+                      color: 'rgba(255, 255, 255, 0.5)',
+                      margin: '4px 0 0 0',
+                      textAlign: msg.sender === 'user' ? 'right' : 'left'
+                    }}>
+                      {msg.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Chat Input */}
+              <div style={{
+                padding: '20px',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'rgba(0, 0, 0, 0.2)'
+              }}>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    if (newMessage.trim()) {
+                      const userMsg = {
+                        id: chatMessages.length + 1,
+                        sender: 'user' as const,
+                        message: newMessage,
+                        time: new Date()
+                      }
+                      setChatMessages([...chatMessages, userMsg])
+                      
+                      // Auto-reply after a short delay
+                      setTimeout(() => {
+                        const botReplies = [
+                          "Thanks for your message! I'm here to help you explore the world with TerraCapsule.",
+                          "That's a great question! Our 3D globe feature lets you discover countries in an immersive way.",
+                          "I'd be happy to help! You can explore different destinations and get real-time information.",
+                          "Excellent! Feel free to click on any country in our 3D globe to learn more about it.",
+                          "Perfect! Our platform offers detailed insights about countries, weather, and cultural information."
+                        ]
+                        const randomReply = botReplies[Math.floor(Math.random() * botReplies.length)]
+                        const botMsg = {
+                          id: chatMessages.length + 2,
+                          sender: 'bot' as const,
+                          message: randomReply,
+                          time: new Date()
+                        }
+                        setChatMessages(prev => [...prev, botMsg])
+                      }, 1000)
+                      
+                      setNewMessage('')
+                    }
+                  }}
+                  style={{ display: 'flex', gap: '12px' }}
+                >
+                  <input
+                    type="text"
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    style={{
+                      flex: 1,
+                      padding: '12px 16px',
+                      borderRadius: '25px',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      color: 'white',
+                      fontSize: '14px',
+                      outline: 'none'
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    style={{
+                      width: '44px',
+                      height: '44px',
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #22d3ee, #3b82f6)',
+                      border: 'none',
+                      color: 'white',
+                      fontSize: '18px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    ➤
+                  </button>
+                </form>
               </div>
             </motion.div>
           </motion.div>
@@ -1738,16 +1992,7 @@ export default function Home() {
       </section>
       
       {/* Content Sections Below Globe */}
-      <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - 100px)' }}>
-        {/* Scrollable ChatBot Component - positioned for sticky behavior */}
-        <div style={{ 
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 1000
-        }}>
-          <ChatBot />
-        </div>
+      <div style={{ position: 'relative', zIndex: 10 }}>
         {/* Welcome Section - Professional Overview */}
         <motion.section 
           id="welcome"
