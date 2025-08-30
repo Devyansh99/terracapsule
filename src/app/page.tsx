@@ -2,8 +2,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import CesiumGlobe from '../components/CesiumGlobe'
-import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo'
 import ChatBot from '../components/ChatBot'
+import SimpleAnimatedLogo from '../components/SimpleAnimatedLogo'
 import Link from 'next/link'
 
 interface Country {
@@ -908,7 +908,7 @@ export default function Home() {
               {/* Header */}
               <div style={{ padding: '40px 40px 20px 40px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-                  <div style={{ width: '50px', height: '50px', marginRight: '15px' }}>
+                  <div style={{ width: '50px', height: '50px', marginRight: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
                     <SimpleAnimatedLogo />
                   </div>
                   <div>
@@ -1209,7 +1209,7 @@ export default function Home() {
               {/* Header */}
               <div style={{ padding: '40px 40px 20px 40px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-                  <div style={{ width: '50px', height: '50px', marginRight: '15px' }}>
+                  <div style={{ width: '50px', height: '50px', marginRight: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
                     <SimpleAnimatedLogo />
                   </div>
                   <div>
