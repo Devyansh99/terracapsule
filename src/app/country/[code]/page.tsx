@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ChatBot from '../../../components/ChatBot';
 
 interface Country {
   id: string
@@ -1020,6 +1021,9 @@ export default function CountryPage() {
           </div>
         </div>
       </div>
+
+      {/* ChatBot Component - Always accessible */}
+      <ChatBot />
     </div>
   )
 }
