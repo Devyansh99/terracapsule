@@ -11,31 +11,31 @@ TerraCapsule is a cutting-edge web application that combines satellite imagery, 
 
 ## 🚀 Features
 
-### 🌐 Interactive 3D Globe
+### Interactive 3D Globe
 - **Real-time 3D Visualization**: Powered by CesiumJS for smooth, interactive globe rendering
 - **Satellite Imagery**: High-resolution satellite data integration
 - **Terrain Analysis**: Advanced elevation data and geological information
 - **Dynamic Navigation**: Seamless country-to-country exploration
 
-### 🤖 AI-Powered Assistant
+### AI-Powered Assistant
 - **Intelligent Chatbot**: Gemini AI integration for natural language interactions
 - **Custom Commands**: TerraCapsule-specific commands for geographical queries
 - **Natural Language Processing**: Understands casual questions about geography
 - **Real-time Responses**: Context-aware conversations with memory
 
-### 📊 Data Analytics
+### Data Analytics
 - **Country Profiles**: Comprehensive geographical, demographic, and economic data
 - **Terrain Comparison**: Side-by-side analysis of different locations
 - **Weather Integration**: Climate and weather pattern information
 - **Population Statistics**: Demographics and population analytics
 
-### 🎨 Modern UI/UX
+### Modern UI/UX
 - **Responsive Design**: Optimized for all devices and screen sizes
 - **Professional Animations**: Smooth transitions using Framer Motion
 - **Dark Theme**: Modern dark UI optimized for data visualization
 - **Intuitive Navigation**: User-friendly interface design
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 ### **Frontend Framework**
 - **Next.js 15.5.0** - React framework with App Router
@@ -58,7 +58,7 @@ TerraCapsule is a cutting-edge web application that combines satellite imagery, 
 - **JWT** - Secure authentication system
 - **bcryptjs** - Password encryption
 
-## 🔌 API Integrations
+## API Integrations
 
 ### **1. Google Gemini AI API**
 - **Purpose**: Intelligent chatbot and natural language processing
@@ -86,7 +86,7 @@ TerraCapsule is a cutting-edge web application that combines satellite imagery, 
   - `/api/auth` - User authentication
 - **Features**: Custom geographical commands, user management
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+ and npm/yarn
@@ -144,7 +144,7 @@ npm run dev
 
 Visit `http://localhost:3000` to view the application.
 
-## 🔑 API Keys Setup Guide
+## API Keys Setup Guide
 
 ### **Google Gemini AI API** (Free)
 1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
@@ -164,7 +164,7 @@ Visit `http://localhost:3000` to view the application.
 2. Create new access token
 3. Add to `NEXT_PUBLIC_CESIUM_ION_ACCESS_TOKEN`
 
-## 💻 Development
+## Development
 
 ### Project Structure
 ```
@@ -194,7 +194,7 @@ npm run db:seed      # Database seeding
 npm run db:reset     # Reset database
 ```
 
-## 🤖 AI Chatbot Commands
+## AI Chatbot Commands
 
 The TerraCapsule AI assistant supports both natural language and specific commands:
 
@@ -204,16 +204,7 @@ The TerraCapsule AI assistant supports both natural language and specific comman
 - "How mountainous is Switzerland?"
 - "Compare France vs Germany"
 
-### **Specific Commands**
-- `/explore [country]` - Detailed country information
-- `/terrain [location]` - Terrain analysis and elevation data
-- `/weather [location]` - Climate and weather patterns
-- `/compare [A] vs [B]` - Side-by-side country comparison
-- `/population [location]` - Demographics and population data
-- `/resources [country]` - Natural resources and economy
-- `/help` - Show all available commands
-
-## 🌐 Deployment
+## Deployment
 
 ### **Vercel (Recommended)**
 ```bash
@@ -235,50 +226,20 @@ npm run build
 npm start
 ```
 
-## 🔒 Security Features
+## License
 
-- **API Key Protection**: Server-side API key management
-- **JWT Authentication**: Secure user sessions
-- **Password Encryption**: bcryptjs for secure password storage
-- **Environment Variables**: Sensitive data protection
-- **HTTPS Ready**: SSL/TLS encryption support
+This project is licensed under a public license. See the [LICENSE](LICENSE) file for details.
 
-## 📊 Performance Metrics
-
-- **Lighthouse Score**: 95+ performance rating
-- **3D Rendering**: 60 FPS globe interaction
-- **API Response Time**: <200ms average
-- **Bundle Size**: Optimized with Next.js
-- **SEO Optimized**: Meta tags and structured data
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **CesiumJS** for 3D globe visualization
 - **Google** for Maps API and Gemini AI
 - **Next.js Team** for the amazing framework
 - **Vercel** for hosting and deployment platform
 
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/Devyansh99/terracapsule/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/Devyansh99/terracapsule/discussions)
-- **Email**: [Contact Support](mailto:support@terracapsule.com)
-
 ---
 
 <div align="center">
   <strong>🌍 Explore the World with TerraCapsule</strong><br>
-  Made with ❤️ for geography enthusiasts and data visualization lovers
+  Made with for geography enthusiasts and data visualization lovers
 </div>
