@@ -467,131 +467,370 @@ export default function Home() {
     </div>
   );
 
-  // Loading Screen - Single Page, No Scrolling
+  // Tesseract-Style Cinematic Loading Screen
   if (!enterSite) {
     return (
-      <main className="loading-container flex items-center justify-center min-h-screen text-white relative overflow-hidden">
-        {/* Animated background particles */}
-        {isClient && (
-          <div className="absolute inset-0 pointer-events-none">
-            {particleData.map((particle, i) => (
-              <div
-                key={i}
-                className="floating-particle"
-                style={{
-                  left: `${particle.left}%`,
-                  top: `${particle.top}%`,
-                  animationDelay: `${particle.delay}s`,
-                  animationDuration: `${particle.duration}s`,
-                  opacity: particle.opacity,
-                  willChange: 'transform'
-                }}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Centered Content - Single Page Layout */}
-        <div className="z-10 flex flex-col items-center max-w-6xl px-8">
-          <TerraCapsuleLogo />
-
-          <div className="text-center space-y-8 mb-12">
-            <h1 className="hero-title">
-              TERRA
-              <span className="title-highlight">CAPSULE</span>
-            </h1>
-            
-            <div className="hero-subtitle-container">
-              <p className="hero-subtitle">
-                {progress < 100 ? (
-                  <>
-                    <span className="subtitle-emphasis">CRAFTING</span> YOUR ULTIMATE
-                    <br />
-                    <span className="subtitle-accent">TRAVEL EXPERIENCE</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="subtitle-emphasis">YOUR GATEWAY</span> TO
-                    <br />
-                    <span className="subtitle-accent">EXTRAORDINARY DESTINATIONS</span>
-                  </>
-                )}
-              </p>
-            </div>
+      <AnimatePresence>
+        <motion.main 
+          className="loading-container flex items-center justify-center min-h-screen text-white relative overflow-hidden"
+          exit={{ 
+            scale: 20,
+            opacity: 0,
+            transition: { duration: 1.5, ease: [0.76, 0, 0.24, 1] }
+          }}
+        >
+          {/* Deep space background with stars */}
+          <div className="absolute inset-0 bg-black">
+            {/* Animated starfield */}
+            {isClient && (
+              <>
+                {[...Array(50)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute bg-white rounded-full"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                      width: Math.random() * 2 + 'px',
+                      height: Math.random() * 2 + 'px',
+                    }}
+                    animate={{
+                      opacity: [0.2, 1, 0.2],
+                      scale: [1, 1.5, 1]
+                    }}
+                    transition={{
+                      duration: Math.random() * 3 + 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2
+                    }}
+                  />
+                ))}
+              </>
+            )}
           </div>
 
-          {/* Progress Section - Centered Below Title */}
-          {!showEnterButton && (
-            <div className="progress-section">
-              <div className="progress-header">
-                <span className="progress-label">JOURNEY INITIALIZATION</span>
-                <span className="progress-percentage">{Math.round(progress)}<span className="percentage-symbol">%</span></span>
-              </div>
-              
-              <div className="progress-bar-container">
-                <div 
-                  className="progress-bar-fill"
-                  style={{ width: `${Math.round(progress)}%` }}
+          {/* Cinematic light beams */}
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(ellipse at center, rgba(34, 211, 238, 0.15) 0%, transparent 60%)',
+            }}
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+
+          {/* Main content with cinematic entrance */}
+          <motion.div 
+            className="z-10 flex flex-col items-center px-8 relative"
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ 
+              duration: 1.2, 
+              ease: [0.16, 1, 0.3, 1]
+            }}
+          >
+            {/* Logo with dramatic entrance */}
+            <motion.div
+              initial={{ scale: 0, rotate: -180, opacity: 0 }}
+              animate={{ scale: 1, rotate: 0, opacity: 1 }}
+              transition={{ 
+                duration: 1.5, 
+                delay: 0.3,
+                ease: [0.16, 1, 0.3, 1]
+              }}
+              style={{ marginBottom: '3rem', position: 'relative' }}
+            >
+              {/* Expanding rings behind logo */}
+              {[...Array(3)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute inset-0"
+                  style={{
+                    border: '1px solid rgba(34, 211, 238, 0.3)',
+                    borderRadius: '50%',
+                    width: '100px',
+                    height: '100px',
+                    left: '50%',
+                    top: '50%',
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                  animate={{
+                    scale: [1, 2.5 + i * 0.5],
+                    opacity: [0.6, 0]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: i * 0.8,
+                    ease: "easeOut"
+                  }}
                 />
-              </div>
+              ))}
+              <TerraCapsuleLogo />
+            </motion.div>
 
-              <p className="progress-status">
-                {Math.round(progress) < 25 && "ESTABLISHING GLOBAL CONNECTIONS"}
-                {Math.round(progress) >= 25 && Math.round(progress) < 50 && "LOADING IMMERSIVE EXPERIENCES"}
-                {Math.round(progress) >= 50 && Math.round(progress) < 75 && "PREPARING INTERACTIVE INTERFACE"}
-                {Math.round(progress) >= 75 && "FINALIZING YOUR ADVENTURE"}
-              </p>
-            </div>
-          )}
-
-          {/* Enter Section - Replace Progress Section When Complete */}
-          {showEnterButton && (
-            <div className="enter-section">
-              <div className="enter-description">
-                <p className="enter-text">
-                  DISCOVER <span className="text-highlight">EXTRAORDINARY DESTINATIONS</span> THROUGH AN
-                  <br />
-                  <span className="text-emphasis">IMMERSIVE 3D EXPERIENCE</span>
-                </p>
-                <p className="enter-subtext">
-                  YOUR ADVENTURE BEGINS HERE
-                </p>
-              </div>
-
-              <button
-                onClick={() => setEnterSite(true)}
-                className="hero-enter-button"
+            {/* Title with letter-by-letter reveal */}
+            <div style={{ overflow: 'hidden', marginBottom: '1.5rem' }}>
+              <motion.h1 
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ 
+                  duration: 1, 
+                  delay: 0.8,
+                  ease: [0.16, 1, 0.3, 1]
+                }}
+                style={{
+                  fontSize: 'clamp(2.5rem, 8vw, 6rem)',
+                  fontWeight: '900',
+                  letterSpacing: '0.1em',
+                  background: 'linear-gradient(135deg, #ffffff, #22d3ee, #3b82f6)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontFamily: 'Orbitron, system-ui, sans-serif',
+                  textAlign: 'center',
+                  lineHeight: 1.2
+                }}
               >
-                <span className="button-text">ENTER TERRACAPSULE</span>
-              </button>
-
-              <div className="enter-instructions">
-                PRESS ENTER OR CLICK ABOVE TO BEGIN YOUR JOURNEY
-              </div>
+                TERRACAPSULE
+              </motion.h1>
             </div>
+
+            {/* Animated divider line */}
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ duration: 1, delay: 1.3 }}
+              style={{
+                width: '300px',
+                maxWidth: '80vw',
+                height: '1px',
+                background: 'linear-gradient(90deg, transparent, #22d3ee, transparent)',
+                marginBottom: '1.5rem'
+              }}
+            />
+
+            {/* Tagline with fade-in */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.6 }}
+              style={{
+                fontSize: 'clamp(0.875rem, 2vw, 1.125rem)',
+                color: 'rgba(255, 255, 255, 0.7)',
+                letterSpacing: '0.3em',
+                marginBottom: '4rem',
+                fontWeight: '300',
+                textAlign: 'center'
+              }}
+            >
+              EXPLORE THE WORLD
+            </motion.p>
+
+            {/* Progress section or Enter button */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 2 }}
+            >
+              {!showEnterButton ? (
+                <div style={{ width: '400px', maxWidth: '90vw' }}>
+                  {/* Sleek progress container */}
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.03)',
+                    backdropFilter: 'blur(20px)',
+                    padding: '2rem',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(34, 211, 238, 0.2)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}>
+                    {/* Scanning line effect */}
+                    <motion.div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '2px',
+                        background: 'linear-gradient(90deg, transparent, #22d3ee, transparent)',
+                        boxShadow: '0 0 20px #22d3ee'
+                      }}
+                      animate={{
+                        y: [0, 100, 0]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                    />
+
+                    {/* Progress percentage */}
+                    <motion.div
+                      style={{
+                        fontSize: '3rem',
+                        fontWeight: '200',
+                        textAlign: 'center',
+                        marginBottom: '1.5rem',
+                        fontFamily: 'Orbitron, monospace',
+                        color: '#22d3ee'
+                      }}
+                      key={Math.round(progress)}
+                      initial={{ opacity: 0, scale: 1.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {Math.round(progress)}
+                    </motion.div>
+
+                    {/* Progress bar */}
+                    <div style={{
+                      position: 'relative',
+                      height: '2px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      overflow: 'hidden',
+                      marginBottom: '1rem'
+                    }}>
+                      <motion.div
+                        style={{
+                          position: 'absolute',
+                          left: 0,
+                          top: 0,
+                          height: '100%',
+                          background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                          boxShadow: '0 0 10px #22d3ee',
+                          width: `${progress}%`
+                        }}
+                      />
+                    </div>
+
+                    {/* Loading text */}
+                    <motion.p
+                      style={{
+                        fontSize: '0.75rem',
+                        textAlign: 'center',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        letterSpacing: '0.2em',
+                        fontWeight: '300'
+                      }}
+                      animate={{
+                        opacity: [0.5, 1, 0.5]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity
+                      }}
+                    >
+                      INITIALIZING
+                    </motion.p>
+                  </div>
+                </div>
+              ) : (
+                <div style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '2rem'
+                }}>
+                  {/* Cinematic enter button */}
+                  <motion.button
+                    onClick={() => setEnterSite(true)}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    whileHover={{ 
+                      scale: 1.05,
+                      boxShadow: '0 0 50px rgba(34, 211, 238, 0.5)',
+                      transition: { duration: 0.2 }
+                    }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      padding: '1.25rem 4rem',
+                      background: 'rgba(34, 211, 238, 0.1)',
+                      backdropFilter: 'blur(20px)',
+                      border: '2px solid rgba(34, 211, 238, 0.5)',
+                      borderRadius: '50px',
+                      color: '#ffffff',
+                      fontSize: '1rem',
+                      fontWeight: '600',
+                      letterSpacing: '0.3em',
+                      cursor: 'pointer',
+                      boxShadow: '0 0 30px rgba(34, 211, 238, 0.3)',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {/* Button glow pulse */}
+                    <motion.div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'radial-gradient(circle, rgba(34, 211, 238, 0.3) 0%, transparent 70%)',
+                      }}
+                      animate={{
+                        scale: [1, 1.5, 1],
+                        opacity: [0.5, 0.8, 0.5]
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity
+                      }}
+                    />
+                    <span style={{ position: 'relative', zIndex: 1 }}>ENTER</span>
+                  </motion.button>
+
+                  {/* Hint text */}
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    style={{
+                      fontSize: '0.75rem',
+                      color: 'rgba(255, 255, 255, 0.4)',
+                      letterSpacing: '0.2em'
+                    }}
+                  >
+                    CLICK TO BEGIN
+                  </motion.p>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+
+          {/* Cinematic corner elements */}
+          {isClient && (
+            <>
+              <motion.div
+                className="absolute top-0 left-0 w-32 h-32"
+                style={{
+                  borderTop: '1px solid rgba(34, 211, 238, 0.3)',
+                  borderLeft: '1px solid rgba(34, 211, 238, 0.3)',
+                }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 2.5 }}
+              />
+              <motion.div
+                className="absolute bottom-0 right-0 w-32 h-32"
+                style={{
+                  borderBottom: '1px solid rgba(34, 211, 238, 0.3)',
+                  borderRight: '1px solid rgba(34, 211, 238, 0.3)',
+                }}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1, delay: 2.5 }}
+              />
+            </>
           )}
-        </div>
-
-        {/* Floating Elements - Only Show When Enter Button Appears */}
-        {showEnterButton && (
-          <>
-            <div className="absolute top-20 left-20 opacity-30">
-              <motion.div
-                animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="w-4 h-4 border border-cyan-400 rounded-full"
-              />
-            </div>
-            <div className="absolute bottom-32 right-32 opacity-20">
-              <motion.div
-                animate={{ rotate: -360, scale: [1, 0.8, 1] }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                className="w-6 h-6 border border-teal-400 rounded-full"
-              />
-            </div>
-          </>
-        )}
-      </main>
+        </motion.main>
+      </AnimatePresence>
     );
   }
 
@@ -2662,10 +2901,28 @@ export default function Home() {
                   <a href="#">Privacy</a>
                   <a href="#">Terms</a>
                 </div>
+                <div className="link-group">
+                  <h4>Legal</h4>
+                  <a href="https://github.com/Devyansh99/terracapsule/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+                  <a href="https://github.com/Devyansh99/terracapsule" target="_blank" rel="noopener noreferrer">Source Code</a>
+                  <a href="#">Open Source</a>
+                </div>
               </div>
             </div>
             <div className="footer-bottom">
               <p>&copy; 2025 TerraCapsule. All rights reserved.</p>
+              <p style={{ fontSize: '0.8rem', opacity: 0.7, marginTop: '0.5rem' }}>
+                Licensed under{' '}
+                <a 
+                  href="https://github.com/Devyansh99/terracapsule/blob/main/LICENSE" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{ color: '#22d3ee', textDecoration: 'underline' }}
+                >
+                  MIT License
+                </a>
+                {' '}• Open Source Project
+              </p>
             </div>
           </div>
         </footer>
