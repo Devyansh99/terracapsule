@@ -1146,27 +1146,22 @@ export default function Home() {
 
               {/* Header */}
               <div style={{ padding: '40px 40px 20px 40px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-                  <div style={{ width: '50px', height: '50px', marginRight: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
-                    <SimpleAnimatedLogo />
-                  </div>
-                  <div>
-                    <h2 style={{
-                      fontSize: '28px',
-                      fontWeight: '700',
-                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      marginBottom: '8px',
-                      margin: 0
-                    }}>
-                      Welcome Back
-                    </h2>
-                    <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>
-                      Sign in to your TerraCapsule account
-                    </p>
-                  </div>
+                <div style={{ marginBottom: '30px' }}>
+                  <h2 style={{
+                    fontSize: '32px',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    marginBottom: '8px',
+                    margin: 0
+                  }}>
+                    Welcome Back
+                  </h2>
+                  <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>
+                    Sign in to your TerraCapsule account
+                  </p>
                 </div>
               </div>
 
@@ -1447,27 +1442,22 @@ export default function Home() {
 
               {/* Header */}
               <div style={{ padding: '40px 40px 20px 40px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-                  <div style={{ width: '50px', height: '50px', marginRight: '15px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '24px' }}>
-                    <SimpleAnimatedLogo />
-                  </div>
-                  <div>
-                    <h2 style={{
-                      fontSize: '28px',
-                      fontWeight: '700',
-                      background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
-                      backgroundClip: 'text',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      marginBottom: '8px',
-                      margin: 0
-                    }}>
-                      Join TerraCapsule
-                    </h2>
-                    <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>
-                      Start your journey of exploration
-                    </p>
-                  </div>
+                <div style={{ marginBottom: '30px' }}>
+                  <h2 style={{
+                    fontSize: '32px',
+                    fontWeight: '700',
+                    background: 'linear-gradient(90deg, #22d3ee, #3b82f6)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    marginBottom: '8px',
+                    margin: 0
+                  }}>
+                    Join TerraCapsule
+                  </h2>
+                  <p style={{ color: '#94a3b8', fontSize: '16px', margin: 0 }}>
+                    Start your journey of exploration
+                  </p>
                 </div>
               </div>
 

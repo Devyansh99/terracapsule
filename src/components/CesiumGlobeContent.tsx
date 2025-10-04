@@ -306,24 +306,23 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
           const entity = viewer.entities.add({
             position: Cesium.Cartesian3.fromDegrees(country.lng, country.lat, 300000), // Elevated
             point: {
-              pixelSize: 12,
-              color: Cesium.Color.CYAN,
-              outlineColor: Cesium.Color.WHITE,
-              outlineWidth: 2,
+              pixelSize: 16,
+              color: Cesium.Color.fromCssColorString('#FFB84D'), // Golden/Orange color
+              outlineColor: Cesium.Color.fromCssColorString('#FFFFFF'),
+              outlineWidth: 3,
               heightReference: Cesium.HeightReference.RELATIVE_TO_GROUND,
-              scaleByDistance: new Cesium.NearFarScalar(1000000, 1.5, 50000000, 0.4),
-              disableDepthTestDistance: Number.POSITIVE_INFINITY
+              scaleByDistance: new Cesium.NearFarScalar(1000000, 1.8, 50000000, 0.5)
             },
             label: {
               text: country.name,
-              font: '14pt monospace',
+              font: 'bold 18px "Segoe UI", Arial, sans-serif',
               fillColor: Cesium.Color.WHITE,
               outlineColor: Cesium.Color.BLACK,
-              outlineWidth: 2,
+              outlineWidth: 3,
               style: Cesium.LabelStyle.FILL_AND_OUTLINE,
               verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-              pixelOffset: new Cesium.Cartesian2(0, -25),
-              scaleByDistance: new Cesium.NearFarScalar(1000000, 1.0, 50000000, 0.2),
+              pixelOffset: new Cesium.Cartesian2(0, -30),
+              scaleByDistance: new Cesium.NearFarScalar(1000000, 1.2, 50000000, 0.3),
               show: false // Initially hidden
             }
           });
