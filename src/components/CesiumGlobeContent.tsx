@@ -172,8 +172,13 @@ export default function CesiumGlobeContent({ onCountryHover }: CesiumGlobeConten
         
         // Set up Cesium Ion access token from environment variable
         const accessToken = process.env.NEXT_PUBLIC_CESIUM_ION_ACCESS_TOKEN;
-        console.log('Access token available:', !!accessToken);
-        Cesium.Ion.defaultAccessToken = accessToken || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkYWJmM2ZhNS02OGI5LTRhNGEtYTFlYi01NzNkN2I3MGJhNGYiLCJpZCI6MjM0MzIsImlhdCI6MTY5MTEwMzg5MX0.uKqtB8tjmLZAu4seTjdAFD2YUa_xS3hqZpUSuKn_5ss';
+        if (!accessToken) {
+          console.error('NEXT_PUBLIC_CESIUM_ION_ACCESS_TOKEN is not configured');
+          setError('Cesium Ion access token is not configured. Please add NEXT_PUBLIC_CESIUM_ION_ACCESS_TOKEN to your environment variables.');
+          return;
+        }
+        console.log('Access token available:', true);
+        Cesium.Ion.defaultAccessToken = accessToken;
 
         if (!cesiumContainer.current) {
           console.error('Cesium container not found');

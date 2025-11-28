@@ -5,6 +5,15 @@ import clientPromise from '@/lib/mongodb'
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate JWT_SECRET is configured
+    if (!process.env.JWT_SECRET) {
+      console.error('JWT_SECRET is not configured');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      )
+    }
+
     console.log('Login API called');
     const { email, password } = await request.json()
     console.log('Login attempt for email:', email);
@@ -46,7 +55,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         name: user.name 
       },
-      process.env.JWT_SECRET || 'your-secret-key',
+      process.env.JWT_SECRET!,
       { expiresIn: '7d' }
     )
 

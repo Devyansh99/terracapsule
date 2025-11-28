@@ -76,6 +76,40 @@ export async function POST(request: NextRequest) {
   try {
     const { message, history } = await request.json();
 
+    // Validate and sanitize input
+    if (!message || typeof message !== 'string') {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid message format'
+      }, { status: 400 });
+    }
+
+    // Basic sanitization - remove control characters, suspicious tokens, and limit length
+    const sanitizedMessage = message
+      .replace(/[\x00-\x1F\x7F]/g, '') // Remove control characters
+      .replace(/^(system:|assistant:|user:)/gi, '') // Remove role prefixes
+      .replace(/###|```/g, '') // Remove common injection delimiters
+      .slice(0, 1000) // Limit message length
+      .trim();
+
+    if (sanitizedMessage.length === 0) {
+      return NextResponse.json({
+        success: false,
+        error: 'Message cannot be empty'
+      }, { status: 400 });
+    }
+
+    // Validate and sanitize history
+    const sanitizedHistory = Array.isArray(history) 
+      ? history
+          .filter((msg: any) => msg && typeof msg.sender === 'string' && typeof msg.message === 'string')
+          .slice(-5) // Limit to last 5 messages
+          .map((msg: any) => ({
+            sender: msg.sender,
+            message: msg.message.slice(0, 500).replace(/[\x00-\x1F\x7F]/g, '')
+          }))
+      : [];
+
     if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json({
         success: false,
@@ -87,31 +121,29 @@ export async function POST(request: NextRequest) {
     const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
     // Check if it's a custom TerraCapsule command or natural language
-    const isCustomCommand = message.startsWith('/');
-    const naturalIntent = !isCustomCommand ? detectIntent(message) : null;
+    const isCustomCommand = sanitizedMessage.startsWith('/');
+    const naturalIntent = !isCustomCommand ? detectIntent(sanitizedMessage) : null;
     
     // Build conversation context
     let prompt = TERRACAPSULE_CONTEXT + '\n\n';
     
-    if (history && history.length > 0) {
-      // Only include last 5 messages to keep context manageable
-      const recentHistory = history.slice(-5);
+    if (sanitizedHistory.length > 0) {
       prompt += 'RECENT CONVERSATION:\n';
-      recentHistory.forEach((msg: any) => {
+      sanitizedHistory.forEach((msg: any) => {
         prompt += `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.message}\n`;
       });
       prompt += '\n';
     }
     
     if (isCustomCommand) {
-      prompt += `COMMAND: "${message}"\nRespond according to the command guidelines above.\n\n`;
+      prompt += `COMMAND: "${sanitizedMessage}"\nRespond according to the command guidelines above.\n\n`;
     } else if (naturalIntent?.command) {
       prompt += `NATURAL LANGUAGE detected as: /${naturalIntent.command} ${naturalIntent.location}\nRespond naturally as if the user used this command.\n\n`;
     } else {
       prompt += `GENERAL QUESTION about geography/exploration. Be helpful and suggest TerraCapsule features.\n\n`;
     }
     
-    prompt += `User: ${message}\n\nTerraCapsule Assistant:`;
+    prompt += `User: ${sanitizedMessage}\n\nTerraCapsule Assistant:`;
 
     // Generate response
     const result = await model.generateContent(prompt);
